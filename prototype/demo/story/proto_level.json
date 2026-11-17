@@ -1,0 +1,251 @@
+{
+  "format": 1,
+  "size": [
+    3200,
+    900
+  ],
+  "player_start": [
+    120,
+    780
+  ],
+  "water": {
+    "y": 850
+  },
+  "solids": [
+    [
+      0,
+      800,
+      3200,
+      50
+    ],
+    [
+      600,
+      690,
+      200,
+      20
+    ],
+    [
+      1100,
+      640,
+      160,
+      20
+    ],
+    [
+      1700,
+      700,
+      240,
+      20
+    ],
+    [
+      2560,
+      560,
+      220,
+      20
+    ]
+  ],
+  "hifi_only": [
+    [
+      2000,
+      620,
+      200,
+      20
+    ],
+    [
+      2250,
+      560,
+      160,
+      20
+    ]
+  ],
+  "linear_only": [
+    [
+      1380,
+      720,
+      180,
+      20
+    ]
+  ],
+  "ladders": [
+    [
+      2600,
+      560,
+      40,
+      240
+    ]
+  ],
+  "npcs": [
+    {
+      "x": 1500,
+      "y": 800,
+      "label": "keeper"
+    }
+  ],
+  "labels": [
+    [
+      40,
+      640,
+      "A"
+    ],
+    [
+      1450,
+      600,
+      "B"
+    ],
+    [
+      2550,
+      500,
+      "C"
+    ]
+  ],
+  "tape": {
+    "length": 7200,
+    "time_scale": 10,
+    "segments": [
+      [
+        3492,
+        3820
+      ],
+      [
+        4745,
+        5512
+      ]
+    ],
+    "events": [
+      {
+        "at": 6000,
+        "name": "power_cut",
+        "flag": "loop.power_cut"
+      }
+    ]
+  },
+  "darkness_event": "power_cut",
+  "darkness_alpha": 0.55,
+  "tracks": {
+    "hifi_flag": "save.hifi_unlocked",
+    "mix_flag": "save.mix_unlocked"
+  },
+  "hub": {
+    "start": [
+      "demo_intro"
+    ],
+    "between": [
+      "demo_call"
+    ],
+    "scares": {
+      "demo_call": "demo_phone"
+    },
+    "on_play": []
+  },
+  "triggers": [
+    {
+      "id": "crowd",
+      "rect": [
+        300,
+        700,
+        300,
+        100
+      ],
+      "bark": "demo_crowd"
+    },
+    {
+      "id": "creak",
+      "rect": [
+        800,
+        700,
+        120,
+        100
+      ],
+      "loop": 1,
+      "scare": "demo_creak"
+    },
+    {
+      "id": "keeper",
+      "rect": [
+        1440,
+        700,
+        140,
+        100
+      ],
+      "dialogue": [
+        "demo_keeper"
+      ]
+    },
+    {
+      "id": "rules",
+      "rect": [
+        1300,
+        700,
+        500,
+        100
+      ],
+      "from": 3400,
+      "to": 3900,
+      "dialogue": [
+        "demo_rules"
+      ]
+    },
+    {
+      "id": "rec_lip",
+      "rect": [
+        1300,
+        700,
+        500,
+        100
+      ],
+      "from": 4745,
+      "to": 5512,
+      "track": "linear",
+      "rec_flag": "save.ev_lipsync"
+    },
+    {
+      "id": "call",
+      "rect": [
+        0,
+        0,
+        3200,
+        900
+      ],
+      "from": 5500,
+      "to": 5990,
+      "dialogue": [
+        "demo_call_linear"
+      ]
+    },
+    {
+      "id": "dark",
+      "after_event": "power_cut",
+      "dialogue": [
+        "demo_dark_hifi",
+        "demo_dark_linear"
+      ]
+    }
+  ],
+  "chaser": {
+    "start_after": [
+      "demo_jump",
+      "demo_dark"
+    ],
+    "catch_scare": "demo_caught",
+    "speed": 160,
+    "offset": -360
+  },
+  "end_flag": "save.demo_done",
+  "report_flags": [
+    "sys.loop_count",
+    "save.hifi_unlocked",
+    "save.ev_lipsync",
+    "save.demo_done"
+  ],
+  "bot_route": [
+    {
+      "from": 3400,
+      "to": 3900,
+      "x": 1550
+    },
+    {
+      "from": 4745,
+      "to": 6600,
+      "x": 1550
+    }
+  ]
+}

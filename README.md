@@ -47,7 +47,10 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 ├── scripts/
 │   ├── story/               # GDScript story runtime (GPL-3.0)
 │   ├── scare/               # Jump-scare scheduling (GPL-3.0)
-│   └── tracks/              # HI-FI / LINEAR track mixer and tape clock (GPL-3.0)
+│   ├── tracks/              # HI-FI / LINEAR track mixer and tape clock (GPL-3.0)
+│   └── proto/               # Graybox vertical-slice prototype (GPL-3.0, placeholder art and sound)
+├── prototype/
+│   └── demo/                # Generic demo content used when the private story pack is absent
 ├── tests/
 │   └── godot/               # GDScript runtime tests and fixtures
 ├── tools/                   # Compiler, repository checks and test runners (GPL-3.0)
@@ -128,6 +131,17 @@ The runner builds a temporary Godot project from `scripts/`, `tests/godot/` and 
 - [`tools/scare_lint.py`](tools/scare_lint.py) checks a scare config against those rules (loudness headroom, rise time, flash area, spacing) and estimates each scare's relative strength.
 
 Rules, numbers and sources are in [`docs/scare-director.md`](docs/scare-director.md) (Korean). `tools/run_godot_tests.py` runs their headless tests together with the story runtime tests.
+
+## Prototype
+
+A graybox vertical slice wires the story runtime, scare director and track mixer to a playable level, so the loop, the two tracks and the scares can be played and playtested before the ACTION GAME MAKER G version exists. It is built in plain Godot 4.7 with placeholder shapes and generated sounds; ACTION GAME MAKER G's own player and level tools are expected to replace the player and level code, while the runtime modules carry over.
+
+```bash
+python3 tools/build_prototype.py --run      # build into build/prototype/ and open the game window
+python3 tools/build_prototype.py --smoke    # headless bot playthrough
+```
+
+It uses the private story pack when `assets/original/story/` contains `proto_level.json` and `scares.json`, and the generic demo in [`prototype/demo/`](prototype/demo/) otherwise. CI runs the bot on the demo. Keys and the level format are described in [`prototype/README.md`](prototype/README.md).
 
 ## Contributing
 

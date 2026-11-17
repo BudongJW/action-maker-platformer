@@ -1,0 +1,7 @@
+{
+  "id": "crowd",
+  "name": "Crowd",
+  "expressions": ["neutral"],
+  "default_expression": "neutral",
+  "style": "bubble"
+}

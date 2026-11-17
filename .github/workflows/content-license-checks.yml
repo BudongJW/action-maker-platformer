@@ -74,3 +74,6 @@ jobs:
 
       - name: Run GDScript runtime tests
         run: python3 tools/run_godot_tests.py --require-godot
+
+      - name: Prototype bot playthrough (generic demo content)
+        run: python3 tools/build_prototype.py --story demo --smoke --require-godot

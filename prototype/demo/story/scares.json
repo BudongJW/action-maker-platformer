@@ -1,0 +1,21 @@
+{
+  "format": 1,
+  "settings": {"soft_gain_db": -10, "off_rise_ms": 1500, "min_input_delay": 0.6, "bed_bus": "Ambience", "ui_bus": ""},
+  "scares": {
+    "demo_creak": {"kind": "false", "family": "everyday", "delay": {"mean": 3, "min": 1.5, "max": 10}, "level_lu": 8,
+                   "rise_ms": 5, "body_ms": 300, "lead_s": 1.0, "duck_db": -20, "sustain_s": 0, "relax_s": 10,
+                   "visual": {"flash": false, "area": 0.1, "shake": 0.0}},
+    "demo_jump": {"kind": "real", "family": "voice", "delay": {"mean": 1.2, "min": 0.6, "max": 4.0}, "input": true,
+                  "level_lu": 16, "rise_ms": 2, "body_ms": 600, "lead_s": 1.8, "duck_db": -20, "sustain_s": 4,
+                  "relax_s": 36, "visual": {"flash": false, "area": 0.2, "shake": 0.4}, "cue": "demo_sting"},
+    "demo_dark": {"kind": "real", "family": "voice", "delay": {"mean": 1.8, "min": 1.2, "max": 6.0}, "level_lu": 18,
+                  "rise_ms": 2, "body_ms": 800, "lead_s": 2.6, "duck_db": -20, "sustain_s": 4, "relax_s": 36,
+                  "visual": {"flash": false, "area": 0.15, "shake": 0.0}, "cue": "demo_sting"},
+    "demo_caught": {"kind": "fail", "family": "caught", "immediate": true, "level_lu": 14, "rise_ms": 2, "body_ms": 500,
+                    "sustain_s": 0, "relax_s": 0, "repeat_step_db": -4, "repeat_floor_lu": 2, "replace_after": 3,
+                    "min_repeat_interval_s": 20, "visual": {"flash": true, "area": 0.2, "shake": 0.3}},
+    "demo_phone": {"kind": "false", "family": "workroom", "delay": {"mean": 4, "min": 2, "max": 14}, "level_lu": 4,
+                   "rise_ms": 10, "body_ms": 400, "lead_s": 4.0, "duck_db": -20, "sustain_s": 0, "relax_s": 10,
+                   "visual": {"flash": false, "area": 0.05, "shake": 0.0}, "after_dialogue": "demo_call"}
+  }
+}

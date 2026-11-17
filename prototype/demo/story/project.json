@@ -1,0 +1,8 @@
+{
+  "format": 1,
+  "source_locale": "en",
+  "locales": ["en"],
+  "emotes": [],
+  "max_chars": {"bubble": 40, "caption": 60, "window": 120},
+  "external_flags": ["loop.track_hifi", "loop.power_cut", "save.ev_lipsync"]
+}

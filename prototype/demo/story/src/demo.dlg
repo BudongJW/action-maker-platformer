@@ -1,0 +1,79 @@
+// demo.dlg - generic placeholder story for the prototype. Not game content.
+// The private story pack replaces this whole folder when it is present.
+
+~ demo_intro
+@style window
+@once save
+
+narrator: A tape is waiting in the deck.  #line:demo_i_001
+- Play it  #line:demo_i_002
+- Label it and play it  #line:demo_i_003
+=> END
+
+
+~ demo_call
+@requires sys.loop_count >= 2
+@once save
+@style window
+
+guide: Did it play? Try the switch on the back if it sounds wrong.  #line:demo_c_001
+set save.hifi_unlocked = true
+=> END
+
+
+~ demo_keeper
+@style bubble
+
+keeper: Keep to the path tonight.  #line:demo_k_001
+=> END
+
+
+~ demo_rules
+@style bubble
+
+if loop.track_hifi
+    keeper: When I call, answer with me.  #line:demo_r_001
+else
+    keeper: If someone calls your name, do not answer.  #line:demo_r_002
+=> END
+
+
+~ demo_call_linear
+@forbids loop.track_hifi
+@style bubble
+
+voice: Hello-  #line:demo_x_001
+- "Who is it?"  #line:demo_x_002
+    do emit scare_demo_jump
+- (Stay quiet)  #line:demo_x_003
+=> END
+
+
+~cue demo_sting
+voice [at=0.0] [dur=1.2]: Press one-  #line:demo_s_001
+
+
+~ demo_dark_linear
+@requires loop.power_cut
+@forbids loop.track_hifi
+@style caption
+
+narrator: The lights go out.  #line:demo_d_001
+do emit scare_demo_dark
+=> END
+
+
+~ demo_dark_hifi
+@requires loop.track_hifi and loop.power_cut
+@style bubble
+
+keeper: The lights are out. Keep going anyway.  #line:demo_d_002
+set save.demo_done = true
+=> END
+
+
+~bark demo_crowd
+@cooldown 4
+
+crowd: Quiet tonight.  #line:demo_b_001
+crowd: Look how low the water is.  #line:demo_b_002
