@@ -1,0 +1,141 @@
+# Top-down mock-up: a town street at night. Brick villas and closed shops
+# on the north side (two storeys of wall face), the convenience store still
+# lit, a crosswalk, a parked car, an alley to the south. Zombies on the road;
+# the protagonist hides behind the car.
+@palette ../palette/night-school.pal
+@size 512 288
+@output ../mockups/map_village_td.png
+@preview ../previews/map_village_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@legend A tw:walltop_15
+@legend B tn:brick_upper
+@legend C tn:brick_lower
+@legend D tn:sidewalk
+@legend E tn:curb_s
+@legend F tn:road
+@legend G tn:road_lane_h
+@legend H tn:curb_n
+@legend I tw:walltop_14
+@legend J tw:walltop_12
+@legend K td:floor_concrete
+@legend L tw:walltop_06
+@legend M tw:walltop_13
+@legend N tw:walltop_07
+@legend O tn:villa_window_0_0
+@legend P tn:villa_window_1_0
+@legend Q tn:villa_window_0_1
+@legend R tn:villa_window_1_1
+@legend S tn:sign_board_0_0
+@legend T tn:sign_board_1_0
+@legend U tn:villa_window_lit_0_0
+@legend V tn:villa_window_lit_1_0
+@legend W tn:villa_window_lit_0_1
+@legend X tn:villa_window_lit_1_1
+@legend Y tn:villa_door_0_0
+@legend Z tn:villa_door_0_1
+@legend a tn:shutter_0_0
+@legend b tn:shutter_0_1
+@legend c tn:store_front_0_0
+@legend d tn:store_front_1_0
+@legend e tn:store_front_0_1
+@legend f tn:store_front_1_1
+@legend g tn:vending_0_0
+@legend h tn:vending_0_1
+@legend i tn:crosswalk
+@legend j tn:car_0_0
+@legend k tn:car_1_0
+@legend l tn:car_0_1
+@legend m tn:car_1_1
+@legend n td:streetlamp
+@legend o tn:manhole
+@legend p tn:bus_stop_0_0
+@legend q tn:bus_stop_1_0
+@legend r tn:bus_stop_0_1
+@legend s tn:bus_stop_1_1
+@legend t tn:trash_bags
+@legend u tn:styro_planter
+@legend v tn:utility_pole_0_0
+@legend w tn:utility_pole_0_1
+@legend x tn:utility_pole_0_2
+
+@layer
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+IIIIIIIIIIIIIIIIIIIJKKLIIIIIIIII
+AAAAAAAAAAAAAAAAAAAMKKNAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAMKKNAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAMKKNAAAAAAAAA
+@layer
+................................
+................................
+.OP.OP..ST...OP.UV....ST..ST.OP.
+.QR.QR.......QR.WX...........QR.
+.Y..OP.aaaacd.g.Y..OP.aaa.OP.Y..
+.Z..QR.bbbbef.h.Z..QR.bbb.QR.Z..
+................................
+................................
+...............iii..............
+...............iii..............
+.....jk........iii..............
+.....lm........iii..............
+................................
+.....n..........n...o...pq.n....
+...................tt...rs......
+...................u............
+................................
+................................
+@layer
+................................
+................................
+................................
+................................
+................................
+...v..........v.............v...
+...w..........w.............w...
+...x..........x.............x...
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+
+@sprite protagonist_topdown.pix left_1 108 144
+@sprite zombie_student_topdown.pix down_1 268 128
+@sprite zombie_office_topdown.pix left_1 380 144
+@sprite zombie_elder_topdown.pix right_1 188 192
+@sprite zombie_guard_topdown.pix up_1 428 96
+@sprite zombie_student_girl_topdown.pix down_0 316 240
+@darkness K 0.78
+@cone 104 168 180 40 110
+@light 184 88 52
+@light 248 88 26
+@light 88 216 44
+@light 264 216 44
+@light 440 216 44
+@light 280 56 22
