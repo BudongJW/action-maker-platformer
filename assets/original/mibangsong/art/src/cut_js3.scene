@@ -1,0 +1,34 @@
+# PRIVATE (미방송분). Cut JS3 (caught, repeats): caught in the chase: the tracking tear, then rewind (no gore, no red, one flash)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/js3.png
+@preview ../previews/js3_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend S s:shore_top
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSSSSSS
+ssssssssssssssssssss
+@sprite mbs_gyeongho.pix caught 150 121
+@sprite mbs_overdub.pix idle_0 104 100
+@darkness K 0.6
+@light 160 130 40
+@sprite mbs_fx_tear.pix tear 0 0 over
+@sprite mbs_fx_viewfinder.pix rec 0 0 over

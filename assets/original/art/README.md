@@ -368,6 +368,10 @@ AGM G 프로젝트가 아직 없으므로 실제 임포트는 확인하지 않�
 - 배경: `backgrounds/`의 세 장을 Parallax2D 세 개에 넣고 위 표의 스크롤 배율에서 시작합니다. 가로로 이어지게 만들었으므로 Repeat Size는 320입니다.
 - 어둠과 빛: 목업의 어둠·광원은 PNG에 구운 것입니다. 게임에서는 CanvasModulate + PointLight2D로 같은 효과를 냅니다 ([`visual_assets.md` Q7](../../../research_notes/쯔꾸르%20리소스와%20스토리%20자원%20분석/visual_assets.md)). 그림자 손님의 눈과 도깨비불은 조명을 받지 않는 레이어(또는 unshaded 머티리얼)에 둡니다.
 
+## 《미방송분》 디자인 팩 (스포일러)
+
+기준 콘티 v1.2에 맞춘 인물·장소·컷 그림은 별도 폴더 [`../mibangsong/`](../mibangsong/README.md)에 있습니다. 줄거리와 반전이 드러나므로 열람에 주의하세요. 트랙별 팔레트(LINEAR·HI-FI·1979·2026)로 이 폴더의 공용 팔레트와 타일을 바꿔 칠해 씁니다.
+
 ## 그리는 기준 (손·얼굴·머리카락)
 
 손을 원과 선으로, 얼굴을 타원으로 그려 "도형을 이어붙인" 느낌이 나던 그림을 다시 그렸습니다. 원인, 레퍼런스, 규칙(구조로 그린 손, 면으로 나눈 얼굴, 덩어리 머리카락, 셀아웃, 뚜렷한 명암 단계)은 [`docs/pixel-technique.md`](../../../docs/pixel-technique.md)에 있습니다. 이전/이후 비교: [`comparisons/pixel_technique_before_after.png`](comparisons/pixel_technique_before_after.png) (원본 `.pix`가 없는 비교용 합성 이미지).

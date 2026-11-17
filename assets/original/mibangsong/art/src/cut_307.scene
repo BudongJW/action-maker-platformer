@@ -1,0 +1,41 @@
+# PRIVATE (미방송분). Cut 3-07: yeongdon-mari: Sunrye washes the rolled clothes with the broom; Mijeong holds on and weeps; Gyeongho lowers the camera and holds a lantern
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/307.png
+@preview ../previews/307_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend A s:water_0
+@legend M g:mat
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....MMMMMMMMMMM.....
+SSSSSSSSSSSSSSSSSAAA
+sssssssssssssssssaaa
+@sprite mbs_items.pix yeongdon 132 130
+@sprite mbs_items.pix soul_bowl 132 118
+@sprite mbs_sunrye.pix broom 96 121
+@sprite mbs_mijeong.pix cry 186 121 flip
+@sprite mbs_gyeongho.pix lantern 244 121 flip
+@darkness K 0.72
+@light 150 140 46
+@light 248 140 34
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

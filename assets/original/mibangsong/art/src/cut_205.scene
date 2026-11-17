@@ -1,0 +1,42 @@
+# PRIVATE (미방송분). Cut 2-05: old Neoulli, only in HI-FI: down over drought-bared walls and roofs; stay too long and the water rises
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/205.png
+@preview ../previews/205_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend A s:water_0
+@legend T s:stonewall
+@legend a s:water_fill
+@legend m s:mud
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+TT....TTT......TTT..
+TT....TTT......TTT..
+TT....TTT......TTT..
+TT....TTT......TTT..
+AAAAAmmmmmmmmmmmmmmm
+aaaaammmmmmmmmmmmmmm
+@sprite mbs_tiles_shore.pix roof_0_0 96 96
+@sprite mbs_tiles_shore.pix roof_1_0 112 96
+@sprite mbs_tiles_shore.pix roof_0_0 160 80
+@sprite mbs_tiles_shore.pix roof_1_0 176 80
+@sprite mbs_tiles_shore.pix roof_0_0 288 96
+@sprite mbs_tiles_shore.pix roof_1_0 304 96
+@sprite mbs_gyeongho.pix jump 164 34
+@darkness K 0.6
+@light 180 70 50
+@light 40 160 40
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

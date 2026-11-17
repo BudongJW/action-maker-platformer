@@ -1,0 +1,37 @@
+# PRIVATE (미방송분). Cut F1 (fake scare, small): a dog puts its head over the wall and barks: the cause is visible at once
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/f1.png
+@preview ../previews/f1_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend S s:shore_top
+@legend T s:stonewall
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+SSSSSSSSSSSSSSSSSSSS
+ssssssssssssssssssss
+@sprite mbs_gyeongho.pix idle_0 40 121
+@sprite mbs_mijeong.pix bowl 150 121 flip
+@sprite mbs_tiles_shore.pix dog_wall 208 48
+@darkness K 0.6
+@light 160 130 40
+@light 214 56 22
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over

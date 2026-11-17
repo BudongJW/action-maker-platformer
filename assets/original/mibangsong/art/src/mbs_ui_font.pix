@@ -1,0 +1,230 @@
+# PRIVATE (미방송분). 3x5 pixel font (digits, colon, a few caps) for timecode, counter and badges. 4x6 cells.
+@palette ../palette/ui.pal
+@size 4 6
+@output ../ui/mbs_ui_font.png
+@preview ../previews/mbs_ui_font_x8.png 8
+@columns 16
+
+@frame 0
+WWW.
+W.W.
+W.W.
+W.W.
+WWW.
+....
+
+@frame 1
+.W..
+WW..
+.W..
+.W..
+WWW.
+....
+
+@frame 2
+WWW.
+..W.
+WWW.
+W...
+WWW.
+....
+
+@frame 3
+WWW.
+..W.
+WWW.
+..W.
+WWW.
+....
+
+@frame 4
+W.W.
+W.W.
+WWW.
+..W.
+..W.
+....
+
+@frame 5
+WWW.
+W...
+WWW.
+..W.
+WWW.
+....
+
+@frame 6
+WWW.
+W...
+WWW.
+W.W.
+WWW.
+....
+
+@frame 7
+WWW.
+..W.
+.W..
+.W..
+.W..
+....
+
+@frame 8
+WWW.
+W.W.
+WWW.
+W.W.
+WWW.
+....
+
+@frame 9
+WWW.
+W.W.
+WWW.
+..W.
+WWW.
+....
+
+@frame colon
+....
+.W..
+....
+.W..
+....
+....
+
+@frame dash
+....
+....
+WWW.
+....
+....
+....
+
+@frame R
+WW..
+W.W.
+WW..
+W.W.
+W.W.
+....
+
+@frame E
+WWW.
+W...
+WW..
+W...
+WWW.
+....
+
+@frame C
+WWW.
+W...
+W...
+W...
+WWW.
+....
+
+@frame L
+W...
+W...
+W...
+W...
+WWW.
+....
+
+@frame I
+WWW.
+.W..
+.W..
+.W..
+WWW.
+....
+
+@frame N
+W.W.
+WWW.
+WWW.
+WWW.
+W.W.
+....
+
+@frame A
+.W..
+W.W.
+WWW.
+W.W.
+W.W.
+....
+
+@frame H
+W.W.
+W.W.
+WWW.
+W.W.
+W.W.
+....
+
+@frame F
+WWW.
+W...
+WW..
+W...
+W...
+....
+
+@frame M
+W.W.
+WWW.
+WWW.
+W.W.
+W.W.
+....
+
+@frame X
+W.W.
+W.W.
+.W..
+W.W.
+W.W.
+....
+
+@frame S
+WWW.
+W...
+WWW.
+..W.
+WWW.
+....
+
+@frame P
+WWW.
+W.W.
+WWW.
+W...
+W...
+....
+
+@frame Y
+W.W.
+W.W.
+.W..
+.W..
+.W..
+....
+
+@frame space
+....
+....
+....
+....
+....
+....
+
+@frame dot
+....
+....
+....
+....
+.W..
+....

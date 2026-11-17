@@ -44,3 +44,6 @@ jobs:
 
       - name: Render assets/original/art/src and compare
         run: python3 tools/pixelart.py --check
+
+      - name: Render assets/original/mibangsong/art/src and compare
+        run: python3 tools/pixelart.py --check --root assets/original/mibangsong/art/src

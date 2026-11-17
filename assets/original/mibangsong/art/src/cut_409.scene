@@ -1,0 +1,40 @@
+# PRIVATE (미방송분). Cut 4-09: before the fourth knot Gyeongho sets the camera on the ground and speaks to Mijeong
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/409.png
+@preview ../previews/409_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend A s:water_0
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSSSAAA
+sssssssssssssssssaaa
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 200 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 200 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 200 144
+@sprite mbs_gyeongho.pix kneel_down 112 121
+@sprite mbs_mijeong.pix idle_0 156 121 flip
+@darkness K 0.78
+@light 150 130 46
+@light 212 124 30
+@sprite mbs_fx_viewfinder.pix standby 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

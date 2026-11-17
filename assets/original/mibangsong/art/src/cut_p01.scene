@@ -1,0 +1,63 @@
+# PRIVATE (미방송분). Cut P-01: archive corridor, one tube flickering, monitor light at the far door
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/p01.png
+@preview ../previews/p01_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend B w:wall_block
+@legend F w:floor
+@legend L w:lamp_on
+@legend Q w:wall_pipe
+@legend l w:lamp_off
+@layer
+BBBBBBBBBBBBBBBBBBBB
+BBBBBQQQQQQBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+@layer
+FFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFF
+@layer
+.....L......l.......
+@sprite mbs_tiles_workroom.pix shelf_0_0 16 112
+@sprite mbs_tiles_workroom.pix shelf_1_0 32 112
+@sprite mbs_tiles_workroom.pix shelf_0_1 16 128
+@sprite mbs_tiles_workroom.pix shelf_1_1 32 128
+@sprite mbs_tiles_workroom.pix shelf_0_2 16 144
+@sprite mbs_tiles_workroom.pix shelf_1_2 32 144
+@sprite mbs_tiles_workroom.pix shelf_0_0 64 112
+@sprite mbs_tiles_workroom.pix shelf_1_0 80 112
+@sprite mbs_tiles_workroom.pix shelf_0_1 64 128
+@sprite mbs_tiles_workroom.pix shelf_1_1 80 128
+@sprite mbs_tiles_workroom.pix shelf_0_2 64 144
+@sprite mbs_tiles_workroom.pix shelf_1_2 80 144
+@sprite mbs_tiles_workroom.pix shelf_0_0 160 112
+@sprite mbs_tiles_workroom.pix shelf_1_0 176 112
+@sprite mbs_tiles_workroom.pix shelf_0_1 160 128
+@sprite mbs_tiles_workroom.pix shelf_1_1 176 128
+@sprite mbs_tiles_workroom.pix shelf_0_2 160 144
+@sprite mbs_tiles_workroom.pix shelf_1_2 176 144
+@sprite mbs_tiles_workroom.pix shelf_0_0 208 112
+@sprite mbs_tiles_workroom.pix shelf_1_0 224 112
+@sprite mbs_tiles_workroom.pix shelf_0_1 208 128
+@sprite mbs_tiles_workroom.pix shelf_1_1 224 128
+@sprite mbs_tiles_workroom.pix shelf_0_2 208 144
+@sprite mbs_tiles_workroom.pix shelf_1_2 224 144
+@sprite mbs_tiles_workroom.pix door_0_0 288 112
+@sprite mbs_tiles_workroom.pix door_0_1 288 128
+@sprite mbs_tiles_workroom.pix door_0_2 288 144
+@darkness K 0.82
+@light 88 8 60
+@light 302 136 26

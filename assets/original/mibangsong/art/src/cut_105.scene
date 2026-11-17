@@ -1,0 +1,47 @@
+# PRIVATE (미방송분). Cut 1-05: the sluice building door: Mansu draws the line
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/105.png
+@preview ../previews/105_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend S s:shore_top
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSSSSSS
+ssssssssssssssssssss
+@sprite mbs_tiles_shore.pix sluice_0_0 72 112
+@sprite mbs_tiles_shore.pix sluice_1_0 88 112
+@sprite mbs_tiles_shore.pix sluice_2_0 104 112
+@sprite mbs_tiles_shore.pix sluice_3_0 120 112
+@sprite mbs_tiles_shore.pix sluice_0_1 72 128
+@sprite mbs_tiles_shore.pix sluice_1_1 88 128
+@sprite mbs_tiles_shore.pix sluice_2_1 104 128
+@sprite mbs_tiles_shore.pix sluice_3_1 120 128
+@sprite mbs_tiles_shore.pix sluice_0_2 72 144
+@sprite mbs_tiles_shore.pix sluice_1_2 88 144
+@sprite mbs_tiles_shore.pix sluice_2_2 104 144
+@sprite mbs_tiles_shore.pix sluice_3_2 120 144
+@sprite mbs_mansu.pix block 156 121
+@sprite mbs_gyeongho.pix idle_0 236 121 flip
+@darkness K 0.62
+@light 176 130 40
+@light 110 128 26
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over
