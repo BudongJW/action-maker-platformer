@@ -1,0 +1,8 @@
+# Old window sliding open: grit, a squeak, a knock at the end.
+@output ../sfx/window_open.wav
+@length 1.0
+@seed 44
+@echo 0.06 0.3 0.25
+layer noise amp=0.35 attack=0.05 dur=0.7 fade=0.2 lp=1800 hp=300 trem=35 trem_depth=0.7
+layer sine at=0.1 freq=1400 freq_end=1700 amp=0.08 attack=0.05 dur=0.4 fade=0.15 trem=29 trem_depth=0.8
+layer noise at=0.72 amp=0.6 decay=0.04 lp=2000 hp=150

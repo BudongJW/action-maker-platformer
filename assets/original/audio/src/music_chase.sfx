@@ -1,0 +1,163 @@
+# Music sketch: chase. 120 bpm, 8 bars (16 s loop): pulsing low square
+# ostinato with semitone tension, heartbeat kick on the beat, dissonant
+# stabs on each bar, a rising noise swell into the loop point.
+@output ../music/chase_loop.wav
+@length 16.0
+@rate 22050
+@seed 54
+@peak -2
+@loop 0.2
+@echo 0.25 0.25 0.2
+layer square freq=110.0 amp=0.16 at=0.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=0.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=0.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=116.54 amp=0.16 at=0.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=1.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=1.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=1.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=1.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer sine freq=62 freq_end=40 amp=0.55 at=0.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=0.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=0.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=0.75 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=1.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=1.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=1.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=1.75 attack=0.001 decay=0.02 hp=5000
+layer saw freq=220.0 amp=0.07 at=0.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=233.08 amp=0.07 at=0.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=329.63 amp=0.07 at=0.0 attack=0.004 decay=0.5 lp=1600
+layer square freq=110.0 amp=0.16 at=2.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=2.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=2.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=116.54 amp=0.16 at=2.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=3.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=3.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=3.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=3.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer sine freq=62 freq_end=40 amp=0.55 at=2.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=2.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=2.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=2.75 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=3.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=3.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=3.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=3.75 attack=0.001 decay=0.02 hp=5000
+layer saw freq=220.0 amp=0.07 at=2.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=233.08 amp=0.07 at=2.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=329.63 amp=0.07 at=2.0 attack=0.004 decay=0.5 lp=1600
+layer square freq=110.0 amp=0.16 at=4.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=4.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=4.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=116.54 amp=0.16 at=4.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=5.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=5.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=5.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=5.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer sine freq=62 freq_end=40 amp=0.55 at=4.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=4.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=4.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=4.75 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=5.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=5.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=5.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=5.75 attack=0.001 decay=0.02 hp=5000
+layer saw freq=220.0 amp=0.07 at=4.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=233.08 amp=0.07 at=4.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=329.63 amp=0.07 at=4.0 attack=0.004 decay=0.5 lp=1600
+layer square freq=110.0 amp=0.16 at=6.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=6.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=6.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=6.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=155.56 amp=0.16 at=7.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=155.56 amp=0.16 at=7.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=7.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=116.54 amp=0.16 at=7.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer sine freq=62 freq_end=40 amp=0.55 at=6.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=6.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=6.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=6.75 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=7.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=7.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=7.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=7.75 attack=0.001 decay=0.02 hp=5000
+layer saw freq=220.0 amp=0.07 at=6.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=233.08 amp=0.07 at=6.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=329.63 amp=0.07 at=6.0 attack=0.004 decay=0.5 lp=1600
+layer square freq=110.0 amp=0.16 at=8.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=8.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=8.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=116.54 amp=0.16 at=8.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=9.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=9.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=9.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=9.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer sine freq=62 freq_end=40 amp=0.55 at=8.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=8.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=8.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=8.75 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=9.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=9.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=9.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=9.75 attack=0.001 decay=0.02 hp=5000
+layer saw freq=220.0 amp=0.07 at=8.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=233.08 amp=0.07 at=8.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=329.63 amp=0.07 at=8.0 attack=0.004 decay=0.5 lp=1600
+layer square freq=110.0 amp=0.16 at=10.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=10.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=10.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=116.54 amp=0.16 at=10.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=11.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=11.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=11.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=11.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer sine freq=62 freq_end=40 amp=0.55 at=10.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=10.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=10.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=10.75 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=11.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=11.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=11.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=11.75 attack=0.001 decay=0.02 hp=5000
+layer saw freq=220.0 amp=0.07 at=10.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=233.08 amp=0.07 at=10.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=329.63 amp=0.07 at=10.0 attack=0.004 decay=0.5 lp=1600
+layer square freq=110.0 amp=0.16 at=12.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=12.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=12.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=116.54 amp=0.16 at=12.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=13.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=13.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=13.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=13.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer sine freq=62 freq_end=40 amp=0.55 at=12.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=12.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=12.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=12.75 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=13.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=13.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=13.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=13.75 attack=0.001 decay=0.02 hp=5000
+layer saw freq=220.0 amp=0.07 at=12.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=233.08 amp=0.07 at=12.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=329.63 amp=0.07 at=12.0 attack=0.004 decay=0.5 lp=1600
+layer square freq=110.0 amp=0.16 at=14.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=110.0 amp=0.16 at=14.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=14.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=14.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=155.56 amp=0.16 at=15.0 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=155.56 amp=0.16 at=15.25 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=130.81 amp=0.16 at=15.5 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer square freq=116.54 amp=0.16 at=15.75 dur=0.24 attack=0.003 decay=0.1 lp=700
+layer sine freq=62 freq_end=40 amp=0.55 at=14.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=14.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=14.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=14.75 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=15.0 attack=0.002 decay=0.09
+layer noise amp=0.08 at=15.25 attack=0.001 decay=0.02 hp=5000
+layer sine freq=62 freq_end=40 amp=0.55 at=15.5 attack=0.002 decay=0.09
+layer noise amp=0.08 at=15.75 attack=0.001 decay=0.02 hp=5000
+layer saw freq=220.0 amp=0.07 at=14.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=233.08 amp=0.07 at=14.0 attack=0.004 decay=0.5 lp=1600
+layer saw freq=329.63 amp=0.07 at=14.0 attack=0.004 decay=0.5 lp=1600
+layer noise amp=0.22 at=12.0 attack=3.6 dur=4.0 fade=0.3 lp=300 lp_end=4000 hp=150

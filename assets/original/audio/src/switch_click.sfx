@@ -1,0 +1,6 @@
+# Wall light switch.
+@output ../sfx/switch_click.wav
+@length 0.12
+@seed 43
+layer noise amp=0.8 attack=0.0005 decay=0.006 hp=1500 lp=6000
+layer sine freq=900 amp=0.2 attack=0.0005 decay=0.01

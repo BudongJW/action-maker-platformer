@@ -1,0 +1,9 @@
+# Dokkaebi-bul crackling, seamless 2 s loop: soft hiss and tiny snaps.
+@output ../sfx/wisp_crackle_loop.wav
+@length 2.0
+@seed 39
+@peak -6
+@loop 0.2
+layer noise amp=0.15 hp=800 lp=3000 trem=3 trem_depth=0.5
+layer noise amp=0.7 dur=0.006 decay=0.002 hp=3000 repeat=24 every=0.083 jitter=0.95
+layer sine freq=310 amp=0.03 trem=4.3 trem_depth=1.0

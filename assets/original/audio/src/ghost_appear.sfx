@@ -1,0 +1,9 @@
+# Sobok ghost appears: a breath that swells in, then a thin dissonant whine.
+@output ../sfx/ghost_appear.wav
+@length 2.6
+@seed 36
+@echo 0.21 0.45 0.35
+layer noise amp=0.5 attack=0.9 dur=1.0 lp=400 lp_end=3500 hp=200
+layer sine at=0.9 freq=880 amp=0.12 attack=0.05 decay=0.9 trem=6 trem_depth=0.5
+layer sine at=0.9 freq=932.33 amp=0.12 attack=0.05 decay=0.9 trem=7 trem_depth=0.5
+layer sine at=0.9 freq=220 amp=0.25 attack=0.01 decay=0.6

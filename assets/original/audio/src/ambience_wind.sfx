@@ -1,0 +1,9 @@
+# Wind outside the windows, seamless 6 s loop: low gusts and a thin whistle.
+@output ../ambience/wind_loop.wav
+@length 6.0
+@seed 31
+@peak -10
+@loop 0.5
+layer brown amp=0.9 lp=600 hp=40 trem=0.17 trem_depth=0.7
+layer noise amp=0.05 hp=2000 lp=5000 trem=0.31 trem_depth=0.9
+layer sine freq=740 freq_end=820 amp=0.015 trem=0.23 trem_depth=1.0

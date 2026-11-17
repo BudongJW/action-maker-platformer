@@ -1,0 +1,8 @@
+# Distant thunder roll (one shot, for the other-world shift or a storm).
+@output ../sfx/thunder_far.wav
+@length 4.0
+@seed 33
+@echo 0.3 0.4 0.3
+layer brown amp=1.0 attack=0.4 decay=1.2 lp=220 hp=25
+layer sine freq=42 freq_end=33 amp=0.4 attack=0.3 decay=1.0
+layer brown at=0.25 amp=0.6 attack=0.05 decay=0.6 lp=400 hp=40
