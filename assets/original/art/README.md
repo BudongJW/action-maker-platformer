@@ -220,6 +220,52 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 
 `dawn.pal`은 이계 팔레트와 같은 방식(같은 키, 다른 색)이라, 엔딩이나 탈출 구간에 팔레트 교체 셰이더로 바로 쓸 수 있습니다.
 
+## 점프스케어
+
+화면 전체(320x180)를 덮는 점프스케어 그림 8종입니다. [`jumpscares/`](jumpscares/)에 있고, 시트마다 프레임이 위에서 아래로 쌓여 있습니다(1열). 프레임을 차례로 보여 "다가온다·눈을 뜬다" 같은 짧은 움직임을 만듭니다.
+
+| | | | |
+|---|---|---|---|
+| ![](previews/jumpscare_shadow_visitor_x2.png) | ![](previews/jumpscare_sobok_ghost_x2.png) | ![](previews/jumpscare_egg_ghost_x2.png) | ![](previews/jumpscare_zombie_x2.png) |
+| **그림자 손님**: 얼굴 없는 어둠이 화면을 채우고 붉은 외눈이 뜸. `closed opening open` | **소복 귀신**: 얼굴을 가린 머리카락이 갈라지며 한쪽 눈과 벌린 입. `hair parting face` | **달걀귀신**: 매끈한 얼굴에 금이 가고 그 틈으로 눈이 내다봄. `smooth crack eye` | **좀비**: 퀭한 눈, 벌린 입, 뻗은 손으로 카메라를 덮침. `near closer` |
+| ![](previews/jumpscare_hands_x2.png) | ![](previews/jumpscare_window_x2.png) | ![](previews/jumpscare_eyes_x2.png) | ![](previews/jumpscare_reaper_x2.png) |
+| **손**: 화면 가장자리 사방에서 창백한 손들이 가운데로 뻗어 옴. `few all` | **창문**: 빈 창밖에 누군가 얼굴과 손바닥을 붙이고, 입김이 유리에 서림. `empty face` | **눈**: 어둠 속에서 붉은 눈이 한 쌍씩 늘어남. `few more many` | **저승사자**: 숙인 갓 아래로 고개를 들면 창백하고 담담한 얼굴, 텅 빈 검은 눈. `bowed looks` |
+
+쓰는 법(제안):
+
+- **조용한 예고 뒤에 짧게**: 소리가 잦아들고(환경음 끊김, 형광등 꺼짐) 1~2초 뒤, 마지막 프레임까지 0.3~0.6초에 보여 주고 `sfx/jumpscare.wav`와 [`fx/fx_static.png`](fx/fx_static.png)을 겹칩니다. 남발하면 효과가 떨어지므로 구간마다 한 번 이하를 권합니다.
+- **깜박임 줄이기**: 옵션이 켜져 있으면 프레임을 넘기지 않고 마지막 프레임만, 노이즈 없이 보여 줍니다([`docs/resource-needs.md`](../../../docs/resource-needs.md) 5절의 광과민성 옵션).
+- **고어 없음(D9)**: 피·상처 없이 얼굴, 눈, 손, 실루엣만으로 겁을 줍니다. 빨강은 눈에만 썼습니다.
+- 주로 실패(잡힘) 직전이나 이벤트 연출에 씁니다. 실패 연출 자체는 암전·소리로 처리한다는 D9는 그대로입니다.
+
+## 바다·배·항구 마을
+
+밤의 작은 어항입니다. 탑다운(쯔꾸르식)과 횡스크롤 양쪽 타일, 바다 배경, 오징어잡이 배, 맵·목업·컨셉을 함께 만들었습니다.
+
+![harbour top-down](previews/map_port_td_x2.png)
+
+| ![pier at night](previews/port_night_side_x3.png) | ![ghost ship](previews/concept_ghost_ship_x3.png) | ![pier grab](previews/concept_pier_grab_x3.png) |
+|---|---|---|
+| **부두의 밤** (목업): 불 켜진 창의 항구 집, 말뚝 위 부두, 집어등을 켠 오징어잡이 배, 먼 곶의 등대 | **유령선** (컨셉): 바다 안개 속에서 청록 집어등을 단 배가 다가옴. 부두 끝의 주인공과 도깨비불 | **부두 끝** (컨셉): 물귀신이 부두 옆 물에서 올라와 손을 뻗고, 판자 틈으로 창백한 손들이 솟음 |
+
+| 파일 | 내용 | 미리보기 |
+|---|---|---|
+| [`tiles/tiles_port_td.png`](tiles/tiles_port_td.png) | 탑다운 16x16. 깊은 물·얕은 물(각 2프레임 물결), 안벽 벽면(`quay_upper`·`quay_lower`, 벽면 두 줄 규칙과 같음), 부두 판자·끝, 계류 기둥(볼라드), 모래, 갯바위, 테트라포드 더미(2x2), 오징어잡이 배(2x3, 뱃머리가 위, 집어등 줄), 나룻배(1x2), 부표, 밧줄 더미, 상자, 생선 상자, 그물 더미, 오징어 덕장(2x1), 창고 벽면(골함석), 노점 천막(2x1), 등대(2x3) | [x4](previews/tiles_port_td_x4.png) |
+| [`tiles/tiles_port_side.png`](tiles/tiles_port_side.png) | 횡스크롤 16x16. 부두 판자(아래에서 통과하는 one-way), 말뚝, 가새, 수면(2프레임, 닿으면 위험 지형 후보)·물속, 상자, 폐타이어 방현재, 매달린 부표, 항구 집 판벽·밑단, 함석지붕(3x1), 불 켜진 창·꺼진 창 | [x4](previews/tiles_port_side_x4.png) |
+| [`backgrounds/bg_sea.png`](backgrounds/bg_sea.png) | 패럴랙스 맨 뒤: 밤하늘, 달, 수평선(y=96), 끊긴 줄로 그린 달빛 반사. 불투명. 시작 배율 0.05 | [x2](previews/bg_sea_x2.png) |
+| [`backgrounds/bg_harbor.png`](backgrounds/bg_harbor.png) | `bg_sea` 위에 겹침: 먼 해안선과 마을 불빛, 곶의 등대와 빛줄기, 정박한 배의 돛대. 위쪽은 투명. 시작 배율 0.2 | [x2](previews/bg_harbor_x2.png) |
+| [`characters/boat_squid.png`](characters/boat_squid.png) | 112x56, 1열 3프레임. 횡스크롤 오징어잡이 배 `bob_0 bob_1`(물결에 1px 흔들림, 노란 집어등 두 줄)과 `ghost`(유령선: 청록 집어등, 빗금으로 비친 선체, 아래로 흐려짐) | [x3](previews/boat_squid_x3.png) |
+| [`fx/fx_sea_fog.png`](fx/fx_sea_fog.png) | 320x180 바다 안개 띠. `palette/light.pal`의 반투명 흰색 디더라 어둠 위에 덧씌움 | [x2](previews/fx_sea_fog_x2.png) |
+| [`mockups/map_port_td.png`](mockups/map_port_td.png) | 512x288 탑다운 항구 맵: 창고·벽돌집 벽면, 노점과 오징어 덕장, 안벽, 바다로 난 부두, 집어등 켠 배 두 척, 나룻배, 부표, 방파제 테트라포드, 등대. 부두 옆 물에 물귀신, 바다 위에 도깨비불, 거리에 노인 좀비 | [x2](previews/map_port_td_x2.png) |
+| [`mockups/port_night_side.png`](mockups/port_night_side.png), [`concepts/concept_ghost_ship.png`](concepts/concept_ghost_ship.png), [`concepts/concept_pier_grab.png`](concepts/concept_pier_grab.png) | 위 세 장면, 각 320x180 | [x3](previews/port_night_side_x3.png) |
+
+쓰는 법:
+
+- **물 앞뒤**: 횡스크롤 장면에서는 배·물귀신을 그린 **다음** 수면·물속 타일 레이어를 한 번 더 그려, 물체가 수면 아래로 잠기게 합니다(목업의 `.scene`이 그 순서). 게임에서는 수면 타일맵을 캐릭터보다 앞 레이어에 둡니다.
+- **배의 흘수선**: `boat_squid`의 선체는 셀의 44번째 줄부터 아래가 어두운 배 밑(`N`)이라, 그 줄을 수면 높이에 맞추면 됩니다.
+- **안벽**: 탑다운에서는 땅 끝에 `quay_upper`·`quay_lower` 두 줄을 두고 그 아래에 `shallow`, 그다음 `water`를 깝니다. 부두(`pier`)는 안벽을 끊고 바다까지 이어 깝니다.
+- 집어등·등대·불 켜진 창은 빛을 받지 않는 레이어에 두거나 PointLight2D를 붙입니다.
+
 ## 이계: 팔레트 교체
 
 모든 그림이 같은 20개 팔레트 키를 쓰므로, 이계는 타일셋을 따로 그리지 않고 **같은 키에 다른 색을 넣은 팔레트**로 만듭니다(design-references 2.3의 "세계 전환 = 화풍 전환").
