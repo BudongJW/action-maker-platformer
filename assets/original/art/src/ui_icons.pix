@@ -1,0 +1,275 @@
+# Input prompts and markers, 12x12. Keyboard keys follow docs/decisions.md.
+@palette ../palette/night-school.pal
+@size 12 12
+@output ../ui/ui_icons.png
+@preview ../previews/ui_icons_x6.png 6
+@columns 6
+
+@frame key_e
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWKKKKKWWWK
+KWWKWWWWWWWK
+KWWKKKKWWWWK
+KWWKWWWWWWWK
+KWWKKKKKWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_f
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWKKKKKWWWK
+KWWKWWWWWWWK
+KWWKKKKWWWWK
+KWWKWWWWWWWK
+KWWKWWWWWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_z
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWKKKKKWWWK
+KWWWWWKWWWWK
+KWWWWKWWWWWK
+KWWWKWWWWWWK
+KWWKKKKKWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_x
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWKWWWKWWWK
+KWWWKWKWWWWK
+KWWWWKWWWWWK
+KWWWKWKWWWWK
+KWWKWWWKWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_c
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWWKKKKWWWK
+KWWKWWWWWWWK
+KWWKWWWWWWWK
+KWWKWWWWWWWK
+KWWWKKKKWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_s
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWWKKKKWWWK
+KWWKWWWWWWWK
+KWWWKKKWWWWK
+KWWWWWWKWWWK
+KWWKKKKWWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_up
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWWWKWWWWWK
+KWWWKKKWWWWK
+KWWKKKKKWWWK
+KWWWWKWWWWWK
+KWWWWKWWWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_down
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWWWKWWWWWK
+KWWWWKWWWWWK
+KWWKKKKKWWWK
+KWWWKKKWWWWK
+KWWWWKWWWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_left
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWWWKWWWWWK
+KWWWKKWWWWWK
+KWWKKKKKWWWK
+KWWWKKWWWWWK
+KWWWWKWWWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_right
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWWWKWWWWWK
+KWWWWKKWWWWK
+KWWKKKKKWWWK
+KWWWWKKWWWWK
+KWWWWKWWWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_space
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KWWKWWWKWWWK
+KWWKKKKKWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+@frame key_menu
+.KKKKKKKKKK.
+KWWWWWWWWWWK
+KWWKKKKKWWWK
+KWWWWWWWWWWK
+KWWKKKKKWWWK
+KWWWWWWWWWWK
+KWWKKKKKWWWK
+KWWWWWWWWWWK
+KWWWWWWWWWWK
+KMMMMMMMMMMK
+KMMMMMMMMMMK
+.KKKKKKKKKK.
+
+# gamepad face button by position (no brand letters)
+@frame pad_south
+............
+......M.....
+.....MMM....
+......M.....
+............
+..M......M..
+.MMM....MMM.
+..M...K..M..
+......w.....
+....KwwwK...
+......w.....
+......K.....
+
+@frame pad_east
+............
+......M.....
+.....MMM....
+......M.....
+.........K..
+..M......w..
+.MMM...KwwwK
+..M......w..
+......M..K..
+.....MMM....
+......M.....
+............
+
+@frame pad_west
+............
+......M.....
+.....MMM....
+......M.....
+..K.........
+..w......M..
+KwwwK...MMM.
+..w......M..
+..K...M.....
+.....MMM....
+......M.....
+............
+
+@frame pad_north
+......K.....
+......w.....
+....KwwwK...
+......w.....
+......K.....
+..M......M..
+.MMM....MMM.
+..M......M..
+......M.....
+.....MMM....
+......M.....
+............
+
+@frame pad_start
+............
+............
+............
+..KKKKKKKK..
+.KNNNNNNNNK.
+.KNwwwwwwNK.
+.KNwNwNwNNK.
+.KNNNNNNNNK.
+..KKKKKKKK..
+............
+............
+............
+
+# over an enemy that noticed you
+@frame mark_alert
+.....KK.....
+....KRrK....
+....KRrK....
+....KRrK....
+....KRrK....
+....KRrK....
+....KRrK....
+....KRrK....
+.....KK.....
+....KRRK....
+....KRRK....
+.....KK.....
+
+# over something you can talk to or examine
+@frame mark_talk
+..KKKKKKKK..
+KKwwwwwwwwKK
+KwwwwwwwwwwK
+KwwwwwwwwwwK
+KwwwwwwwwwwK
+KwwwNwNwNwwK
+KwwwwwwwwwwK
+KwwwwwwwwwwK
+KKwwwwwwwwKK
+..KwKKKKKK..
+...KK.......
+...K........

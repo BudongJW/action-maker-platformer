@@ -134,6 +134,14 @@ class PixelArtTest(unittest.TestCase):
         self.assertEqual(pixels[1][11], (0, 0, 0, 255))  # sprite under full darkness
         self.assertEqual(pixels[0][11], (255, 0, 0, 255))  # "over" sprite drawn after darkness
 
+    def test_over_layer_is_drawn_above_darkness(self):
+        self.write("t.pix", "@palette p.pal\n@size 1 1\n@output t.png\n@frame r\nR\n")
+        scene = self.write("o.scene", "@palette p.pal\n@size 2 1\n@output o.png\n@fill W\n"
+                           "@tiles t t.pix\n@legend r t:r\n@layer over\n.r\n@darkness K 1.0\n")
+        pixels = self.render(scene)["o.png"]
+        self.assertEqual(pixels[0][0], (0, 0, 0, 255))  # background darkened
+        self.assertEqual(pixels[0][1], (255, 0, 0, 255))  # over layer untouched
+
     def test_preview_is_scaled(self):
         src = self.write("p.pix", "@palette p.pal\n@size 1 1\n@output o.png\n@preview big.png 3\n@frame a\nR\n")
         outputs = self.render(src)

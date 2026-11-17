@@ -32,7 +32,9 @@ Formats (how the art uses them: assets/original/art/README.md)
                    @fill KEY                background colour
                    @tiles ALIAS PATH        a .pix tileset
                    @legend C ALIAS:FRAME    map character C to a tile
-                   @layer                   then rows of legend characters
+                   @layer [over]            then rows of legend characters; an
+                                            "over" layer is drawn above the
+                                            darkness (UI in mock-ups)
                    @sprite PATH FRAME X Y [flip] [over]
                    @darkness KEY ALPHA      night overlay (0..1)
                    @light X Y RADIUS        hole in the darkness
@@ -319,6 +321,7 @@ class Scene:
                     raise ArtError(f'{self.path}:{number}: unknown tile {parts[2]}')
                 self.legend[parts[1]] = (alias, frame)
             elif name == '@layer':
+                is_over = 'over' in parts[1:]
                 rows = []
                 while i < len(lines) and not lines[i][1].lstrip().startswith('@'):
                     rows.append(lines[i][1].strip())
@@ -327,7 +330,7 @@ class Scene:
                     for ch in row:
                         if ch != TRANSPARENT and ch not in self.legend:
                             raise ArtError(f'{self.path}: layer near line {number}: {ch!r} has no @legend')
-                self.steps.append(('layer', rows))
+                self.steps.append(('layer', rows, is_over))
             elif name == '@sprite':
                 sprite = self.sprite(self._rel(parts[1]))
                 if parts[2] not in sprite.frames:
@@ -381,8 +384,7 @@ class Scene:
                     if px[3] and 0 <= cx < self.width:
                         canvas[cy][cx] = px
 
-        over = []
-        for step in self.steps:
+        def draw(step):
             if step[0] == 'layer':
                 for ty, row in enumerate(step[1]):
                     for tx, ch in enumerate(row):
@@ -392,11 +394,13 @@ class Scene:
                         tiles = self.tiles[alias]
                         blit(tiles.frame_pixels(frame), tx * tiles.width, ty * tiles.height)
             else:
-                _, sprite, frame, x, y, flip, is_over = step
-                if is_over:
-                    over.append(step)
-                else:
-                    blit(sprite.frame_pixels(frame, flip), x, y)
+                _, sprite, frame, x, y, flip, _ = step
+                blit(sprite.frame_pixels(frame, flip), x, y)
+
+        over = [step for step in self.steps if step[-1]]
+        for step in self.steps:
+            if not step[-1]:
+                draw(step)
         if self.darkness:
             key, alpha = self.darkness
             dr, dg, db, _ = colours[key]
@@ -407,8 +411,8 @@ class Scene:
                         r, g, b, a = canvas[y][x]
                         canvas[y][x] = (round(r + (dr - r) * t), round(g + (dg - g) * t),
                                         round(b + (db - b) * t), a if a else round(255 * t))
-        for _, sprite, frame, x, y, flip, _ in over:
-            blit(sprite.frame_pixels(frame, flip), x, y)
+        for step in over:
+            draw(step)
         return canvas
 
 
