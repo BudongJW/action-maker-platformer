@@ -169,13 +169,13 @@ Steam이 요구하는 크기입니다 ([스토어 그래픽 에셋](https://part
 | 리소스 | 우선 | 상태 | 메모 |
 |---|---|---|---|
 | 이야기 개요, 세계관, 등장인물 설정 | P0 | 없음 | D1. 설화 모티프는 자유, 특정 판본의 문장은 확인 필요 (보고서 "스토리 원천" 절) |
-| `story/project.json`, 캐릭터 레지스트리 | P0 | 없음 | 이 파일이 생겨야 `storyc`가 동작 (`script-format` 3·8절) |
+| `story/project.json`, 캐릭터 레지스트리 | P0 | 임시 | 있음. 주인공 이름은 자리표시. `max_chars`는 폰트·대화창 크기로 계산 ([`assets/original/story/`](../assets/original/story/README.md)) |
 | 프롤로그·튜토리얼 대사 (`.dlg`) | P0 | 없음 | |
-| UI 문자열 (메뉴, 옵션, 프롬프트) | P0 | 없음 | 코드에는 키만 (대사 규칙) |
+| UI 문자열 (메뉴, 옵션, 프롬프트) | P0 | 임시 | Godot 번역 CSV 1차안 30개, 한·영 ([`assets/original/ui/`](../assets/original/ui/README.md)). 코드에는 키만 (대사 규칙) |
 | 챕터 대사, 선택지, 분기 | P1 | 없음 | |
 | 바크 풀 (주인공 혼잣말, 적 접근 반응) | P1 | 없음 | `script-format` 7.1 |
 | 문서·메모·일기 (로어) | P1 | 없음 | `script-format` 7.2 |
-| 콘텐츠 경고, 광과민성 경고 문구 | P1 | 없음 | |
+| 콘텐츠 경고, 광과민성 경고 문구 | P1 | 임시 | `ui.warning.content` 1차안 |
 | 영어 번역 | P2 | 없음 | D8. `l10n/strings.csv` |
 | 크레딧 문구, 스토어 소개문 | P2 | 일부 | `CREDITS.md`가 원본 |
 
@@ -215,7 +215,8 @@ Steam이 요구하는 크기입니다 ([스토어 그래픽 에셋](https://part
 - [x] 대화창·말풍선·프롬프트·일시정지 최소 UI (1차안)
 - [x] 한글 픽셀 폰트 들이기: Galmuri11 Condensed·Bold ([`assets/third_party/quiple-galmuri/`](../assets/third_party/quiple-galmuri/SOURCE.md))
 - [x] 오디오: 탐색·추격 BGM, 복도 환경음, 발소리, 문·사물함·손전등·피격·사망, 적 접근 신호, UI 3종 (효과음은 오리지널 합성 1차안, 음악·UI는 CC0 임시. [`assets/original/audio/`](../assets/original/audio/README.md))
-- [ ] 서사: 이야기 개요, `project.json`·캐릭터 레지스트리, 프롤로그 대사, UI 문자열
+- [ ] 서사: 이야기 개요와 프롤로그 대사 (D1 결정 필요)
+- [x] 서사 뼈대: `project.json`·캐릭터 레지스트리·초상화 파일, UI 문자열 (1차안)
 - [ ] 대화 런타임, 숨기·추격 AI
 
 ## 8. 이미 수집한 CC0 팩으로 임시 대체할 수 있는 것

@@ -148,6 +148,14 @@ class PixelArtTest(unittest.TestCase):
         self.assertEqual(len(outputs["big.png"]), 3)
         self.assertEqual(outputs["big.png"][2][2], (255, 0, 0, 255))
 
+    def test_split_writes_one_png_per_frame(self):
+        src = self.write("s.pix", "@palette p.pal\n@size 1 1\n@output s.png\n@split parts\n"
+                         "@frame _hidden\nK\n@frame a\nR\n@frame b\nW\n")
+        outputs = pixelart.outputs_for(src, {})
+        names = sorted(os.path.relpath(k, self.dir) for k in outputs)
+        self.assertEqual(names, [os.path.join("parts", "a.png"), os.path.join("parts", "b.png"), "s.png"])
+        self.assertEqual(decode_png(outputs[str(self.dir / "parts" / "b.png")])[0][0], (255, 255, 255, 255))
+
     def test_output_is_deterministic(self):
         src = self.write("d.pix", "@palette p.pal\n@size 2 1\n@output d.png\n@frame a\nKR\n")
         self.assertEqual(pixelart.outputs_for(src, {}), pixelart.outputs_for(src, {}))

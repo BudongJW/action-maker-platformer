@@ -4,6 +4,8 @@
 @size 48 48
 @output ../portraits/protagonist_faces.png
 @preview ../previews/protagonist_faces_x4.png 4
+# one file per expression for the character registry (docs/script-format.md 3)
+@split ../../characters/protagonist/portraits
 @columns 4
 
 @frame neutral

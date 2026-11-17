@@ -14,6 +14,8 @@ Formats (how the art uses them: assets/original/art/README.md)
                    @output PATH             PNG sheet to write
                    @columns N               frames per sheet row (default: all)
                    @preview PATH SCALE      optional enlarged copy
+                   @split DIR               also write each sheet frame as
+                                            DIR/<frame>.png (e.g. portraits)
                    @frame NAME [base=OTHER] then H rows of W characters;
                                             '.' transparent, '~' keep OTHER's
                                             pixel, a row of just '~' keeps the
@@ -136,6 +138,7 @@ class Sprite:
         self.output = None
         self.preview = None
         self.columns = None
+        self.split = None
         self.frames = {}  # name -> list of row strings
         self.order = []
         self._parse()
@@ -163,6 +166,8 @@ class Sprite:
                 self.preview = (self._rel(parts[1]), int(parts[2]))
             elif name == '@columns':
                 self.columns = int(parts[1])
+            elif name == '@split':
+                self.split = self._rel(parts[1])
             elif name == '@blank':
                 self._add(number, parts[1], ['.' * self.width] * self.height)
             elif name == '@frame':
@@ -433,6 +438,9 @@ def outputs_for(path, cache):
     if art.preview:
         preview_path, factor = art.preview
         result[preview_path] = encode_png(width * factor, height * factor, scale_pixels(pixels, factor))
+    if getattr(art, 'split', None):
+        for name in art.sheet_frames():
+            result[os.path.join(art.split, name + '.png')] = encode_png(art.width, art.height, art.frame_pixels(name))
     return result
 
 

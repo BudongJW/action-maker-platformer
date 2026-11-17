@@ -1,0 +1,20 @@
+{
+  "id": "protagonist",
+  "name": "주인공",
+  "color": "#56638a",
+  "style": "window",
+  "expressions": ["neutral", "scared", "sad", "determined"],
+  "default_expression": "neutral",
+  "portraits": {
+    "neutral": "portraits/neutral.png",
+    "scared": "portraits/scared.png",
+    "sad": "portraits/sad.png",
+    "determined": "portraits/determined.png"
+  },
+  "bio": {
+    "personality": "미정 (docs/decisions.md D1)",
+    "purpose": "밤의 학교에서 빠져나가기",
+    "backstory": "미정"
+  },
+  "notes": "이름, 말투, 설정은 D1 확정 후 정한다. 표정 목록은 portraits와 맞춰 둔 것으로, 대사를 쓰면서 늘린다."
+}

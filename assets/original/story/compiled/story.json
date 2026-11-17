@@ -1,0 +1,46 @@
+{
+  "format": 1,
+  "source_locale": "ko",
+  "locales": [
+    "ko",
+    "en"
+  ],
+  "characters": {
+    "narrator": {
+      "style": "caption",
+      "expressions": [],
+      "default_expression": null,
+      "portraits": {},
+      "aliases": []
+    },
+    "protagonist": {
+      "color": "#56638a",
+      "style": "window",
+      "expressions": [
+        "neutral",
+        "scared",
+        "sad",
+        "determined"
+      ],
+      "default_expression": "neutral",
+      "portraits": {
+        "neutral": "res://assets/original/characters/protagonist/portraits/neutral.png",
+        "scared": "res://assets/original/characters/protagonist/portraits/scared.png",
+        "sad": "res://assets/original/characters/protagonist/portraits/sad.png",
+        "determined": "res://assets/original/characters/protagonist/portraits/determined.png"
+      },
+      "aliases": []
+    },
+    "system": {
+      "style": "os_dialog",
+      "expressions": [],
+      "default_expression": null,
+      "portraits": {},
+      "aliases": []
+    }
+  },
+  "dialogues": {},
+  "barks": {},
+  "docs": {},
+  "cues": {}
+}
