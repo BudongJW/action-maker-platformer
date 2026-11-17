@@ -66,6 +66,23 @@ ACTION GAME MAKER G가 새 프로젝트에 어떤 GGG 독점 파일(런타임 �
 
 외부 코드는 **MIT·BSD·CC0 등 GPL-3.0과 호환되고 독점 런타임과의 결합을 막지 않는 라이선스만** 받습니다. 제3자의 GPL 코드는 우리가 대신 추가 허가를 줄 수 없으므로 넣지 않습니다(같은 추가 허가가 붙은 경우 제외).
 
+**외부 게임의 대사·시나리오 텍스트는 오픈소스라도 들이지 않습니다.** 형식과 구조만 참고합니다. 자세한 규칙은 [`assets/README.md`](assets/README.md)의 "대사·시나리오 텍스트 규칙"을 따릅니다.
+
+## 대사와 코드 분리 검사
+
+대사 원문은 `assets/original/`의 데이터 파일(All Rights Reserved)에만 두고, GDScript 코드(GPL)는 줄 ID나 번역 키로만 참조합니다. 코드에 적은 텍스트는 코드 라이선스로 함께 배포되기 때문입니다.
+
+이 규칙은 CI([`.github/workflows/content-license-checks.yml`](.github/workflows/content-license-checks.yml))가 PR과 `main` 푸시마다 검사합니다. `.gd` 파일의 문자열 리터럴에 한글이 있으면 실패합니다. 로컬에서는 다음으로 실행합니다.
+
+```bash
+python3 tools/check_dialogue_in_code.py
+```
+
+- 한글 주석(`#`, `##`)은 허용됩니다.
+- 콘텐츠가 아닌 문자열은 같은 줄에 `# dialogue-lint: allow` 주석을 달면 통과합니다.
+- `addons/`, `test/`, `tests/`, `.godot/`, `assets_private/`는 검사하지 않습니다.
+- **알려진 한계:** 씬·리소스 파일(`.tscn`, `.tres`)은 아직 검사하지 않습니다. ACTION GAME MAKER G의 비주얼 스크립트가 텍스트 표시 액션의 문자열을 씬 파일에 저장하는지 확인한 뒤 검사 대상에 추가할지 정합니다. 영어 등 한글이 아닌 대사도 잡지 못하므로, 리뷰에서 함께 확인합니다.
+
 ## 기여
 
 이 저장소에 기여하는 코드는 GPL-3.0과 [`LICENSE-EXCEPTION.md`](LICENSE-EXCEPTION.md)의 추가 허가 조건으로 제공되는 것으로 간주합니다. `assets/original/`에 기여하는 콘텐츠는 [`assets/original/LICENSE.md`](assets/original/LICENSE.md)의 조건을 따릅니다.
