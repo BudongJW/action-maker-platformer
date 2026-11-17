@@ -217,6 +217,8 @@ AGM G에는 RPG Maker 같은 고정 규격표가 공개되어 있지 않습니�
 | [AdamCYounis](https://www.youtube.com/@AdamCYounis) | YouTube, 무료 | 채널 소개: "게임 개발 튜토리얼, 아트 작업, 에세이, 브이로그" |
 | [Brandon James Greer](https://www.youtube.com/@bjgpixel) | YouTube, 무료 | 채널 소개: 픽셀아트 구성의 "기술적 측면과 설계 선택"을 다룸 |
 
+손·얼굴·머리카락을 그리는 기준과 안티에일리어싱·셀아웃·클러스터 자료는 [`pixel-technique.md`](pixel-technique.md)에 따로 정리했습니다.
+
 **(추론) 학습 순서 제안:** 팔레트 고르기(Slynyrd 1 → 4절) → 걷기·달리기(Slynyrd 50, saint11 Walk) → 횡스크롤 타일(Slynyrd 28) → 어둠·조명(Slynyrd 6, saint11 Darkness·IlluminationTechniques) → 원경(Slynyrd 23·62). 도구는 [`visual_assets.md` Q6](../research_notes/쯔꾸르%20리소스와%20스토리%20자원%20분석/visual_assets.md)과 5.3절을 봅니다.
 
 ---
