@@ -20,14 +20,24 @@
         "neutral",
         "scared",
         "sad",
-        "determined"
+        "determined",
+        "surprised",
+        "relieved",
+        "angry",
+        "smile",
+        "eyes_closed"
       ],
       "default_expression": "neutral",
       "portraits": {
         "neutral": "res://assets/original/characters/protagonist/portraits/neutral.png",
         "scared": "res://assets/original/characters/protagonist/portraits/scared.png",
         "sad": "res://assets/original/characters/protagonist/portraits/sad.png",
-        "determined": "res://assets/original/characters/protagonist/portraits/determined.png"
+        "determined": "res://assets/original/characters/protagonist/portraits/determined.png",
+        "surprised": "res://assets/original/characters/protagonist/portraits/surprised.png",
+        "relieved": "res://assets/original/characters/protagonist/portraits/relieved.png",
+        "angry": "res://assets/original/characters/protagonist/portraits/angry.png",
+        "smile": "res://assets/original/characters/protagonist/portraits/smile.png",
+        "eyes_closed": "res://assets/original/characters/protagonist/portraits/eyes_closed.png"
       },
       "aliases": []
     },
