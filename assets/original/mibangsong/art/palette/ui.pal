@@ -1,0 +1,21 @@
+# UI palette for VHS overlays and the deduction board (not swapped).
+K 0a0a0c black
+D 1e1e24 panel dark
+N 34343e panel
+M 8c8c96 grey
+W d8d8d0 text white
+w ffffff white
+L ff5ad0 LINEAR magenta
+l 8a2a74 LINEAR dark
+H 6ff0d8 HI-FI teal
+h 1f8a7a HI-FI dark
+R e0303a REC red (UI only, never in scares)
+Y f0d070 yellow
+B 2a3cc8 blue back
+b 1a2690 blue dark
+G 58b058 bar green
+C 58c8d8 bar cyan
+P c858c0 bar magenta
+1 00000014 scanline 8%
+2 ffffff26 noise light
+3 00000060 shade

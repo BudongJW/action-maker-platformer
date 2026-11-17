@@ -1,0 +1,41 @@
+# PRIVATE (미방송분). Cut 1-02: relay truck and generator: Jonggil directs, Gitae hauls cable, Gyeongho behind the camera
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/102.png
+@preview ../previews/102_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend S s:shore_top
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSSSSSS
+ssssssssssssssssssss
+@sprite mbs_obvan.pix van 6 112
+@sprite mbs_tiles_shore.pix generator_0_0 108 128
+@sprite mbs_tiles_shore.pix generator_1_0 124 128
+@sprite mbs_tiles_shore.pix generator_0_1 108 144
+@sprite mbs_tiles_shore.pix generator_1_1 124 144
+@sprite mbs_jonggil.pix point 146 121
+@sprite mbs_gitae.pix idle_0 186 121
+@sprite mbs_gyeongho.pix idle_0 236 121
+@darkness K 0.55
+@light 60 120 60
+@light 124 140 30
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over

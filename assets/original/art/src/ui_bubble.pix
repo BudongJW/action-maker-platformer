@@ -1,0 +1,97 @@
+# 9-slice speech bubble for barks. Nine 8x8 pieces in a 3x3 sheet: the PNG is the 24x24
+# NinePatchRect texture (margins 8). Scenes can also use the pieces as tiles.
+@palette ../palette/night-school.pal
+@size 8 8
+@output ../ui/ui_bubble.png
+@preview ../previews/ui_bubble_x6.png 6
+@columns 3
+
+@frame tl
+..KKKKKK
+.Kwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+
+@frame t
+KKKKKKKK
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+
+@frame tr
+KKKKKK..
+wwwwwwK.
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+
+@frame l
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+
+@frame c
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+
+@frame r
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+
+@frame bl
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+Kwwwwwww
+.KWWWWWW
+..KKKKKK
+
+@frame b
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+WWWWWWWW
+KKKKKKKK
+
+@frame br
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+wwwwwwWK
+WWWWWWK.
+KKKKKK..

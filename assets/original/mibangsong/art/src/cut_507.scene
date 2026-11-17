@@ -1,0 +1,42 @@
+# PRIVATE (미방송분). Cut 5-07: jongcheon-megi: a small table, Sunrye strikes the gong alone; the Thing sits before the table and goes quiet
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/507.png
+@preview ../previews/507_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend A s:water_0
+@legend M g:mat
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+......MMMMMMM.......
+SSSSSSSSSSSSSSSSSAAA
+sssssssssssssssssaaa
+@sprite ../../../art/src/tiles_gut.pix incense 150 144
+@sprite ../../../art/src/tiles_gut.pix water_bowl 134 144
+@sprite ../../../art/src/tiles_gut.pix candle_0 118 144
+@sprite ../../../art/src/tiles_gut.pix candle_1 166 144
+@sprite mbs_sunrye.pix jing 70 121
+@sprite mbs_overdub.pix sit 190 96
+@darkness K 0.75
+@light 142 146 40
+@light 86 136 30
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

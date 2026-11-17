@@ -1,0 +1,7 @@
+# Protagonist is grabbed or hit: body thump.
+@output ../sfx/hurt.wav
+@length 0.45
+@seed 14
+layer sine freq=160 freq_end=55 amp=0.9 attack=0.001 decay=0.12
+layer noise amp=0.7 attack=0.001 decay=0.06 lp=900 hp=80
+layer noise amp=0.3 attack=0.0005 decay=0.02 hp=3000

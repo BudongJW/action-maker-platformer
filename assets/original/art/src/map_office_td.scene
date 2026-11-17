@@ -1,0 +1,108 @@
+# Top-down mock-up: a company floor during a blackout. Elevator lobby on
+# the left, open-plan cubicles with a few monitors still on, a glass
+# meeting room and a pantry on the right. Office zombies wander between
+# the desks; the protagonist hides in a cubicle.
+@palette ../palette/night-school.pal
+@size 480 256
+@output ../mockups/map_office_td.png
+@preview ../previews/map_office_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@legend A tw:walltop_15
+@legend B of:face_upper
+@legend C of:face_lower
+@legend D of:floor_office
+@legend E of:floor_carpet
+@legend F tw:walltop_14
+@legend G of:elevator_0_0
+@legend H of:elevator_1_0
+@legend I of:elevator_0_1
+@legend J of:elevator_1_1
+@legend K of:exit_sign
+@legend L of:window_blinds_0_0
+@legend M of:window_blinds_1_0
+@legend N of:window_blinds_0_1
+@legend O of:window_blinds_1_1
+@legend P of:whiteboard_0_0
+@legend Q of:whiteboard_1_0
+@legend R of:plant
+@legend S of:desk_pc_on
+@legend T of:desk_pc_off
+@legend U of:partition_v
+@legend V td:teacher_desk_0_0
+@legend W td:teacher_desk_1_0
+@legend X of:office_chair
+@legend Y of:partition_h
+@legend Z of:sofa_0_0
+@legend a of:sofa_1_0
+@legend b of:water_cooler
+@legend c of:printer
+@legend d of:file_cabinet
+@legend e tn:vending_0_0
+@legend f tn:vending_0_1
+
+@layer
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+DDDDDDDEEEEEEEEEEEEEEEEEEEEEEE
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+@layer
+..............................
+..............................
+.GH.K....LM....LM....LM..PQ.K.
+.IJ......NO....NO....NO.......
+.R.......STS.S..STS.TS..U.VW..
+.......U.XXX.X..XXX.XX..U.XX..
+.......U.YYY.Y..YYY.YY..U.....
+.Za....U.TSS.S..SST.SS..U.....
+.......U.XXX.X..XXX.XX..U.....
+.......U................YY.YYY
+.b.....U.YYY.Y..YYY.YY........
+.......U.STS.S..STS.TS...c.ddd
+.......U.XXX.X..XXX.XX........
+..R........................e..
+...........................f..
+..............................
+
+@sprite protagonist_topdown.pix down_1 188 128
+@sprite zombie_office_topdown.pix right_1 92 128
+@sprite zombie_office_topdown.pix left_1 284 80
+@sprite zombie_office_topdown.pix down_1 316 192
+@sprite zombie_guard_topdown.pix up_1 44 64
+@sprite zombie_office_topdown.pix left_1 428 80
+@darkness K 0.85
+@cone 200 152 90 40 90
+@light 24 40 18
+@light 152 72 14
+@light 184 72 14
+@light 216 72 14
+@light 280 72 14
+@light 312 72 14
+@light 360 72 14
+@light 168 120 14
+@light 184 120 14
+@light 264 120 14
+@light 280 120 14
+@light 344 120 14
+@light 456 216 30
+@light 72 40 12

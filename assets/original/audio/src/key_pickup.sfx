@@ -1,0 +1,7 @@
+# Picking up a key: small metallic jingle.
+@output ../sfx/key_pickup.wav
+@length 0.7
+@seed 42
+layer sine freq=2400 amp=0.25 attack=0.001 decay=0.12 repeat=3 every=0.07 jitter=0.4
+layer sine freq=3170 amp=0.18 attack=0.001 decay=0.09 repeat=3 every=0.07 jitter=0.4
+layer noise amp=0.3 attack=0.001 decay=0.01 hp=4000 repeat=3 every=0.07 jitter=0.4

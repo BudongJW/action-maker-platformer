@@ -1,0 +1,8 @@
+# Lighting the candle checkpoint: a breath of flame and a soft warm tone.
+@output ../sfx/checkpoint.wav
+@length 1.6
+@seed 20
+@echo 0.2 0.35 0.3
+layer noise amp=0.4 attack=0.05 decay=0.2 lp=2500 hp=300
+layer sine freq=523.25 amp=0.15 attack=0.05 decay=0.8
+layer sine freq=784 amp=0.1 attack=0.08 decay=0.7

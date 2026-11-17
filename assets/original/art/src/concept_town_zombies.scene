@@ -1,0 +1,79 @@
+# Concept: zombies flood the street at night (side view). Three-storey brick
+# villas, shut shops, the convenience store still lit, someone watching from
+# a window; the protagonist runs for it.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../concepts/concept_town_zombies.png
+@preview ../previews/concept_town_zombies_x3.png 3
+@fill D
+@tiles tn tiles_town_td.pix
+@tiles ex tiles_exterior.pix
+@legend B tn:brick_upper
+@legend b tn:brick_lower
+@legend S tn:side_sidewalk
+@legend R tn:side_road
+@legend A tn:villa_window_0_0
+@legend C tn:villa_window_1_0
+@legend D tn:villa_window_0_1
+@legend E tn:villa_window_1_1
+@legend F tn:villa_window_lit_0_0
+@legend G tn:villa_window_lit_1_0
+@legend H tn:villa_window_lit_0_1
+@legend I tn:villa_window_lit_1_1
+@legend J tn:shutter_0_0
+@legend K tn:shutter_0_1
+@legend L tn:store_front_0_0
+@legend M tn:store_front_1_0
+@legend N tn:store_front_0_1
+@legend O tn:store_front_1_1
+@legend P tn:villa_door_0_0
+@legend Q tn:villa_door_0_1
+@legend T tn:vending_0_0
+@legend U tn:vending_0_1
+@legend V tn:utility_pole_0_0
+@legend W tn:utility_pole_0_1
+@legend X tn:utility_pole_0_2
+@sprite bg_sky.pix sky 0 0
+@sprite bg_far.pix far 0 0
+@layer
+....................
+....................
+BBBBBBBBBBBBBBBBBBBB
+bbbbbbbbbbbbbbbbbbbb
+BBBBBBBBBBBBBBBBBBBB
+bbbbbbbbbbbbbbbbbbbb
+BBBBBBBBBBBBBBBBBBBB
+bbbbbbbbbbbbbbbbbbbb
+BBBBBBBBBBBBBBBBBBBB
+bbbbbbbbbbbbbbbbbbbb
+SSSSSSSSSSSSSSSSSSSS
+RRRRRRRRRRRRRRRRRRRR
+@layer
+....................
+....................
+.AC...AC....AC..AC..
+.DE...DE....DE..DE..
+.AC...AC....FG..AC..
+.DE...DE....HI..DE..
+.AC.........AC..AC..
+.DE.........DE..DE.V
+.JJJJ.LM..P..JJJ.T.W
+.KKKK.NO..Q..KKK.U.X
+....................
+....................
+@sprite tiles_exterior.pix streetlamp_0_0 128 112
+@sprite tiles_exterior.pix streetlamp_0_1 128 128
+@sprite tiles_exterior.pix streetlamp_0_2 128 144
+@sprite protagonist_side.pix run_0 36 127 flip
+@sprite zombie_student.pix walk_0 150 128 flip
+@sprite zombie_office.pix walk_2 186 128 flip
+@sprite zombie_elder.pix walk_1 214 128 flip
+@sprite zombie_student_girl.pix lunge 246 128 flip
+@sprite zombie_brute.pix walk_0 272 112 flip
+@darkness K 0.72
+@cone 36 151 180 34 100
+@light 112 144 52
+@light 136 120 42
+@light 200 72 24
+@light 280 144 28
+@sprite fx_vignette.pix vignette 0 0 over

@@ -35,3 +35,15 @@ jobs:
 
       - name: Lint .dlg scripts and verify compiled output
         run: python3 tools/storyc.py --check
+
+  pixel-art:
+    name: Pixel art PNGs match their text sources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Render assets/original/art/src and compare
+        run: python3 tools/pixelart.py --check
+
+      - name: Render assets/original/mibangsong/art/src and compare
+        run: python3 tools/pixelart.py --check --root assets/original/mibangsong/art/src

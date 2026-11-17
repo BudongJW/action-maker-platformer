@@ -1,0 +1,95 @@
+# Top-down mock-up: a shrine during a gut. Paper-lattice walls with a
+# shaman-god painting and cloth strips, the altar, flags in the corners,
+# candles, the blade trestle on the mat, drum and gong, the mudang dancing,
+# villagers seated with their backs to us, the protagonist at the door.
+@palette ../palette/night-school.pal
+@size 320 224
+@output ../mockups/map_gut_td.png
+@preview ../previews/map_gut_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@tiles gt tiles_gut_td.pix
+@tiles gs tiles_gut.pix
+@legend A tw:walltop_15
+@legend B gt:hanji_face_upper
+@legend C gt:hanji_face_lower
+@legend D tw:walltop_13
+@legend E gt:mat_td
+@legend F tw:walltop_07
+@legend G tw:walltop_14
+@legend H gs:ribbons_0_0
+@legend I gs:ribbons_0_1
+@legend J gt:musindo_small_0_0
+@legend K gt:musindo_small_1_0
+@legend L gt:musindo_small_0_1
+@legend M gt:musindo_small_1_1
+@legend N gs:obangki_0_0
+@legend O gs:obangki_1_0
+@legend P gs:obangki_0_1
+@legend Q gs:obangki_1_1
+@legend R gs:obangki_0_2
+@legend S gs:obangki_1_2
+@legend T gt:altar_td_0_0
+@legend U gt:altar_td_1_0
+@legend V gt:altar_td_2_0
+@legend W gt:altar_td_0_1
+@legend X gt:altar_td_1_1
+@legend Y gt:altar_td_2_1
+@legend Z gt:candle_td_0
+@legend a gt:janggu_td
+@legend b gt:jakdu_td_0_0
+@legend c gt:jakdu_td_1_0
+@legend d gt:jing_td
+
+@layer
+AAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAA
+ABBBBBBBBBBBBBBBBBBA
+ACCCCCCCCCCCCCCCCCCA
+DEEEEEEEEEEEEEEEEEEF
+DEEEEEEEEEEEEEEEEEEF
+DEEEEEEEEEEEEEEEEEEF
+DEEEEEEEEEEEEEEEEEEF
+DEEEEEEEEEEEEEEEEEEF
+DEEEEEEEEEEEEEEEEEEF
+DEEEEEEEEEEEEEEEEEEF
+DEEEEEEEEEEEEEEEEEEF
+DEEEEEEEEEEEEEEEEEEF
+AGGGGGGGGGGGGGGGGGGA
+@layer
+....................
+....................
+...H......JK......H.
+...I......LM......I.
+..NO....TUV......NO.
+..PQ....WXY......PQ.
+..RSZ.........Z..RS.
+....................
+..a.....bc..........
+..d.................
+....................
+....................
+....................
+....................
+
+@sprite npc_mudang_topdown.pix down_1 136 88
+@sprite npc_gut_musicians.pix janggu_0 44 120
+@sprite npc_onlookers.pix a_seated 92 160
+@sprite npc_onlookers.pix b_seated 124 160
+@sprite npc_onlookers.pix c_seated 156 160
+@sprite npc_onlookers.pix a_seated 188 160
+@sprite npc_onlookers.pix b_seated 220 176
+@sprite protagonist_topdown.pix up_1 268 176
+@darkness K 0.7
+@light 72 104 40
+@light 248 104 40
+@light 160 100 50
+@light 152 136 40

@@ -1,0 +1,97 @@
+# 9-slice aged paper for the document reader (notes, diaries). Nine 8x8 pieces in a 3x3 sheet: the PNG is the 24x24
+# NinePatchRect texture (margins 8). Scenes can also use the pieces as tiles.
+@palette ../palette/night-school.pal
+@size 8 8
+@output ../ui/ui_paper.png
+@preview ../previews/ui_paper_x6.png 6
+@columns 3
+
+@frame tl
+.ppppppp
+pwwwwwww
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+
+@frame t
+pppppppp
+wwwwwwww
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+
+@frame tr
+ppppppp.
+wwwwwwwp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+
+@frame l
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+
+@frame c
+WWWWWWWW
+WWWWWWWW
+WWWWWMWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WMWWWWWW
+WWWWWWWW
+
+@frame r
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+
+@frame bl
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwWWWWWW
+pwMMMMMM
+.ppppppp
+
+@frame b
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+MMMMMMMM
+pppppppp
+
+@frame br
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+WWWWWWMp
+MMMMMMMp
+ppppppp.

@@ -1,0 +1,43 @@
+# PRIVATE (미방송분). Cut 5-01: the night that nearly aired: through set lights and props the broken Thing gives its last chase
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/501.png
+@preview ../previews/501_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend S s:shore_top
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSSSSSS
+ssssssssssssssssssss
+@sprite mbs_tiles_extra.pix setlight_0_0 40 112
+@sprite mbs_tiles_extra.pix setlight_0_1 40 128
+@sprite mbs_tiles_extra.pix setlight_0_2 40 144
+@sprite mbs_tiles_extra.pix setlight_0_0 264 112
+@sprite mbs_tiles_extra.pix setlight_0_1 264 128
+@sprite mbs_tiles_extra.pix setlight_0_2 264 144
+@sprite mbs_tiles_extra.pix prop_dummy_0_0 136 128
+@sprite mbs_tiles_extra.pix prop_dummy_0_1 136 144
+@sprite mbs_overdub.pix idle_1 70 98
+@sprite mbs_gyeongho.pix run_0 210 121
+@darkness K 0.55
+@light 48 118 60
+@light 272 118 60
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over

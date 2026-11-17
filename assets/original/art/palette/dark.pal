@@ -1,0 +1,6 @@
+# Overlay palette: the outline black (K of night-school.pal) at four opacity
+# steps, for vignettes and screen transitions.
+1 0d0b1240 25%
+2 0d0b1280 50%
+3 0d0b12c0 75%
+4 0d0b12ff 100%

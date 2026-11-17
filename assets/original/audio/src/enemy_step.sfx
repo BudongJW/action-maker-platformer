@@ -1,0 +1,8 @@
+# Shadow Visitor footstep: slow, heavy, echoing (approach cue off screen).
+@output ../sfx/enemy_step.wav
+@length 0.9
+@seed 17
+@echo 0.17 0.4 0.4
+layer sine freq=60 freq_end=40 amp=0.9 attack=0.002 decay=0.15
+layer noise amp=0.7 attack=0.002 decay=0.12 lp=350
+layer noise amp=0.15 attack=0.001 decay=0.02 hp=1500

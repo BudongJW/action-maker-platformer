@@ -1,0 +1,35 @@
+{
+  "id": "protagonist",
+  "name": "주인공",
+  "color": "#56638a",
+  "style": "window",
+  "expressions": [
+    "neutral",
+    "scared",
+    "sad",
+    "determined",
+    "surprised",
+    "relieved",
+    "angry",
+    "smile",
+    "eyes_closed"
+  ],
+  "default_expression": "neutral",
+  "portraits": {
+    "neutral": "portraits/neutral.png",
+    "scared": "portraits/scared.png",
+    "sad": "portraits/sad.png",
+    "determined": "portraits/determined.png",
+    "surprised": "portraits/surprised.png",
+    "relieved": "portraits/relieved.png",
+    "angry": "portraits/angry.png",
+    "smile": "portraits/smile.png",
+    "eyes_closed": "portraits/eyes_closed.png"
+  },
+  "bio": {
+    "personality": "미정 (docs/decisions.md D1)",
+    "purpose": "밤의 학교에서 빠져나가기",
+    "backstory": "미정"
+  },
+  "notes": "이름, 말투, 설정은 D1 확정 후 정한다. eyes_closed는 깜박임 프레임으로도 쓴다."
+}

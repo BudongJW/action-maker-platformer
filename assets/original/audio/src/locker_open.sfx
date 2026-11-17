@@ -1,0 +1,11 @@
+# Steel locker door: latch click, hinge squeak, hollow body.
+@output ../sfx/locker_open.wav
+@length 0.8
+@seed 8
+@echo 0.07 0.3 0.25
+layer noise amp=0.6 decay=0.01 hp=2000
+layer sine freq=1320 amp=0.2 decay=0.08
+layer sine freq=2710 amp=0.12 decay=0.05
+layer sine at=0.08 freq=950 freq_end=1250 dur=0.45 amp=0.18 attack=0.05 fade=0.15 trem=31 trem_depth=0.7 lp=3000
+layer sine at=0.08 freq=210 amp=0.25 decay=0.25
+layer sine at=0.08 freq=487 amp=0.15 decay=0.2

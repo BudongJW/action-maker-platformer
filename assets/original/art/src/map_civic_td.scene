@@ -1,0 +1,111 @@
+# Top-down mock-up: a community service centre (주민센터) after hours. The
+# queue display still shows 444; zombies sit in the waiting chairs facing
+# the counter, and a clerk zombie still stands behind it.
+@palette ../palette/night-school.pal
+@size 416 288
+@output ../mockups/map_civic_td.png
+@preview ../previews/map_civic_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@legend A tw:walltop_15
+@legend B of:face_upper
+@legend C of:face_lower
+@legend D of:floor_carpet
+@legend E of:floor_marble
+@legend F tw:walltop_10
+@legend G tw:walltop_08
+@legend H tw:walltop_02
+@legend I tn:sidewalk
+@legend J tn:curb_s
+@legend K of:bookshelf_0_0
+@legend L of:bookshelf_0_1
+@legend M of:window_blinds_0_0
+@legend N of:window_blinds_1_0
+@legend O of:window_blinds_0_1
+@legend P of:window_blinds_1_1
+@legend Q of:number_display_0_0
+@legend R of:number_display_1_0
+@legend S cl:clock
+@legend T of:exit_sign
+@legend U cl:bulletin_0_0
+@legend V cl:bulletin_1_0
+@legend W of:printer
+@legend X of:desk_pc_on
+@legend Y of:desk_pc_off
+@legend Z of:file_cabinet
+@legend a of:office_chair
+@legend b of:counter_l
+@legend c of:counter_m
+@legend d of:counter_r
+@legend e of:ticket_machine
+@legend f of:bench_0_0
+@legend g of:bench_1_0
+@legend h of:water_cooler
+@legend i of:plant
+
+@layer
+AAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+DDDDDDDDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDDDDDDDD
+EEEEEEEEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEEEEEEEE
+FFFFFFFFFFGEEEEHFFFFFFFFFF
+IIIIIIIIIIIIIIIIIIIIIIIIII
+JJJJJJJJJJJJJJJJJJJJJJJJJJ
+@layer
+..........................
+..........................
+.KK.MN..QR.S.QR..MN.T..UV.
+.LL.OP...........OP.......
+.W..XX..XY..XX..YX..XX..Z.
+..a.aa..aa..aa..aa..aa....
+..........................
+..........................
+.bcccccccccccccccccccd....
+..........................
+.e..fg..fg..fg..fg....h...
+..........................
+.e..fg..fg..fg..fg....i...
+..........................
+..........................
+..........................
+..........................
+..........................
+
+@sprite protagonist_topdown.pix up_1 188 224
+@sprite zombie_guard_topdown.pix down_1 92 80
+@sprite zombie_office_topdown.pix down_1 236 80
+@sprite zombie_elder_topdown.pix up_1 76 144
+@sprite zombie_student_topdown.pix up_1 140 176
+@sprite zombie_office_topdown.pix up_1 204 144
+@sprite zombie_elder_topdown.pix up_1 252 176
+@darkness K 0.82
+@cone 200 248 270 36 140
+@light 136 40 34
+@light 216 40 34
+@light 24 168 18
+@light 328 40 16
+@light 72 72 14
+@light 88 72 14
+@light 216 72 14
+@light 280 72 14
+@light 328 72 14
+@light 344 72 14

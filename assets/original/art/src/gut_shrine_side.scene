@@ -1,0 +1,89 @@
+# Mock-up: a gut in a shrine at night, side view. Altar with offerings under a
+# shaman-god painting, candles, paper money and cloth strips hanging from the
+# beam, five-direction flags, drum and gong players, the mudang dancing with
+# fan and bells, villagers watching (backs to us), the protagonist kneeling.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../mockups/gut_shrine_side.png
+@preview ../previews/gut_shrine_side_x3.png 3
+@fill D
+@tiles g tiles_gut.pix
+@tiles t tiles_night_school.pix
+@legend B g:beam
+@legend H g:hanji_wall
+@legend h g:hanji_wall_warm
+@legend | g:post
+@legend m g:mat
+@legend F t:floor_top
+@legend f t:floor_fill
+@layer
+BBBBBBBBBBBBBBBBBBBB
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+FFFFFFFFFFFFFFFFFFFF
+ffffffffffffffffffff
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+..mmmmmmmmmmmmmmmm..
+@sprite tiles_gut.pix jijeon_0_0 40 16
+@sprite tiles_gut.pix jijeon_0_1 40 32
+@sprite tiles_gut.pix jijeon_0_0 104 16
+@sprite tiles_gut.pix jijeon_0_1 104 32
+@sprite tiles_gut.pix jijeon_0_0 200 16
+@sprite tiles_gut.pix jijeon_0_1 200 32
+@sprite tiles_gut.pix jijeon_0_0 264 16
+@sprite tiles_gut.pix jijeon_0_1 264 32
+@sprite tiles_gut.pix ribbons_0_0 72 16
+@sprite tiles_gut.pix ribbons_0_1 72 32
+@sprite tiles_gut.pix ribbons_0_0 232 16
+@sprite tiles_gut.pix ribbons_0_1 232 32
+@sprite tiles_gut.pix musindo_0_0 144 40
+@sprite tiles_gut.pix musindo_1_0 160 40
+@sprite tiles_gut.pix musindo_0_1 144 56
+@sprite tiles_gut.pix musindo_1_1 160 56
+@sprite tiles_gut.pix musindo_0_2 144 72
+@sprite tiles_gut.pix musindo_1_2 160 72
+@sprite tiles_gut.pix altar_0_0 136 128
+@sprite tiles_gut.pix altar_1_0 152 128
+@sprite tiles_gut.pix altar_2_0 168 128
+@sprite tiles_gut.pix altar_0_1 136 144
+@sprite tiles_gut.pix altar_1_1 152 144
+@sprite tiles_gut.pix altar_2_1 168 144
+@sprite tiles_gut.pix candle_0 116 144
+@sprite tiles_gut.pix candle_1 188 144
+@sprite tiles_gut.pix incense 156 144
+@sprite tiles_gut.pix obangki_0_0 264 112
+@sprite tiles_gut.pix obangki_1_0 280 112
+@sprite tiles_gut.pix obangki_0_1 264 128
+@sprite tiles_gut.pix obangki_1_1 280 128
+@sprite tiles_gut.pix obangki_0_2 264 144
+@sprite tiles_gut.pix obangki_1_2 280 144
+@sprite tiles_gut.pix water_bowl 100 144
+@sprite npc_gut_musicians.pix janggu_1 28 136
+@sprite npc_gut_musicians.pix jing_0 54 136
+@sprite npc_mudang.pix dance_1 206 120
+@sprite protagonist_side.pix crouch 288 128 flip
+@sprite npc_onlookers.pix a_seated 88 148
+@sprite npc_onlookers.pix c_seated 112 151
+@sprite npc_onlookers.pix b_seated 236 149
+@darkness K 0.72
+@light 124 140 44
+@light 196 140 44
+@light 160 96 40
+@light 220 130 30
+@light 50 140 22

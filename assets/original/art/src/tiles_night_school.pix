@@ -1,0 +1,806 @@
+# Night-school corridor tileset, side view. 16x16 tiles.
+# Solid: floor_*, ceiling. One-way: shelf, desk. Background: wall_*,
+# window_*, door_*. Props go on a layer above the wall.
+# Multi-tile pieces are named NAME_x_y by tile position.
+@palette ../palette/night-school.pal
+@size 16 16
+@output ../tiles/tiles_night_school.png
+@preview ../previews/tiles_night_school_x4.png 4
+@columns 8
+
+# wooden floor surface over concrete, solid
+@frame floor_top
+PPPPPPPPPPPPPPPP
+PPPPPpPPPPPPPpPP
+pppppppppppppppp
+KKKKKKKKKKKKKKKK
+NNNNNNNNNNNNNNNN
+NNNNNNNNNUNNNNNN
+NNDNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNN
+NNNNNNNNNNNDNNNN
+NNNNNNNNNNNNNNNN
+NNNUNNNNNNNNNNNN
+NNNNNNNNNNNNNNDN
+NNNNNNDNNNNNNNNN
+NNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNN
+
+# concrete below the floor, solid
+@frame floor_fill
+NNNNNNNNNNNNNNNN
+NNNNNNNNNDNNNNNN
+NNDNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNN
+NNNNNNNUNNNNNNNN
+NNNNNNNNNNNDNNNN
+NNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNN
+NNNNNNDNNNNNNUNN
+NNNNNNNNNNNNNNNN
+NUNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNDN
+NNNNNNNNNNNNNNNN
+NNNNDNNNNNNNNNNN
+NNNNNNNNNNNNNNNN
+
+# left end of a floor platform
+@frame floor_edge_l
+KPPPPPPPPPPPPPPP
+KPPPPpPPPPPPPpPP
+Kppppppppppppppp
+KKKKKKKKKKKKKKKK
+..KNNNNNNNNNNNNN
+.KNNNNNNNUNNNNNN
+.KDNNNNNNNNNNNNN
+.KNNNNNNNNNNNNNN
+.KNNNNNNNNNNNNNN
+.KNNNNNNNNNDNNNN
+.KNNNNNNNNNNNNNN
+.KNUNNNNNNNNNNNN
+.KNNNNNNNNNNNNDN
+.KNNNNDNNNNNNNNN
+.KNNNNNNNNNNNNNN
+.KKNNNNNNNNNNNNN
+
+# right end of a floor platform
+@frame floor_edge_r
+PPPPPPPPPPPPPPPK
+PPpPPPPPPPpPPPPK
+pppppppppppppppK
+KKKKKKKKKKKKKKKK
+NNNNNNNNNNNNNK..
+NNNNNNUNNNNNNNK.
+NNNNNNNNNNNNNDK.
+NNNNNNNNNNNNNNK.
+NNNNNNNNNNNNNNK.
+NNNNDNNNNNNNNNK.
+NNNNNNNNNNNNNNK.
+NNNNNNNNNNNNUNK.
+NDNNNNNNNNNNNNK.
+NNNNNNNNNDNNNNK.
+NNNNNNNNNNNNNNK.
+NNNNNNNNNNNNNKK.
+
+# ceiling slab seen from below, solid
+@frame ceiling
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+DDDDDDDNDDDDDDDD
+NNNNNNNNNNNNNNNN
+UUUUUUUUUUUUUUUU
+KKKKKKKKKKKKKKKK
+
+# fluorescent lamp hanging under the ceiling (prop)
+@frame lamp_off
+....K......K....
+....K......K....
+.KKKKKKKKKKKKKK.
+.KMMMMMMMMMMMMK.
+.KWWWWWWWWWWWWK.
+.KKKKKKKKKKKKKK.
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+
+# lamp switched on; pair with a light in the scene
+@frame lamp_on
+....K......K....
+....K......K....
+.KKKKKKKKKKKKKK.
+.KwwwwwwwwwwwwK.
+.KYYYYYYYYYYYYK.
+.KKKKKKKKKKKKKK.
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+
+# one-way wooden shelf platform
+@frame shelf
+PPPPPPPPPPPPPPPP
+pppppppppppppppp
+KKKKKKKKKKKKKKKK
+.KpK........KpK.
+.KpK........KpK.
+.KKK........KKK.
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+
+# upper wall
+@frame wall_plaster
+WWWWWWWWWWWWWWWW
+WWWWWWWWWWWWMWWW
+WWWWWWWWWWWWWWWW
+WWWMWWWWWWWWWWWW
+WWWWWWWWWWWWWWWW
+WWWWWWWWWMWWWWWW
+WWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWW
+WMWWWWWWWWWWWWWW
+WWWWWWWWWWWWWMWW
+WWWWWWWWWWWWWWWW
+WWWWWWMWWWWWWWWW
+WWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWW
+WWWWWWWWWWWMWWWW
+WWWWWWWWWWWWWWWW
+
+# upper wall with a crack
+@frame wall_plaster_crack
+WWWWWWWWWNWWWWWW
+WWWWWWWWWNWWMWWW
+WWWWWWWWNWWWWWWW
+WWWMWWWWNWWWWWWW
+WWWWWWWNWWWWWWWW
+WWWWWWWMNMWWWWWW
+WWWWWWWWWNWWWWWW
+WWWWWWWWWNMWWWWW
+WMWWWWWWMWNWWWWW
+WWWWWWWWWWWNWMWW
+WWWWWWWWWWWNMWWW
+WWWWWWMWWWNWWWWW
+WWWWWWWWWWNWWWWW
+WWWWWWWWWMWWWWWW
+WWWWWWWWWWWMWWWW
+WWWWWWWWWWWWWWWW
+
+# plaster above, chair rail, top of the wainscot
+@frame wall_rail
+WWWWWWWWWWWWWWWW
+WWWWWWWWWWWWMWWW
+WWWWWWWWWWWWWWWW
+WWWMWWWWWWWWWWWW
+WWWWWWWWWWWWWWWW
+WWWWWWWWWMWWWWWW
+WWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWW
+WMWWWWWWWWWWWWWW
+WWWWWWWWWWWWWMWW
+pppppppppppppppp
+PPPPPPPPPPPPPPPP
+pppppppppppppppp
+GgggggggGggggggg
+GgggggggGggggggg
+GgggggggGggggggg
+
+# lower wall panelling
+@frame wall_wainscot
+GgggggggGggggggg
+GgggggggGggggggg
+GgggggggGggggggg
+GgggggggGgggGggg
+GgggggggGggggggg
+GgggggggGggggggg
+GgggGgggGggggggg
+GgggggggGggggggg
+GgggggggGggggggg
+GgggggggGggggggg
+GgggggggGggggggg
+GgggggggGggggggg
+GggGggggGggggggg
+GgggggggGggggggg
+GgggggggGggggggg
+GGGGGGGGGGGGGGGG
+
+# wainscot with a dark handprint smear
+@frame wall_wainscot_hand
+GgggggggGggggggg
+GgggggggGggggggg
+GgggggggGggggggg
+GgggggggGggGGggg
+GgggggggGGgGgGgg
+GgggggggGGgGgGgg
+GgggGgggGGgGgGgG
+GgggggGgGGgGgGgG
+GggggggGGGGGGGGG
+GgggggggGGGGGGGg
+GgggggggGGGGGGGg
+GgggggggGGGGGGGg
+GggGggggGgGGGGgg
+GgggggggGggGgggg
+GgggggggGgggGggg
+GGGGGGGGGGGGGGGG
+
+# classroom name plate (no text, placeholder marks)
+@frame sign_plate
+................
+.......KK.......
+.......KK.......
+..KKKKKKKKKKKK..
+..KwwwwwwwwwwK..
+..KwNNwNwNNwwK..
+..KwwNNwNwwwwK..
+..KwwwwwwwwwwK..
+..KKKKKKKKKKKK..
+................
+................
+................
+................
+................
+................
+................
+
+# paper talisman (부적) with red brush marks, not real script
+@frame talisman
+................
+......KKKKK.....
+.....KYYYYYK....
+.....KYRRRYK....
+.....KYYRYYK....
+.....KYRRRYK....
+.....KYYRYYK....
+.....KYRYRYK....
+.....KYYRYYK....
+.....KYRRRYK....
+.....KYYYYYK....
+.....KYYKYYK....
+.....KYK.KYK....
+.....K.K.K.K....
+................
+................
+
+# straw rope (금줄) with white paper strips, tiles horizontally
+@frame geumjul
+................
+................
+PpPpPpPpPpPpPpPp
+YPYPYPYPYPYPYPYP
+PpPpPpPpPpPpPpPp
+...wW......wW...
+...ww......ww...
+...Ww......Ww...
+...wW......wW...
+...ww......ww...
+....w.......w...
+................
+................
+................
+................
+................
+
+# school desk, side view (prop / low platform)
+@frame desk
+................
+................
+................
+................
+................
+................
+.KKKKKKKKKKKKKK.
+.PPPPPPPPPPPPPP.
+.pppppppppppppp.
+.KKKKKKKKKKKKKK.
+..KMKKKKKKKKMK..
+..KMppppppppMK..
+..KMKKKKKKKKMK..
+..KMK......KMK..
+..KMK......KMK..
+..KMK......KMK..
+
+# window, 2x2 tiles
+@frame window_0_0
+KKKKKKKKKKKKKKKK
+KWWWWWWWWWWWWWWW
+KWKKKKKKKKKKKKKW
+KWKDDDDDDNDDDDKW
+KWKDDDDDNDDDDDKW
+KWKDDDDNDDDDDDKW
+KWKDDDNDDDDDDDKW
+KWKDDDDDDDDDNDKW
+KWKDDDDDDDDNDDKW
+KWKDDDDDDDNDDDKW
+KWKDDDDDDDDDDDKW
+KWKDDDDDDDDDDDKW
+KWKDDDDDDDDDDDKW
+KWKKKKKKKKKKKKKW
+KWKKKKKKKKKKKKKW
+KWKDDDDDDNDDDDKW
+
+# window, 2x2 tiles
+@frame window_1_0
+KKKKKKKKKKKKKKKK
+WWWWWWWWWWWWWWWK
+WKKKKKKKKKKKKKWK
+WKDDDDDDNDDDDKWK
+WKDDDDDNDDDDDKWK
+WKDDDDNwwDDDDKWK
+WKDDDNwwwwDDDKWK
+WKDDDDwwwMDNDKWK
+WKDDDDDwMDNDDKWK
+WKDDDDDDDNDDDKWK
+WKDDDDDDDDDDDKWK
+WKDDDDDDDDDDDKWK
+WKDDDDDDDDDDDKWK
+WKKKKKKKKKKKKKWK
+WKKKKKKKKKKKKKWK
+WKDDDDDDNDDDDKWK
+
+# window, 2x2 tiles
+@frame window_0_1
+KWKDDDDDNDDDDDKW
+KWKDDDDNDDDDDDKW
+KWKDDDNDDDDDDDKW
+KWKDDDDDDDDDNDKW
+KWKDDDDDDDDNDDKW
+KWKDDDDDDDNDDDKW
+KWKDDDDDDDDDDDKW
+KWKDDDDDDDDDDDKW
+KWKDDDDDDDDDDDKW
+KWKKKKKKKKKKKKKW
+KWWWWWWWWWWWWWWW
+KKKKKKKKKKKKKKKK
+PPPPPPPPPPPPPPPP
+pppppppppppppppp
+KKKKKKKKKKKKKKKK
+................
+
+# window, 2x2 tiles
+@frame window_1_1
+WKDDDDDNDDDDDKWK
+WKDDDDNDDDDDDKWK
+WKDDDNDDDDDDDKWK
+WKDDDDDDDDDNDKWK
+WKDDDDDDDDNDDKWK
+WKDDDDDDDNDDDKWK
+WKDDDDDDDDDDDKWK
+WKDDDDDDDDDDDKWK
+WKDDDDDDDDDDDKWK
+WKKKKKKKKKKKKKWK
+WWWWWWWWWWWWWWWK
+KKKKKKKKKKKKKKKK
+PPPPPPPPPPPPPPPP
+pppppppppppppppp
+KKKKKKKKKKKKKKKK
+................
+
+# sliding classroom door, 2x3 tiles
+@frame door_0_0
+KKKKKKKKKKKKKKKK
+KppppppppppppppK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KpPPKKKKKKKKKPpK
+KpPPKDDDDDDDKPpK
+KpPPKDDDDNDDKPpK
+KpPPKDDDNDDDKPpK
+KpPPKDDNDDDDKPpK
+KpPPKDDDDDDDKPpK
+KpPPKDDDDDDDKPpK
+KpPPKDDDDDDDKPpK
+KpPPKDDDDDDDKPpK
+KpPPKDDDDDDDKPpK
+KpPPKDDDDDDDKPpK
+KpPPKDDDDDDDKPpK
+
+# sliding classroom door, 2x3 tiles
+@frame door_1_0
+KKKKKKKKKKKKKKKK
+KppppppppppppppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KPPKKKKKKKKKPppK
+KPPKDDDDDDDKPppK
+KPPKDDDDNDDKPppK
+KPPKDDDNDDDKPppK
+KPPKDDNDDDDKPppK
+KPPKDDDDDDDKPppK
+KPPKDDDDDDDKPppK
+KPPKDDDDDDDKPppK
+KPPKDDDDDDDKPppK
+KPPKDDDDDDDKPppK
+KPPKDDDDDDDKPppK
+KPPKDDDDDDDKPppK
+
+# sliding classroom door, 2x3 tiles
+@frame door_0_1
+KpPPKDDDDDDDKPpK
+KpPPKDDDDDDDKPpK
+KpPPKKKKKKKKKPpK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KpPPpppppppppPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPKPpK
+KpPPpPPPPPPPKPpK
+
+# sliding classroom door, 2x3 tiles
+@frame door_1_1
+KPPKDDDDDDDKPppK
+KPPKDDDDDDDKPppK
+KPPKKKKKKKKKPppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KPPpppppppppPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPKPPPPPPPpPppK
+KPPKPPPPPPPpPppK
+
+# sliding classroom door, 2x3 tiles
+@frame door_0_2
+KpPPpPPPPPPPKPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpPPPPPPPpPpK
+KpPPpppppppppPpK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KpPPPPPPPPPPPPpK
+KppppppppppppppK
+KppppppppppppppK
+
+# sliding classroom door, 2x3 tiles
+@frame door_1_2
+KPPKPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpPPPPPPPpPppK
+KPPpppppppppPppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KPPPPPPPPPPPPppK
+KppppppppppppppK
+KppppppppppppppK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_0_0
+KKKKKKKKKKKKKKKK
+KppppppppppppppK
+KpKKKKKKKKKKKKKK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_1_0
+KKKKKKKKKKKKKKKK
+KppppppppppppppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpKKKKKKKKKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDNDDKPppK
+KPpKDDDNDDDKPppK
+KPpKDDNDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_0_1
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDNNNNNDDDDK
+KpKKDDNDDDNDDDDK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_1_1
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKKKKKKKKKPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPppppppppppPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPpKPPPPPPPpPppK
+KPpKPPPPPPPpPppK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_0_2
+KpKKDDNDDDNDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KppppppppppppppK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_1_2
+KPpKPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppppppppppPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KppppppppppppppK
+KppppppppppppppK
+
+# steel locker, closed, 1x2 tiles
+@frame locker_0_0
+.KKKKKKKKKKKKKK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMNNNNNNNNMuK.
+.KWMMMMMMMMMMuK.
+.KWMNNNNNNNNMuK.
+.KWMMMMMMMMMMuK.
+.KWMNNNNNNNNMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMKKMuK.
+.KWMMMMMMMWKMuK.
+
+# steel locker, closed, 1x2 tiles
+@frame locker_0_1
+.KWMMMMMMMWKMuK.
+.KWMMMMMMMKKMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KNNNNNNNNNNNNK.
+.KuuuuuuuuuuuuK.
+.KuuuuuuuuuuuuK.
+.KuuuuuuuuuuuuK.
+.KKKKKKKKKKKKKK.
+..KK........KK..
+..KK........KK..
+
+# steel locker, door open
+@frame locker_open_0_0
+.KKKKKKKKKKKKKK.
+.KuNKKKKKKKKKKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDNNDDDKK.
+.KuNDDDDDNDDDKK.
+.KuNDDDDDNDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+
+# steel locker, door open
+@frame locker_open_0_1
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNNNNNNNNNNKK.
+.KuNDDDDDDDDDKK.
+.KKKKKKKKKKKKKK.
+..KK........KK..
+..KK........KK..
+
+# note lying on the floor (pick-up)
+@frame note
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+....KKKKKKKK....
+...KwwwwwwwWK...
+...KwMMwMMMwK...
+...KwwwwwwwwK...
+....KKKKKKKK....
+
+# note, glint frame (alternate with note)
+@frame note_glint
+................
+................
+................
+................
+................
+................
+................
+........Y.......
+.......YwY......
+........Y.......
+................
+....KKKKKKKK....
+...KwwwwwwwWK...
+...KwMMwMMMwK...
+...KwwwwwwwwK...
+....KKKKKKKK....
+
+# candle checkpoint, lit (2-frame flicker)
+@frame candle_lit_0
+................
+................
+................
+.......Y........
+.......wY.......
+.......Y........
+.......K........
+.......KK.......
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+..KPPPPPPPPPPK..
+...KKKKKKKKKK...
+
+@frame candle_lit_1
+................
+................
+................
+........Y.......
+.......Yw.......
+........Y.......
+.......K........
+.......KK.......
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+..KPPPPPPPPPPK..
+...KKKKKKKKKK...
+
+# candle checkpoint, not yet lit
+@frame candle_out
+................
+........M.......
+.......M........
+........M.......
+.......M........
+................
+.......K........
+.......KK.......
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+..KPPPPPPPPPPK..
+...KKKKKKKKKK...

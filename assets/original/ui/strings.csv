@@ -1,0 +1,31 @@
+keys,ko,en
+ui.title.continue,이어하기,Continue
+ui.title.new_game,처음부터,New Game
+ui.title.options,설정,Options
+ui.title.quit,종료,Quit
+ui.pause.title,일시정지,Paused
+ui.pause.resume,계속하기,Resume
+ui.pause.options,설정,Options
+ui.pause.to_title,타이틀로,Back to Title
+ui.prompt.examine,조사하기,Examine
+ui.prompt.open,열기,Open
+ui.prompt.locked,잠겨 있다,Locked
+ui.prompt.read,읽기,Read
+ui.prompt.hide,숨기,Hide
+ui.prompt.leave_hiding,나오기,Come Out
+ui.prompt.flashlight,손전등,Flashlight
+ui.prompt.light_candle,촛불 켜기,Light the Candle
+ui.dialogue.next,다음,Next
+ui.dialogue.skip,건너뛰기,Skip
+ui.doc.close,닫기,Close
+ui.options.master_volume,전체 음량,Master Volume
+ui.options.music_volume,음악 음량,Music Volume
+ui.options.sfx_volume,효과음 음량,Sound Effects Volume
+ui.options.brightness,밝기,Brightness
+ui.options.reduce_flashing,깜박임 줄이기,Reduce Flashing
+ui.options.text_size,글자 크기,Text Size
+ui.options.subtitles,자막,Subtitles
+ui.options.back,돌아가기,Back
+ui.system.saved,기록했습니다,Progress Saved
+ui.system.retry,다시 하기,Try Again
+ui.warning.content,"이 게임에는 깜박이는 빛, 갑자기 놀라게 하는 장면, 죽음을 암시하는 표현이 있습니다.","This game contains flashing lights, sudden scares and implied death."

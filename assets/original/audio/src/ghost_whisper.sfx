@@ -1,0 +1,9 @@
+# Whispering with no words (filtered breath), seamless 4 s loop. Near ghosts.
+@output ../sfx/ghost_whisper_loop.wav
+@length 4.0
+@seed 38
+@peak -6
+@loop 0.4
+layer noise amp=0.5 hp=1500 lp=4500 trem=5.3 trem_depth=0.9
+layer noise amp=0.35 hp=2200 lp=6000 trem=8.1 trem_depth=0.95
+layer brown amp=0.3 lp=500 hp=150 trem=0.5 trem_depth=0.8

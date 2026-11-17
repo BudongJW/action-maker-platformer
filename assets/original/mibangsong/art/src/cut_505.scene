@@ -1,0 +1,51 @@
+# PRIVATE (미방송분). Cut 5-05: gil-dakkeum: the untied cotton becomes the road; the soul boat rides it; Gyeongho walks beside with the lantern
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/505.png
+@preview ../previews/505_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend S s:shore_top
+@legend T s:stonewall
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+SSSSSSSSSSSSSSSSSSSS
+ssssssssssssssssssss
+@sprite ../../../art/src/tiles_gut.pix jilbe_l 40 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 56 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 72 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 88 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 104 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 120 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 136 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 152 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 168 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 184 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 200 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_m 216 132
+@sprite ../../../art/src/tiles_gut.pix jilbe_r 232 132
+@sprite ../../../art/src/tiles_gut.pix neokdang_soul 132 124
+@sprite mbs_sunrye.pix push 92 121
+@sprite ../../../art/src/npc_onlookers.pix a_standing 18 128
+@sprite mbs_gyeongho.pix lantern 252 121 flip
+@darkness K 0.66
+@light 140 130 50
+@light 258 136 34
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

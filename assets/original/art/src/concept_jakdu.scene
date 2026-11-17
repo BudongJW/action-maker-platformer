@@ -1,0 +1,93 @@
+# Concept: jakdu-tagi. Barefoot on the edges of two upright blades, the
+# mudang balances with a flag and a fan while the drum beats and the village
+# watches. If the spirit has truly come down, the blades do not cut.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../concepts/concept_jakdu.png
+@preview ../previews/concept_jakdu_x3.png 3
+@fill D
+@tiles g tiles_gut.pix
+@tiles t tiles_night_school.pix
+@legend B g:beam
+@legend H g:hanji_wall
+@legend h g:hanji_wall_warm
+@legend | g:post
+@legend m g:mat
+@legend F t:floor_top
+@legend f t:floor_fill
+@layer
+BBBBBBBBBBBBBBBBBBBB
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+FFFFFFFFFFFFFFFFFFFF
+ffffffffffffffffffff
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+..mmmmmmmmmmmmmmmm..
+@sprite tiles_gut.pix jijeon_0_0 40 16
+@sprite tiles_gut.pix jijeon_0_1 40 32
+@sprite tiles_gut.pix jijeon_0_0 104 16
+@sprite tiles_gut.pix jijeon_0_1 104 32
+@sprite tiles_gut.pix jijeon_0_0 200 16
+@sprite tiles_gut.pix jijeon_0_1 200 32
+@sprite tiles_gut.pix jijeon_0_0 264 16
+@sprite tiles_gut.pix jijeon_0_1 264 32
+@sprite tiles_gut.pix ribbons_0_0 72 16
+@sprite tiles_gut.pix ribbons_0_1 72 32
+@sprite tiles_gut.pix ribbons_0_0 232 16
+@sprite tiles_gut.pix ribbons_0_1 232 32
+@sprite tiles_gut.pix musindo_0_0 80 40
+@sprite tiles_gut.pix musindo_1_0 96 40
+@sprite tiles_gut.pix musindo_0_1 80 56
+@sprite tiles_gut.pix musindo_1_1 96 56
+@sprite tiles_gut.pix musindo_0_2 80 72
+@sprite tiles_gut.pix musindo_1_2 96 72
+@sprite tiles_gut.pix altar_0_0 72 128
+@sprite tiles_gut.pix altar_1_0 88 128
+@sprite tiles_gut.pix altar_2_0 104 128
+@sprite tiles_gut.pix altar_0_1 72 144
+@sprite tiles_gut.pix altar_1_1 88 144
+@sprite tiles_gut.pix altar_2_1 104 144
+@sprite tiles_gut.pix candle_0 56 144
+@sprite tiles_gut.pix candle_1 124 144
+@sprite tiles_gut.pix jakdu_0_0 152 128
+@sprite tiles_gut.pix jakdu_1_0 168 128
+@sprite tiles_gut.pix jakdu_0_1 152 144
+@sprite tiles_gut.pix jakdu_1_1 168 144
+@sprite tiles_gut.pix obangki_0_0 272 112
+@sprite tiles_gut.pix obangki_1_0 288 112
+@sprite tiles_gut.pix obangki_0_1 272 128
+@sprite tiles_gut.pix obangki_1_1 288 128
+@sprite tiles_gut.pix obangki_0_2 272 144
+@sprite tiles_gut.pix obangki_1_2 288 144
+@sprite tiles_gut.pix candle_1 140 144
+@sprite tiles_gut.pix candle_0 186 144
+@sprite npc_gut_musicians.pix janggu_0 4 136
+@sprite npc_mudang.pix jakdu 152 98
+@sprite protagonist_side.pix idle_0 236 128 flip
+@sprite npc_onlookers.pix b_seated 40 150
+@sprite npc_onlookers.pix a_seated 116 152
+@sprite npc_onlookers.pix c_seated 200 150
+@sprite npc_onlookers.pix a_seated 258 151
+@sprite npc_onlookers.pix b_seated 292 149
+@darkness K 0.7
+@light 148 140 34
+@light 194 140 34
+@light 168 110 44
+@light 64 140 30
+@light 132 140 30

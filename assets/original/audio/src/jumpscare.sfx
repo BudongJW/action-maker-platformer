@@ -1,0 +1,11 @@
+# Jump-scare sting: hard hit, dissonant cluster, a scraping screech.
+@output ../sfx/jumpscare.wav
+@length 1.8
+@seed 40
+@echo 0.11 0.35 0.3
+layer noise amp=1.0 attack=0.001 decay=0.08 lp=6000 hp=60
+layer sine freq=82.41 freq_end=55 amp=0.8 attack=0.001 decay=0.25
+layer saw freq=466.16 amp=0.25 attack=0.002 decay=0.6 lp=2500
+layer saw freq=493.88 amp=0.25 attack=0.002 decay=0.6 lp=2500
+layer saw freq=698.46 amp=0.2 attack=0.002 decay=0.5 lp=2500
+layer sine freq=1800 freq_end=2600 amp=0.12 attack=0.02 dur=0.9 fade=0.4 trem=23 trem_depth=0.8

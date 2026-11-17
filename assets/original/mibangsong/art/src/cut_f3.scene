@@ -1,0 +1,68 @@
+# PRIVATE (미방송분). Cut F3 (fake scare, small): reserve stacks: the mobile shelving rolls shut on its rails
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/f3.png
+@preview ../previews/f3_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend B w:wall_block
+@legend F w:floor
+@legend L w:lamp_on
+@layer
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+@layer
+FFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFF
+@layer
+....L...............
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_0 16 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_0 32 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_1 16 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_1 32 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_2 16 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_2 32 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_3 16 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_3 32 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_0 52 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_0 68 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_1 52 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_1 68 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_2 52 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_2 68 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_3 52 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_3 68 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_0 210 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_0 226 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_1 210 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_1 226 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_2 210 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_2 226 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_3 210 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_3 226 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_0 246 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_0 262 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_1 246 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_1 262 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_2 246 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_2 262 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_3 246 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_3 262 144
+@sprite mbs_tiles_workroom.pix box 150 144
+@sprite mbs_seojin.pix crouch 156 121
+@darkness K 0.62
+@light 72 8 70
+@light 164 140 30

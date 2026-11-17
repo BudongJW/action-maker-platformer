@@ -41,7 +41,8 @@ Separately from asset classification, two rules always apply to text. The reason
 
 - Art, audio and scenario/dialogue text, including source and work files (`.dlg`, `.aseprite`, `.kra`, `.psd`).
 - License: [`original/LICENSE.md`](original/LICENSE.md)
-- If AI-generated content is used, record the file paths and tools (needed for Steam's AI content disclosure).
+- If AI-generated content is used, record the file paths and tools in [`original/AI_CONTENT.md`](original/AI_CONTENT.md) (needed for Steam's AI content disclosure).
+- Pixel art sources are plain-text maps in `original/art/src/`, rendered by `tools/pixelart.py`. The art data stays under `original/` and only the renderer is GPL code, the same split as for dialogue. See [`original/art/README.md`](original/art/README.md).
 - **Do not put modified GGG or third-party assets here.** A modified asset still follows the original license, so keep it with the original (`third_party/` or `assets_private/`).
 
 ## 2. `third_party/<source>/`: redistributable third-party assets
@@ -73,9 +74,11 @@ Then add a row to the external assets table ("외부 에셋") in [`CREDITS.md`](
 | Ansimuz Sunny Land | CC0 | Side-scrolling. Check the author's other paid packs one by one |
 | 0x72 DungeonTileset II, Ninja Adventure | CC0 | Top-down 16x16 |
 | LPC (OpenGameArt) | GPL-3.0 / CC BY-SA 3.0 dual | **Record the GPL-3.0 side.** Per-asset CREDITS are required |
-| Pipoya (ぴぽや倉庫) free materials | Own terms | Free redistribution only with the full terms included as `LICENSE`. Paid and supporter materials are not allowed |
+| Pipoya (ぴぽや倉庫) free materials | Own terms | Free redistribution only with the full terms included as `LICENSE`. Paid and supporter materials are not allowed. **The itch.io pages** (e.g. "PIPOYA FREE RPG Character Sprites 32x32", "Pipoya RPG Tileset 32x32") say "Not redistribute or resell this assets", so those downloads go in `assets_private/` (checked 2026-11-17) |
+| OpenGameArt, per asset | Per asset | Use the page's "License(s)" field, and read the description and comments too: some CC0 uploads are edits of RPG Maker RTP or of other artists' work, or are re-uploads by someone other than the author. Those are not committed. Packs already committed are listed in [`third_party/README.md`](third_party/README.md) |
 | Freesound individual files | CC0 / CC BY per file | Check each file's license. **CC BY-NC is not allowed** (no commercial use) |
 | Incompetech (Kevin MacLeod) | CC BY 4.0 | The prescribed credit wording is required |
+| Fonts under SIL OFL 1.1 (e.g. Galmuri, Neo Dunggeunmo) | OFL 1.1 | Ship the copyright notice and license text with the font; the font may not be sold on its own. Check glyph provenance notes in the font's README |
 | SFX made by us with Bfxr or jfxr | Ours | May go in `original/` |
 
 ### Share-alike caveats

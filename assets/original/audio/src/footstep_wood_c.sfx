@@ -1,0 +1,7 @@
+# Footstep on old wooden floor boards (variant c, a board creaks).
+@output ../sfx/footstep_wood_c.wav
+@length 0.3
+@seed 37
+layer noise amp=0.6 attack=0.001 decay=0.035 lp=2000 hp=160
+layer sine freq=150 freq_end=75 amp=0.45 attack=0.001 decay=0.04
+layer sine at=0.05 freq=420 freq_end=380 amp=0.06 attack=0.02 dur=0.18 fade=0.08 trem=40 trem_depth=0.8 lp=1500

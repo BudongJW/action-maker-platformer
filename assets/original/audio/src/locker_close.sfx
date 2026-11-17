@@ -1,0 +1,11 @@
+# Steel locker door slammed shut from inside.
+@output ../sfx/locker_close.wav
+@length 0.9
+@seed 9
+@echo 0.08 0.35 0.3
+layer noise amp=0.9 decay=0.04 lp=3500 hp=200
+layer sine freq=180 amp=0.5 decay=0.35
+layer sine freq=431 amp=0.35 decay=0.3
+layer sine freq=1047 amp=0.2 decay=0.18
+layer sine freq=2311 amp=0.12 decay=0.1
+layer noise at=0.06 amp=0.4 decay=0.008 hp=2500

@@ -1,0 +1,74 @@
+# Concept: blackout on the office floor. A few monitors still glow; office
+# zombies drift between the cubicles while the protagonist crouches behind one.
+@palette ../palette/night-school.pal
+@size 320 192
+@output ../concepts/concept_office_blackout.png
+@preview ../previews/concept_office_blackout_x3.png 3
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@legend A tw:walltop_15
+@legend B of:face_upper
+@legend C of:face_lower
+@legend D of:floor_carpet
+@legend E of:window_blinds_0_0
+@legend F of:window_blinds_1_0
+@legend G of:window_blinds_0_1
+@legend H of:window_blinds_1_1
+@legend I of:desk_pc_off
+@legend J of:desk_pc_on
+@legend K of:partition_v
+@legend L of:office_chair
+@legend M of:partition_h
+
+@layer
+AAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCC
+DDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDD
+@layer
+....................
+..EF...EF....EF.....
+..GH...GH....GH.....
+.IJI.JI..K.JIJ.IJ...
+.LLL.LL..K.LLL.LL...
+.MMM.MM..K.MMM.MM...
+.JIJ.IJ..K.IJI.JJ...
+.LLL.LL..K.LLL.LL...
+.........K..........
+.MMM.MM....MMM.MM...
+.IJJ.JI....JJI.IJ...
+.LLL.LL....LLL.LL...
+
+@sprite protagonist_topdown.pix down_1 124 112
+@sprite zombie_office_topdown.pix left_1 188 112
+@sprite zombie_office_topdown.pix down_1 60 32
+@sprite zombie_office_topdown.pix right_1 236 48
+@sprite zombie_guard_topdown.pix up_1 284 144
+@darkness K 0.86
+@light 40 56 14
+@light 88 56 14
+@light 200 56 14
+@light 264 56 14
+@light 24 104 14
+@light 104 104 14
+@light 184 104 14
+@light 200 168 14
+@light 264 168 14
+@cone 136 136 90 40 40
+@sprite fx_vignette.pix vignette 0 0 over

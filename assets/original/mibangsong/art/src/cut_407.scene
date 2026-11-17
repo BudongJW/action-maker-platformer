@@ -1,0 +1,49 @@
+# PRIVATE (미방송분). Cut 4-07: gopuri: Sunrye shakes the cotton with seven knots to the salpuri rhythm; each piece of evidence unties one
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/407.png
+@preview ../previews/407_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend A s:water_0
+@legend M g:mat
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+..MMMMMMMMMMMMM.....
+SSSSSSSSSSSSSSSSAAAA
+ssssssssssssssssaaaa
+@sprite ../../../art/src/tiles_gut.pix altar_0_0 24 128
+@sprite ../../../art/src/tiles_gut.pix altar_1_0 40 128
+@sprite ../../../art/src/tiles_gut.pix altar_2_0 56 128
+@sprite ../../../art/src/tiles_gut.pix altar_0_1 24 144
+@sprite ../../../art/src/tiles_gut.pix altar_1_1 40 144
+@sprite ../../../art/src/tiles_gut.pix altar_2_1 56 144
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 230 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 230 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 230 144
+@sprite mbs_mijeong.pix sindae_0 96 121
+@sprite mbs_sunrye.pix cloth_0 150 121
+@sprite ../../../art/src/npc_onlookers.pix a_seated 60 152
+@sprite ../../../art/src/npc_onlookers.pix b_seated 190 151
+@darkness K 0.72
+@light 160 136 50
+@light 242 124 36
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over
