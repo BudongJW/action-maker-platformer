@@ -6,7 +6,7 @@ See [`../README.md`](../README.md) for the classification rules, the `SOURCE.md`
 
 ## Collected packs (2026-11-17)
 
-Every pack below is **CC0 1.0** (public domain dedication). The license was checked on the source page on the download date, and each folder keeps the author's own license note where one was shipped. Credit is not required, but all of them are listed in [`../../CREDITS.md`](../../CREDITS.md).
+Every art pack below is **CC0 1.0** (the font is OFL 1.1, listed separately) (public domain dedication). The license was checked on the source page on the download date, and each folder keeps the author's own license note where one was shipped. Credit is not required, but all of them are listed in [`../../CREDITS.md`](../../CREDITS.md).
 
 They are reference material and placeholder art for pre-production: a style study for characters, horror atmosphere and map composition, and grey-boxing before original art replaces them. Mixing many packs in the final game will not give a consistent look (different palettes and pixel densities), so pick a small set per prototype.
 
@@ -58,6 +58,12 @@ They are reference material and placeholder art for pre-production: a style stud
 | [`kenney-roguelike-rpg-pack/`](kenney-roguelike-rpg-pack/) ([preview](kenney-roguelike-rpg-pack/preview.png)) | Roguelike/RPG pack | Kenney (with Lynn Evers) | 5 | 1,700+ 16x16 top-down tiles with Tiled sample maps (outdoor and indoor). |
 | [`kenney-1-bit-pack/`](kenney-1-bit-pack/) ([preview](kenney-1-bit-pack/preview.png)) | 1-Bit Pack 1.1 | Kenney | 14 | 16x16 one-bit tiles, monochrome and coloured, with Tiled sample maps (fantasy, interior, platformer, urban). |
 | [`0x72-dungeontileset-ii/`](0x72-dungeontileset-ii/) ([preview](0x72-dungeontileset-ii/preview.png)) | 16x16 DungeonTileset II v1.7 (+ pumpkin_dude Halloween character) | 0x72 (Robert) | 375 | Dark 16x16 dungeon tiles (walls 16x32), undead and demon monsters, heroes, props, autotile atlases. |
+
+### Fonts
+
+| Folder | Font | Author | License | Use |
+|---|---|---|---|---|
+| [`quiple-galmuri/`](quiple-galmuri/) ([specimen](quiple-galmuri/preview.png)) | Galmuri11 Condensed, Galmuri11 Bold | Lee Minseo (quiple) | **SIL OFL 1.1** (not CC0) | Korean pixel font for dialogue (Condensed) and names/headings (Bold), 12 px. Only the two weights whose glyphs are all the author's own; see its `SOURCE.md` |
 
 ### Checked and not committed
 

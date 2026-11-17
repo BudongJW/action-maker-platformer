@@ -78,6 +78,7 @@ Then add a row to the external assets table ("외부 에셋") in [`CREDITS.md`](
 | OpenGameArt, per asset | Per asset | Use the page's "License(s)" field, and read the description and comments too: some CC0 uploads are edits of RPG Maker RTP or of other artists' work, or are re-uploads by someone other than the author. Those are not committed. Packs already committed are listed in [`third_party/README.md`](third_party/README.md) |
 | Freesound individual files | CC0 / CC BY per file | Check each file's license. **CC BY-NC is not allowed** (no commercial use) |
 | Incompetech (Kevin MacLeod) | CC BY 4.0 | The prescribed credit wording is required |
+| Fonts under SIL OFL 1.1 (e.g. Galmuri, Neo Dunggeunmo) | OFL 1.1 | Ship the copyright notice and license text with the font; the font may not be sold on its own. Check glyph provenance notes in the font's README |
 | SFX made by us with Bfxr or jfxr | Ours | May go in `original/` |
 
 ### Share-alike caveats

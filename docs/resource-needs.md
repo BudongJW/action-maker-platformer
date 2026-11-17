@@ -122,7 +122,7 @@
 
 | 리소스 | 우선 | 상태 | 조달 | 메모 |
 |---|---|---|---|---|
-| 한글 픽셀 폰트 (대사·UI) | P0 | 없음 | CC0 아님, **OFL 1.1** | 후보: [Galmuri](https://github.com/quiple/galmuri) (OFL 1.1), [Neo둥근모](https://github.com/neodgm/neodgm) (OFL 1.1). OFL은 게임에 넣어 배포할 수 있고, 폰트 자체 판매는 금지. 들일 때 `assets/third_party/<폰트>/`에 OFL 전문을 같이 둠 |
+| 한글 픽셀 폰트 (대사·UI) | P0 | 있음 | CC0 아님, **OFL 1.1** | 후보: [Galmuri](https://github.com/quiple/galmuri) (OFL 1.1), [Neo둥근모](https://github.com/neodgm/neodgm) (OFL 1.1). OFL은 게임에 넣어 배포할 수 있고, 폰트 자체 판매는 금지. 들일 때 `assets/third_party/<폰트>/`에 OFL 전문을 같이 둠 |
 | 영문 표시 확인 | P1 | 없음 | — | D8. 위 후보가 라틴 문자를 포함하는지 확인 후 결정 |
 | 제목용 디스플레이 서체 | P2 | 없음 | 오리지널 또는 OFL | 로고는 그려서 만드는 편이 라이선스가 단순 |
 
@@ -213,7 +213,7 @@ Steam이 요구하는 크기입니다 ([스토어 그래픽 에셋](https://part
 - [x] 소품: 쪽지, 체크포인트(촛불) (1차안)
 - [x] 라이트 텍스처 2종 (1차안. 조명 설정과 페이드는 AGM G 작업)
 - [x] 대화창·말풍선·프롬프트·일시정지 최소 UI (1차안)
-- [ ] 한글 픽셀 폰트 1종 들이기 (OFL 전문 포함)
+- [x] 한글 픽셀 폰트 들이기: Galmuri11 Condensed·Bold ([`assets/third_party/quiple-galmuri/`](../assets/third_party/quiple-galmuri/SOURCE.md))
 - [ ] 오디오: 탐색·추격 BGM, 복도 환경음, 발소리, 문·사물함·손전등·피격·사망, 적 접근 신호, UI 3종
 - [ ] 서사: 이야기 개요, `project.json`·캐릭터 레지스트리, 프롤로그 대사, UI 문자열
 - [ ] 대화 런타임, 숨기·추격 AI

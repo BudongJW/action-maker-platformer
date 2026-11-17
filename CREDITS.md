@@ -89,6 +89,7 @@ SOFTWARE.
 | Roguelike/RPG pack | Kenney (with Lynn Evers) | https://opengameart.org/content/roguelikerpg-pack-1700-tiles | CC0 1.0 | 아니오 | assets/third_party/kenney-roguelike-rpg-pack/ | Roguelike/RPG pack by Kenney (with Lynn Evers) |
 | 1-Bit Pack 1.1 | Kenney | https://opengameart.org/content/1-bit-pack | CC0 1.0 | 아니오 | assets/third_party/kenney-1-bit-pack/ | 1-Bit Pack 1.1 by Kenney |
 | 16x16 DungeonTileset II v1.7 (+ pumpkin_dude Halloween character) | 0x72 (Robert) | https://0x72.itch.io/dungeontileset-ii | CC0 1.0 | 아니오 | assets/third_party/0x72-dungeontileset-ii/ | 16x16 DungeonTileset II v1.7 (+ pumpkin_dude Halloween character) by 0x72 (Robert) |
+| Galmuri11 Condensed, Galmuri11 Bold (폰트) | Lee Minseo (quiple) | https://galmuri.quiple.dev | SIL OFL 1.1 | 예 (저작권 표시와 OFL 전문 동봉) | assets/third_party/quiple-galmuri/ | Galmuri by Lee Minseo (quiple), SIL Open Font License 1.1 |
 
 <!--
 작성 예시:
