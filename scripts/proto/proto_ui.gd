@@ -64,6 +64,8 @@ func _ready() -> void:
 	_window.anchor_right = 0.92
 	_window.anchor_top = 0.70
 	_window.anchor_bottom = 0.96
+	# Taller content (choices) grows the window upward, never off the bottom of the screen.
+	_window.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	var box := VBoxContainer.new()
 	_window.add_child(box)
 	_name = _label(18, Color(0.95, 0.85, 0.55))
@@ -183,7 +185,7 @@ func show_choices(options: Array, selected: int = 0) -> void:
 		var o: Dictionary = options[i]
 		var row := PanelContainer.new()
 		var on := i == selected
-		row.add_theme_stylebox_override("panel", _choice_style if on and _choice_style != null else StyleBoxEmpty.new())
+		row.add_theme_stylebox_override("panel", _choice_style if on and _choice_style != null else _choice_blank())
 		var line := HBoxContainer.new()
 		var mark := TextureRect.new()
 		mark.custom_minimum_size = Vector2(32, 0)
@@ -213,6 +215,15 @@ func hide_doc() -> void:
 
 func doc_open() -> bool:
 	return _doc.visible
+
+
+## Same padding as the highlight, so moving the cursor does not shift the list.
+func _choice_blank() -> StyleBox:
+	var sb := StyleBoxEmpty.new()
+	if _choice_style != null:
+		for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+			sb.set_content_margin(side, _choice_style.get_content_margin(side))
+	return sb
 
 
 func _clear_choices() -> void:
