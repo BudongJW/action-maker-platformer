@@ -118,6 +118,28 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 | [`mockups/document_mock.png`](mockups/document_mock.png) | 쪽지 열람: 디더로 어둡게 한 화면 위 종이 |
 | [`mockups/menu_mock.png`](mockups/menu_mock.png) | 일시정지 메뉴와 세이브 슬롯 3개(촛불 = 체크포인트) |
 
+## 괴이 도감 (귀신·괴물·크리쳐)
+
+![creature line-up](previews/creatures_lineup_x3.png)
+
+왼쪽부터 주인공(크기 비교용), 그림자 손님, 소복 귀신, 도깨비불, 그리고 새로 추가한 아홉 종입니다. 모두 횡스크롤용으로 오른쪽을 보며(정면 디자인 제외), 색 규칙(빨강은 위험·눈, 청록은 영적 존재)과 고어 없음(D9)을 지켰습니다. 모티프는 한국 설화와 학교 괴담에서 가져왔고, 특정 영화·드라마·게임의 디자인을 따르지 않았습니다.
+
+**행동** 칸은 전투 없는 숨기·도주(D2)에 맞춘 **제안**이며, 이야기(D1)가 정해지면 다시 고릅니다.
+
+| 시트 | 이름 | 모티프 | 셀·프레임 | 행동 제안 |
+|---|---|---|---|---|
+| [`creature_egg_ghost`](previews/creature_egg_ghost_x4.png) | 달걀귀신 | 설화: 얼굴 없는 귀신 | 24x40. `idle_0 idle_1 walk_0 walk_1 crack` | 천천히 따라오다 마주치면 멈춤. `crack`(알이 갈라지며 붉은 눈)은 한 번만 쓰는 놀래기 |
+| [`creature_reaper`](previews/creature_reaper_x4.png) | 저승사자 | 설화: 망자를 데려가는 사자. 갓은 말총처럼 비치게 | 32x48. `idle_0 idle_1 walk_0 walk_1 summon` | 숨어도 "명부"로 찾아냄(숨기 무효). 대신 촛불(체크포인트) 빛 안으로는 못 들어옴 |
+| [`creature_gumiho`](previews/creature_gumiho_x4.png) | 구미호 | 설화: 아홉 꼬리 여우 | 48x32. `idle_0 idle_1 run_0 run_1 pounce` | 빠른 돌진 뒤 멈칫하는 틈. 꼬리 끝 불꽃이 어둠 속 위치를 드러냄 |
+| [`creature_water_ghost`](previews/creature_water_ghost_x4.png) | 물귀신 | 설화: 물로 끌어들이는 귀신 | 24x40. `rise_0 rise_1 idle_0 idle_1 reach` | 화장실·빗물 웅덩이에서 솟아 붙잡음. 웅덩이를 뛰어넘는 구간 |
+| [`creature_skeleton_model`](previews/creature_skeleton_model_x4.png) | 과학실 해골 모형 | 학교 괴담 | 24x40, 정면. `on_stand awake walk_0 walk_1 collapse` | 소리가 나면 받침대에서 내려와 뻣뻣하게 쫓음. 부딪히면 무너졌다 다시 맞춰짐 |
+| [`creature_reading_statue`](previews/creature_reading_statue_x4.png) | 책 읽는 소녀상 | 학교 괴담: 밤에 움직이는 동상 | 24x40, 정면. `still look reach` | 손전등으로 비추는 동안은 멈춤, 끄면 다가옴 |
+| [`creature_floor_hands`](previews/creature_floor_hands_x4.png) | 바닥의 손 | 창작(함정) | 32x24. `shadow_0 shadow_1 emerge_0 emerge_1 grab` | 고정 함정. 그림자 일렁임으로 예고한 뒤 솟아오름 |
+| [`creature_dokkaebi`](previews/creature_dokkaebi_x4.png) | 도깨비 | 설화: 장난꾸러기 도깨비(외뿔, 방망이, 짚 도롱이) | 32x48. `idle_0 idle_1 walk_0 walk_1 swing_0 swing_1` | 직접 해치기보다 길을 바꾸고 물건을 숨기는 훼방꾼. 방망이로 바닥을 내리쳐 발판을 흔듦 |
+| [`creature_straw_doll`](previews/creature_straw_doll_x6.png) | 짚인형 | 저주 인형(붉은 실, 부적) | 16x24. `still hop_0 hop_1 turn` | 깡충 뛰어다니며 주인공을 발견하면 다른 귀신을 부르는 경보 역할 |
+
+도깨비의 옷은 일본 오니의 호랑이 가죽 대신 짚 도롱이로 그렸습니다. 학교 동상 괴담은 실존 인물 동상 대신 이름 없는 "책 읽는 소녀상"으로 옮겼습니다.
+
 ## 탑다운 (쯔꾸르식 3/4 시점)
 
 횡스크롤 본편과 별도로, 쯔꾸르처럼 위에서 내려다보는 구간에 쓸 타일과 캐릭터입니다(D7: 첫 플레이어블에는 넣지 않지만 미리 준비). 타일은 **16x16**, 캐릭터 셀은 **24x32**로, 쯔꾸르 2000과 같은 비율입니다.
