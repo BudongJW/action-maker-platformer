@@ -118,6 +118,9 @@ func _process(delta: float) -> void:
 			var who: String = String(line["attrs"].get("display_name", ""))
 			shown.append((who + ": " if who != "" else "") + String(line.get("text", "")))
 	_caption.text = "\n".join(shown)
+	# Captions sit above the dialogue window while it is open, so the two never overlap.
+	_caption.anchor_top = 0.60 if _window.visible else 0.86
+	_caption.anchor_bottom = 0.68 if _window.visible else 0.93
 	_bubble_left -= delta
 	if _bubble_left <= 0.0:
 		_bubble.text = ""
