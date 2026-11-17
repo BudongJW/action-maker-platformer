@@ -32,6 +32,10 @@
 @legend s t:sign_plate
 @legend T t:talisman
 @legend d t:desk
+@legend k t:locker_0_0
+@legend l t:locker_0_1
+@legend c t:candle_lit_0
+@legend n t:note_glint
 
 # walls and structure
 @layer
@@ -58,8 +62,8 @@ ffffffffffffffffffff
 ....................
 ......gggg.......s..
 ........T...........
-....................
-...........d........
+.k..................
+.lc........d.n......
 
 @sprite protagonist_side.pix idle_0 56 128
 @sprite enemy_shadow_visitor.pix walk_0 262 104 flip
@@ -71,6 +75,8 @@ ffffffffffffffffffff
 @light 208 48 22
 @light 108 92 20
 @light 138 76 18
+@light 40 150 20
+@light 216 152 14
 
 @sprite enemy_shadow_visitor.pix _eye_glow 262 104 flip over
 @sprite enemy_dokkaebi_bul.pix flicker_0 100 84 over

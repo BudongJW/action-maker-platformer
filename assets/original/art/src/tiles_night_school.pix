@@ -520,3 +520,287 @@ KPPPPPPPPPPPPppK
 KPPPPPPPPPPPPppK
 KppppppppppppppK
 KppppppppppppppK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_0_0
+KKKKKKKKKKKKKKKK
+KppppppppppppppK
+KpKKKKKKKKKKKKKK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_1_0
+KKKKKKKKKKKKKKKK
+KppppppppppppppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpKKKKKKKKKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDNDDKPppK
+KPpKDDDNDDDKPppK
+KPpKDDNDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_0_1
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDNNNNNDDDDK
+KpKKDDNDDDNDDDDK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_1_1
+KPpKDDDDDDDKPppK
+KPpKDDDDDDDKPppK
+KPpKKKKKKKKKPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPppppppppppPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPpKPPPPPPPpPppK
+KPpKPPPPPPPpPppK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_0_2
+KpKKDDNDDDNDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KpKKDDDDDDDDDDDK
+KppppppppppppppK
+
+# sliding door, open (same 2x3 layout)
+@frame door_open_1_2
+KPpKPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppPPPPPPPpPppK
+KPppppppppppPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KPpPPPPPPPPPPppK
+KppppppppppppppK
+KppppppppppppppK
+
+# steel locker, closed, 1x2 tiles
+@frame locker_0_0
+.KKKKKKKKKKKKKK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMNNNNNNNNMuK.
+.KWMMMMMMMMMMuK.
+.KWMNNNNNNNNMuK.
+.KWMMMMMMMMMMuK.
+.KWMNNNNNNNNMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMKKMuK.
+.KWMMMMMMMWKMuK.
+
+# steel locker, closed, 1x2 tiles
+@frame locker_0_1
+.KWMMMMMMMWKMuK.
+.KWMMMMMMMKKMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KWMMMMMMMMMMuK.
+.KNNNNNNNNNNNNK.
+.KuuuuuuuuuuuuK.
+.KuuuuuuuuuuuuK.
+.KuuuuuuuuuuuuK.
+.KKKKKKKKKKKKKK.
+..KK........KK..
+..KK........KK..
+
+# steel locker, door open
+@frame locker_open_0_0
+.KKKKKKKKKKKKKK.
+.KuNKKKKKKKKKKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDNNDDDKK.
+.KuNDDDDDNDDDKK.
+.KuNDDDDDNDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+
+# steel locker, door open
+@frame locker_open_0_1
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNDDDDDDDDDKK.
+.KuNNNNNNNNNNKK.
+.KuNDDDDDDDDDKK.
+.KKKKKKKKKKKKKK.
+..KK........KK..
+..KK........KK..
+
+# note lying on the floor (pick-up)
+@frame note
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+....KKKKKKKK....
+...KwwwwwwwWK...
+...KwMMwMMMwK...
+...KwwwwwwwwK...
+....KKKKKKKK....
+
+# note, glint frame (alternate with note)
+@frame note_glint
+................
+................
+................
+................
+................
+................
+................
+........Y.......
+.......YwY......
+........Y.......
+................
+....KKKKKKKK....
+...KwwwwwwwWK...
+...KwMMwMMMwK...
+...KwwwwwwwwK...
+....KKKKKKKK....
+
+# candle checkpoint, lit (2-frame flicker)
+@frame candle_lit_0
+................
+................
+................
+.......Y........
+.......wY.......
+.......Y........
+.......K........
+.......KK.......
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+..KPPPPPPPPPPK..
+...KKKKKKKKKK...
+
+@frame candle_lit_1
+................
+................
+................
+........Y.......
+.......Yw.......
+........Y.......
+.......K........
+.......KK.......
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+..KPPPPPPPPPPK..
+...KKKKKKKKKK...
+
+# candle checkpoint, not yet lit
+@frame candle_out
+................
+........M.......
+.......M........
+........M.......
+.......M........
+................
+.......K........
+.......KK.......
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+.....KWWWMK.....
+..KPPPPPPPPPPK..
+...KKKKKKKKKK...

@@ -7,7 +7,8 @@ format, the same split the project uses for dialogue text and code.
 
 Formats (how the art uses them: assets/original/art/README.md)
 
-  palette (.pal)   KEY HEX [name]           one character per colour
+  palette (.pal)   KEY HEX [name]           one character per colour; HEX is
+                                            RRGGBB, or RRGGBBAA for translucency
   sprite (.pix)    @palette PATH            palette file, relative to the source
                    @size W H                frame size in pixels
                    @output PATH             PNG sheet to write
@@ -21,6 +22,9 @@ Formats (how the art uses them: assets/original/art/README.md)
                    @frame NAME shift=OTHER,DX,DY  moved copy, no rows
                    @frame NAME copy=FILE.pix:OTHER  frame from another
                                             source of the same size, no rows
+                   @frame NAME fade=OTHER,LEVEL  OTHER with LEVEL/4 of its
+                                            pixels removed in an ordered
+                                            dither (1..3), for dissolves
                    @blank NAME              empty frame
                    frames whose name starts with "_" are helpers: usable as
                    base/mirror/shift sources but not placed in the sheet
@@ -52,6 +56,7 @@ ART_SRC = os.path.join(REPO, 'assets', 'original', 'art', 'src')
 TRANSPARENT = '.'
 INHERIT = '~'
 DARK_STEPS = 4  # darkness is quantised into this many levels for a pixel-art look
+BAYER2 = ((0, 2), (3, 1))  # ordered-dither thresholds for fade=
 
 
 class ArtError(Exception):
@@ -108,13 +113,13 @@ def load_palette(path):
         if key in colours:
             raise ArtError(f'{path}:{number}: duplicate palette key {key!r}')
         value = value.lstrip('#')
-        if len(value) != 6:
-            raise ArtError(f'{path}:{number}: colour must be RRGGBB')
+        if len(value) not in (6, 8):
+            raise ArtError(f'{path}:{number}: colour must be RRGGBB or RRGGBBAA')
         try:
-            rgb = tuple(int(value[i:i + 2], 16) for i in (0, 2, 4))
+            rgba = tuple(int(value[i:i + 2], 16) for i in range(0, len(value), 2))
         except ValueError:
-            raise ArtError(f'{path}:{number}: colour must be RRGGBB') from None
-        colours[key] = rgb + (255,)
+            raise ArtError(f'{path}:{number}: colour must be RRGGBB or RRGGBBAA') from None
+        colours[key] = rgba if len(rgba) == 4 else rgba + (255,)
         names[key] = ' '.join(parts[2:])
     return colours, names
 
@@ -202,6 +207,15 @@ class Sprite:
             return i
         if 'mirror' in options:
             self._add(number, name, [row[::-1] for row in self._source(number, options['mirror'])])
+            return i
+        if 'fade' in options:
+            other, level = options['fade'].split(',')
+            src, level = self._source(number, other), int(level)
+            if not 1 <= level <= 3:
+                raise ArtError(f'{self.path}:{number}: fade level must be 1, 2 or 3')
+            self._add(number, name, [''.join(
+                TRANSPARENT if BAYER2[y % 2][x % 2] < level else ch for x, ch in enumerate(row))
+                for y, row in enumerate(src)])
             return i
         if 'shift' in options:
             other, dx, dy = options['shift'].split(',')

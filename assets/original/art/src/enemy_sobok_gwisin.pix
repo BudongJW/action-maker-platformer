@@ -92,3 +92,8 @@
 ~
 ~
 ~
+
+# dissolve in/out
+@frame vanish_0 fade=float_0,1
+@frame vanish_1 fade=float_0,2
+@frame vanish_2 fade=float_0,3

@@ -89,6 +89,15 @@ class PixelArtTest(unittest.TestCase):
         self.assertEqual(sprite.frames["moved"], [".KW", ".RR"])
         self.assertEqual(sprite.sheet_frames(), ["edited", "flipped", "moved"])  # helper hidden
 
+    def test_fade_and_rgba_palette(self):
+        (self.dir / "a.pal").write_text("L ffffff80 half white\n", encoding="utf-8")
+        src = self.write("f.pix", "@palette a.pal\n@size 2 2\n@output f.png\n"
+                         "@frame full\nLL\nLL\n@frame half fade=full,2\n@frame gone fade=full,3\n")
+        sprite = pixelart.Sprite(src)
+        self.assertEqual(sprite.frames["half"], [".L", "L."])
+        self.assertEqual(sum(row.count("L") for row in sprite.frames["gone"]), 1)
+        self.assertEqual(self.render(src)["f.png"][0][0], (255, 255, 255, 128))
+
     def test_copy_from_other_file(self):
         self.write("src.pix", "@palette p.pal\n@size 1 1\n@output s.png\n@frame dot\nR\n")
         dst = self.write("dst.pix", "@palette p.pal\n@size 1 1\n@output d.png\n@frame x copy=src.pix:dot\n")
