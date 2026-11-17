@@ -1,0 +1,155 @@
+import contextlib
+import io
+import os
+import struct
+import sys
+import tempfile
+import unittest
+import zlib
+from pathlib import Path
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+import pixelart  # noqa: E402
+
+PALETTE = """# test palette
+K 000000 black
+W ffffff white
+R ff0000 red
+"""
+
+
+def decode_png(data):
+    """Minimal decoder for the RGBA, filter-0 PNGs that pixelart writes."""
+    assert data[:8] == b"\x89PNG\r\n\x1a\n"
+    pos, idat, width = 8, b"", None
+    while pos < len(data):
+        length, tag = struct.unpack(">I4s", data[pos:pos + 8])
+        body = data[pos + 8:pos + 8 + length]
+        if tag == b"IHDR":
+            width, height = struct.unpack(">II", body[:8])
+        elif tag == b"IDAT":
+            idat += body
+        pos += 12 + length
+    raw = zlib.decompress(idat)
+    stride = width * 4 + 1
+    rows = []
+    for y in range(height):
+        line = raw[y * stride:(y + 1) * stride]
+        assert line[0] == 0
+        rows.append([tuple(line[1 + x * 4:5 + x * 4]) for x in range(width)])
+    return rows
+
+
+class PixelArtTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        (self.dir / "p.pal").write_text(PALETTE, encoding="utf-8")
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def write(self, name, text):
+        path = self.dir / name
+        path.write_text(text, encoding="utf-8")
+        return str(path)
+
+    def render(self, path):
+        outputs = pixelart.outputs_for(path, {})
+        return {os.path.basename(k): decode_png(v) for k, v in outputs.items()}
+
+    def run_main(self, *args):
+        err = io.StringIO()
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
+            code = pixelart.main(list(args))
+        return code, err.getvalue()
+
+    def test_sheet_layout_and_colours(self):
+        src = self.write("a.pix", "@palette p.pal\n@size 2 2\n@output a.png\n@columns 2\n"
+                         "@frame one\nKW\n.R\n@frame two\nRR\nKK\n@frame three\nWW\nWW\n")
+        sheet = self.render(src)["a.png"]
+        self.assertEqual((len(sheet[0]), len(sheet)), (4, 4))  # 2 columns x 2 rows of 2x2 frames
+        self.assertEqual(sheet[0][0], (0, 0, 0, 255))
+        self.assertEqual(sheet[0][1], (255, 255, 255, 255))
+        self.assertEqual(sheet[1][0], (0, 0, 0, 0))  # '.' is transparent
+        self.assertEqual(sheet[0][2], (255, 0, 0, 255))  # second frame to the right
+        self.assertEqual(sheet[2][0], (255, 255, 255, 255))  # third frame wraps to the next row
+        self.assertEqual(sheet[3][3], (0, 0, 0, 0))  # unused cell stays empty
+
+    def test_base_inherit_mirror_shift_and_helpers(self):
+        src = self.write("b.pix", "@palette p.pal\n@size 3 2\n@output b.png\n"
+                         "@frame _base\nKWR\nRRR\n"
+                         "@frame edited base=_base\n~K~\n~\n"
+                         "@frame flipped mirror=_base\n"
+                         "@frame moved shift=_base,1,0\n")
+        sprite = pixelart.Sprite(src)
+        self.assertEqual(sprite.frames["edited"], ["KKR", "RRR"])
+        self.assertEqual(sprite.frames["flipped"], ["RWK", "RRR"])
+        self.assertEqual(sprite.frames["moved"], [".KW", ".RR"])
+        self.assertEqual(sprite.sheet_frames(), ["edited", "flipped", "moved"])  # helper hidden
+
+    def test_copy_from_other_file(self):
+        self.write("src.pix", "@palette p.pal\n@size 1 1\n@output s.png\n@frame dot\nR\n")
+        dst = self.write("dst.pix", "@palette p.pal\n@size 1 1\n@output d.png\n@frame x copy=src.pix:dot\n")
+        self.assertEqual(pixelart.Sprite(dst).frames["x"], ["R"])
+
+    def test_errors_are_reported(self):
+        cases = {
+            "wide.pix": "@palette p.pal\n@size 2 1\n@output o.png\n@frame a\nKKK\n",
+            "colour.pix": "@palette p.pal\n@size 1 1\n@output o.png\n@frame a\nZ\n",
+            "inherit.pix": "@palette p.pal\n@size 1 1\n@output o.png\n@frame a\n~\n",
+            "dupe.pix": "@palette p.pal\n@size 1 1\n@output o.png\n@frame a\nK\n@frame a\nK\n",
+            "short.pix": "@palette p.pal\n@size 1 2\n@output o.png\n@frame a\nK\n",
+        }
+        for name, text in cases.items():
+            with self.subTest(name):
+                with self.assertRaises(pixelart.ArtError):
+                    pixelart.Sprite(self.write(name, text))
+
+    def test_bad_palette_key(self):
+        self.write("bad.pal", "# K 000000\n. 000000\n")
+        with self.assertRaises(pixelart.ArtError):
+            pixelart.load_palette(str(self.dir / "bad.pal"))
+
+    def test_scene_layers_sprites_and_light(self):
+        self.write("t.pix", "@palette p.pal\n@size 2 2\n@output t.png\n@frame wall\nWW\nWW\n")
+        self.write("s.pix", "@palette p.pal\n@size 1 1\n@output s.png\n@frame dot\nR\n")
+        scene = self.write("x.scene", "@palette p.pal\n@size 12 2\n@output x.png\n@fill K\n"
+                           "@tiles t t.pix\n@legend w t:wall\n@layer\nww\n"
+                           "@sprite s.pix dot 11 1\n@darkness K 1.0\n@light 0 0 8\n"
+                           "@sprite s.pix dot 11 0 over\n")
+        pixels = self.render(scene)["x.png"]
+        self.assertEqual(pixels[0][0], (255, 255, 255, 255))  # light core: untouched
+        self.assertEqual(pixels[0][3], (191, 191, 191, 255))  # one darkness step further out
+        self.assertEqual(pixels[1][11], (0, 0, 0, 255))  # sprite under full darkness
+        self.assertEqual(pixels[0][11], (255, 0, 0, 255))  # "over" sprite drawn after darkness
+
+    def test_preview_is_scaled(self):
+        src = self.write("p.pix", "@palette p.pal\n@size 1 1\n@output o.png\n@preview big.png 3\n@frame a\nR\n")
+        outputs = self.render(src)
+        self.assertEqual(len(outputs["big.png"]), 3)
+        self.assertEqual(outputs["big.png"][2][2], (255, 0, 0, 255))
+
+    def test_output_is_deterministic(self):
+        src = self.write("d.pix", "@palette p.pal\n@size 2 1\n@output d.png\n@frame a\nKR\n")
+        self.assertEqual(pixelart.outputs_for(src, {}), pixelart.outputs_for(src, {}))
+
+    def test_check_mode(self):
+        src = self.write("c.pix", "@palette p.pal\n@size 1 1\n@output c.png\n@frame a\nR\n")
+        code, err = self.run_main("--check", src)
+        self.assertEqual(code, 1)
+        self.assertIn("out of date", err)
+        self.assertEqual(self.run_main(src)[0], 0)
+        self.assertEqual(self.run_main("--check", src)[0], 0)
+        Path(src).write_text(Path(src).read_text().replace("\nR\n", "\nK\n"))
+        self.assertEqual(self.run_main("--check", src)[0], 1)
+
+    def test_empty_root_is_ok(self):
+        empty = self.dir / "empty"
+        empty.mkdir()
+        self.assertEqual(self.run_main("--check", "--root", str(empty))[0], 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,42 @@
+# AI-generated content record
+
+Steam asks developers to disclose AI-generated content that players will see
+([Steamworks content survey](https://partner.steamgames.com/doc/gettingstarted/contentsurvey)),
+and [`assets/README.md`](../README.md) requires recording which files under
+`assets/original/` were made with AI and how. Keep this file up to date; when a
+file is redrawn by a person, move it to the "Replaced" table instead of deleting
+the row.
+
+## Current AI-generated files
+
+| Files | Made with | Date | How |
+|---|---|---|---|
+| `art/palette/night-school.pal` | Anthropic Claude (Claude Code) | 2026-11-17 | Colour values chosen by the AI |
+| `art/src/*.pix`, `art/src/*.scene` | Anthropic Claude (Claude Code) | 2026-11-17 | The AI wrote the text pixel maps directly, and for the tileset and faces wrote small shape-drawing scripts that emitted the text (those scripts are not kept; the `.pix` text is the source) |
+| `art/characters/*.png`, `art/tiles/*.png`, `art/portraits/*.png`, `art/mockups/*.png`, `art/palette/night-school.png`, `art/previews/*.png` | `tools/pixelart.py` (deterministic renderer, no AI) from the sources above | 2026-11-17 | Rendered output of AI-written sources |
+
+What was **not** involved:
+
+- No image-generation model. Every pixel comes from the text sources above.
+- No third-party image was used as input, traced, or edited. The packs in
+  `assets/third_party/` and the games in `docs/design-references.md` were used
+  only as written references for principles (size contrast, colour as signal,
+  darkness and light).
+
+## Replaced by human work
+
+| Files | Replaced on | By |
+|---|---|---|
+| _(none yet)_ | | |
+
+## Notes before release
+
+- For Steam, this counts as **pre-generated** AI content (made during
+  development), which the content survey asks you to describe.
+- Whether purely AI-generated images are protected by copyright differs by
+  country, and is doubtful in several of them. The "All rights reserved" notice
+  in [`LICENSE.md`](LICENSE.md) may not be enforceable for these files. If
+  exclusivity matters, have them redrawn or substantially reworked by a person.
+- The research report notes that AI art can be a reputational risk in the
+  Japanese doujin and RPG Maker community (DLsite separated AI works in 2024).
+  Decide how to present it before marketing.

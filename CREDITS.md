@@ -112,4 +112,6 @@ SOFTWARE.
 
 | 분야 | 제작자 |
 |---|---|
-| _(아직 없음)_ | |
+| 픽셀 아트 1차 콘셉트 (`assets/original/art/`: 주인공, 적 3종, 복도 타일셋, 얼굴, 목업) | AI 생성 (Anthropic Claude, Claude Code), 2026-11-17. 경위는 [`assets/original/AI_CONTENT.md`](assets/original/AI_CONTENT.md) |
+
+AI 생성물을 사람이 다시 그리면 이 행과 `AI_CONTENT.md`를 함께 고칩니다. 출시 크레딧과 Steam AI 콘텐츠 공개 문구는 그 시점의 기록을 기준으로 씁니다.

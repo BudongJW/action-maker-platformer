@@ -41,7 +41,8 @@ Separately from asset classification, two rules always apply to text. The reason
 
 - Art, audio and scenario/dialogue text, including source and work files (`.dlg`, `.aseprite`, `.kra`, `.psd`).
 - License: [`original/LICENSE.md`](original/LICENSE.md)
-- If AI-generated content is used, record the file paths and tools (needed for Steam's AI content disclosure).
+- If AI-generated content is used, record the file paths and tools in [`original/AI_CONTENT.md`](original/AI_CONTENT.md) (needed for Steam's AI content disclosure).
+- Pixel art sources are plain-text maps in `original/art/src/`, rendered by `tools/pixelart.py`. The art data stays under `original/` and only the renderer is GPL code, the same split as for dialogue. See [`original/art/README.md`](original/art/README.md).
 - **Do not put modified GGG or third-party assets here.** A modified asset still follows the original license, so keep it with the original (`third_party/` or `assets_private/`).
 
 ## 2. `third_party/<source>/`: redistributable third-party assets
