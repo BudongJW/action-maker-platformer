@@ -1,6 +1,6 @@
 # 스케어 디렉터·트랙 믹서·스케어 검사 도구
 
-이 문서는 `scripts/scare/scare_director.gd`(`ScareDirector`), `scripts/tracks/track_mixer.gd`(`TrackMixer`), `tools/scare_lint.py`의 동작과 근거를 설명합니다. 세 가지 모두 GPL-3.0 코드이며 대사·줄거리를 담지 않습니다. 게임별 설정 파일(예: `assets/original/story/scares.json`)은 원작 콘텐츠로서 비공개로 둡니다.
+이 문서는 `scripts/scare/scare_director.gd`(`ScareDirector`), `scripts/tracks/track_mixer.gd`(`TrackMixer`), `tools/scare_lint.py`의 동작과 근거를 설명합니다. 세 가지 모두 GPL-3.0 코드이며 대사·줄거리를 담지 않습니다. 게임별 설정 파일(예: 비공개 스토리 팩의 `private/assets/original/story/scares.json`)은 원작 콘텐츠로서 비공개로 둡니다.
 
 ## 1. 왜 따로 두는가
 
@@ -115,7 +115,7 @@ dub [at=0.0] [dur=1.4]: Did you hear that—
 ## 5. 검사 도구 `tools/scare_lint.py`
 
 ```bash
-python3 tools/scare_lint.py assets/original/story/scares.json --table
+python3 tools/scare_lint.py private/assets/original/story/scares.json --table
 ```
 
 ### 5.1 규칙

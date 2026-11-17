@@ -1,0 +1,92 @@
+# Top-down mock-up: a classroom at night. Chalkboard, TV showing static,
+# clock at 4:44 and a window on the wall face; rows of desks; the sobok
+# ghost stands in the aisle.
+@palette ../palette/night-school.pal
+@size 320 224
+@output ../mockups/map_classroom_td.png
+@preview ../previews/map_classroom_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@legend A tw:walltop_15
+@legend B td:face_upper
+@legend C td:face_lower
+@legend D tw:walltop_13
+@legend E td:floor_wood_shadow
+@legend F tw:walltop_07
+@legend G td:floor_wood
+@legend H td:floor_wood_b
+@legend I tw:walltop_14
+@legend J ns:window_0_0
+@legend K ns:window_1_0
+@legend L ns:window_0_1
+@legend M ns:window_1_1
+@legend N cl:tv_static0_0_0
+@legend O cl:tv_static0_1_0
+@legend P cl:tv_static0_0_1
+@legend Q cl:tv_static0_1_1
+@legend R cl:chalkboard_0_0
+@legend S cl:chalkboard_1_0
+@legend T cl:chalkboard_2_0
+@legend U cl:chalkboard_3_0
+@legend V cl:chalkboard_0_1
+@legend W cl:chalkboard_1_1
+@legend X cl:chalkboard_2_1
+@legend Y cl:chalkboard_3_1
+@legend Z cl:bulletin_0_0
+@legend a cl:bulletin_1_0
+@legend b td:door_open_0_0
+@legend c td:door_open_0_1
+@legend d cl:clock
+@legend e cl:cabinet_0_0
+@legend f cl:cabinet_1_0
+@legend g cl:cabinet_0_1
+@legend h cl:cabinet_1_1
+@legend i td:teacher_desk_0_0
+@legend j td:teacher_desk_1_0
+@legend k td:desk
+@legend l td:chair
+
+@layer
+AAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAA
+ABBBBBBBBBBBBBBBBBBA
+ACCCCCCCCCCCCCCCCCCA
+DEEEEEEEEEEEEEEEEEEF
+DGGGGGGGHGGHGHGGGGGF
+DHHGGHHGGHHGGGGHGGGF
+DHGHGGGGGGGGGGGGGGHF
+DGGGHGHHGGGHHGGGHGHF
+DGHHHHHHGGGHGGHGHGGF
+DHGHGGGHHHGGHGHGGGGF
+DGGHGGHGGHGHGHHHGGHF
+DGGHHHHGHHHGGGGGGGGF
+AIIIIIIIIIIIIIIIIIIA
+@layer
+....................
+....................
+.JKNO..RSTU..Za..b..
+.LMPQ..VWXd......c..
+.ef.................
+.gh.....ij..........
+....................
+...k.k.k.....k.k.k..
+...l.l.l.....l.l.l..
+...k.k.k.....k.k.k..
+...l.l.l.....l.l.l..
+...k.k.k.....k.k.k..
+...l.l.l.....l.l.l..
+....................
+
+@sprite protagonist_topdown.pix down_1 268 48
+@sprite enemy_sobok_gwisin_topdown.pix down_1 156 120
+@darkness K 0.8
+@cone 280 76 120 40 150
+@light 40 72 26
+@light 88 56 30
+@light 168 156 18

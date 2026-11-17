@@ -1,0 +1,12 @@
+# Corridor room tone, seamless 8 s loop: mains hum of the lamps, low air
+# rumble and a faint hiss. Quiet on purpose (bed under everything else).
+@output ../ambience/corridor_loop.wav
+@length 8.0
+@seed 21
+@peak -12
+@loop
+layer sine freq=120 amp=0.12
+layer sine freq=240 amp=0.06
+layer sine freq=360 amp=0.03 trem=0.13 trem_depth=0.3
+layer brown amp=0.35 lp=350 hp=30
+layer noise amp=0.03 hp=4000 lp=9000 trem=0.07 trem_depth=0.5

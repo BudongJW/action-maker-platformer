@@ -1,0 +1,120 @@
+# Top-down mock-up: a small fishing port at night. Warehouses and a brick
+# house along the quay, market stalls and squid racks, a pier into the
+# harbour, squid boats with their lamps lit, tetrapods on the breakwater
+# and a lighthouse. Something rises from the water by the pier.
+@palette ../palette/night-school.pal
+@size 512 288
+@output ../mockups/map_port_td.png
+@preview ../previews/map_port_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@tiles pt tiles_port_td.pix
+@legend A tw:walltop_15
+@legend B pt:warehouse_upper
+@legend C tn:brick_upper
+@legend D pt:warehouse_lower
+@legend E tn:brick_lower
+@legend F td:floor_concrete
+@legend G pt:quay_upper
+@legend H pt:pier
+@legend I pt:quay_lower
+@legend J pt:shallow_0
+@legend K pt:water_0
+@legend L tn:shutter_0_0
+@legend M tn:shutter_0_1
+@legend N tn:villa_window_0_0
+@legend O tn:villa_window_1_0
+@legend P tn:villa_window_0_1
+@legend Q tn:villa_window_1_1
+@legend R pt:market_stall_0_0
+@legend S pt:market_stall_1_0
+@legend T pt:squid_rack_0_0
+@legend U pt:squid_rack_1_0
+@legend V td:streetlamp
+@legend W pt:crate
+@legend X pt:fish_boxes
+@legend Y pt:net_pile
+@legend Z pt:rope_coil
+@legend a pt:bollard
+@legend b pt:fishing_boat_0_0
+@legend c pt:fishing_boat_1_0
+@legend d pt:fishing_boat_0_1
+@legend e pt:fishing_boat_1_1
+@legend f pt:fishing_boat_0_2
+@legend g pt:fishing_boat_1_2
+@legend h pt:lighthouse_0_0
+@legend i pt:lighthouse_1_0
+@legend j pt:lighthouse_0_1
+@legend k pt:lighthouse_1_1
+@legend l pt:lighthouse_0_2
+@legend m pt:lighthouse_1_2
+@legend n pt:tetrapods_0_0
+@legend o pt:tetrapods_1_0
+@legend p pt:tetrapods_0_1
+@legend q pt:tetrapods_1_1
+@legend r pt:rowboat_0_0
+@legend s pt:rowboat_0_1
+@legend t pt:buoy
+
+@layer
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBCCCCCCCCBBBBBBBBCCCCC
+DDDDDDDDDDDEEEEEEEEDDDDDDDDEEEEE
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+GGGGGGGGGHHHGGGGGGGGGGGGGGGGGGGG
+IIIIIIIIIHHHIIIIIIIIIIIIIIIIIIII
+JJJJJJJJJHHHJJJJJJJJJJJJJJJJJJJJ
+KKKKKKKKKHHHKKKKKKKKKKKKKKKFFFFK
+KKKKKKKKKHHHKKKKKKKKKKKKKKKFFFFK
+KKKKKKKKKHHHKKKKKKKKKKKKKKKKKKKK
+KKKKKKKKKHHHKKKKKKKKKKKKKKKKKKKK
+KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+@layer
+................................
+................................
+..LL....LL...NO.....NO.LLLL...NO
+..MM....MM...PQ.....PQ.MMMM...PQ
+..RS.TU...RS...TU..V....WW.X..V.
+.Y.....Z..........Y.............
+..X..W...V...W..........Y.......
+...........................XXX..
+..a........a.......a............
+................................
+................................
+............bc.............hi...
+............de.............jk...
+...bc.......fg.............lmno.
+...de.........r..t...........pq.
+.t.fg........ts.................
+....................nono.no.....
+....................pqpq.pq.....
+
+@sprite protagonist_topdown.pix down_1 156 176
+@sprite creature_water_ghost.pix rise_1 124 216
+@sprite zombie_elder_topdown.pix right_1 60 80
+@sprite zombie_elder_topdown.pix down_1 348 64
+@sprite enemy_dokkaebi_bul.pix flicker_0 288 192 over
+@darkness K 0.78
+@cone 168 216 90 36 90
+@light 152 104 44
+@light 312 72 44
+@light 488 72 44
+@light 200 200 40
+@light 56 232 40
+@light 440 184 50
+@light 216 56 20
+@light 296 200 18

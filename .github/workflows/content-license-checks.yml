@@ -33,9 +33,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Fail if anything under assets/original/story or assets/original/characters is tracked
+      # The private story pack (plot, dialogue, characters, level and scare configs) lives in
+      # private/ on the developer's machine. assets/original/story/ is a public placeholder.
+      - name: Fail if anything under private/ is tracked
         run: |
-          tracked="$(git ls-files assets/original/story assets/original/characters)"
+          tracked="$(git ls-files private)"
           if [ -n "$tracked" ]; then
             echo "These files are private story content and must not be committed:"
             echo "$tracked"
@@ -77,3 +79,15 @@ jobs:
 
       - name: Prototype bot playthrough (generic demo content)
         run: python3 tools/build_prototype.py --story demo --smoke --require-godot
+
+  pixel-art:
+    name: Pixel art PNGs match their text sources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Render assets/original/art/src and compare
+        run: python3 tools/pixelart.py --check
+
+      - name: Render assets/original/mibangsong/art/src and compare
+        run: python3 tools/pixelart.py --check --root assets/original/mibangsong/art/src

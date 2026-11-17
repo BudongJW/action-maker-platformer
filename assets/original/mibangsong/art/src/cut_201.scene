@@ -1,0 +1,46 @@
+# PRIVATE (미방송분). Cut 2-01: the care home: Gyeongho (59) by the window; Seojin stops at the door after eight years
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/201.png
+@preview ../previews/201_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend E x:wall
+@legend F w:floor
+@legend e x:wall_base
+@layer
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+eeeeeeeeeeeeeeeeeeee
+FFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFF
+@sprite mbs_tiles_extra.pix window_0_0 208 48
+@sprite mbs_tiles_extra.pix window_1_0 224 48
+@sprite mbs_tiles_extra.pix window_0_1 208 64
+@sprite mbs_tiles_extra.pix window_1_1 224 64
+@sprite mbs_tiles_extra.pix bed_0_0 72 128
+@sprite mbs_tiles_extra.pix bed_1_0 88 128
+@sprite mbs_tiles_extra.pix bed_2_0 104 128
+@sprite mbs_tiles_extra.pix bed_0_1 72 144
+@sprite mbs_tiles_extra.pix bed_1_1 88 144
+@sprite mbs_tiles_extra.pix bed_2_1 104 144
+@sprite mbs_tiles_workroom.pix door_0_0 8 112
+@sprite mbs_tiles_workroom.pix door_0_1 8 128
+@sprite mbs_tiles_workroom.pix door_0_2 8 144
+@sprite mbs_tiles_workroom.pix chair 232 144
+@sprite mbs_gyeongho_old.pix sit_0 228 121 flip
+@sprite mbs_seojin.pix idle_0 28 121
+@darkness K 0.08
+@light 224 64 90

@@ -1,0 +1,104 @@
+# Concept: the corridor after. A drag trail runs from a covered body into an
+# open classroom door, a bloody hand slid down the door frame, a body sits
+# slumped by a locker that is bleeding from its vents, and the bloody student
+# ghost stands in the doorway, caught in the flashlight.
+# GORE SET (optional): part of the gore option; see docs/decisions.md D9.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../concepts/concept_gore_aftermath.png
+@preview ../previews/concept_gore_aftermath_x3.png 3
+@fill D
+
+@tiles t tiles_night_school.pix
+@legend C t:ceiling
+@legend P t:wall_plaster
+@legend X t:wall_plaster_crack
+@legend R t:wall_rail
+@legend w t:wall_wainscot
+@legend h t:wall_wainscot_hand
+@legend F t:floor_top
+@legend f t:floor_fill
+@legend 1 t:window_0_0
+@legend 2 t:window_1_0
+@legend 3 t:window_0_1
+@legend 4 t:window_1_1
+@legend 5 t:door_0_0
+@legend 6 t:door_1_0
+@legend 7 t:door_0_1
+@legend 8 t:door_1_1
+@legend 9 t:door_0_2
+@legend 0 t:door_1_2
+@legend L t:lamp_off
+@legend O t:lamp_on
+@legend g t:geumjul
+@legend s t:sign_plate
+@legend T t:talisman
+@legend d t:desk
+@legend k t:locker_0_0
+@legend l t:locker_0_1
+@legend c t:candle_lit_0
+@legend n t:note_glint
+
+@legend a t:door_open_0_0
+@legend b t:door_open_1_0
+@legend e t:door_open_0_1
+@legend i t:door_open_1_1
+@legend j t:door_open_0_2
+@legend m t:door_open_1_2
+@layer
+CCCCCCCCCCCCCCCCCCCC
+PPPPPPPPPPPPPPPPPPPP
+PP12PPPPPPPPPPPP12PP
+PP34PPPPPPXPPPPP34PP
+PPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPP
+RRRRRRRabRRRRRRRRRRR
+wwwwwwweiwwwwwwwhwww
+wwwwwwwjmwwwwwwwwwww
+FFFFFFFFFFFFFFFFFFFF
+ffffffffffffffffffff
+@layer
+....L.....L....L....
+....................
+....................
+....................
+....................
+....................
+.....s..............
+....................
+.T..................
+....................
+@sprite tiles_gore.pix splatter_0 36 60
+@sprite tiles_gore.pix splatter_2 252 74
+@sprite tiles_gore.pix handprints 196 108
+@sprite tiles_gore.pix scratches 92 116
+@sprite tiles_gore.pix hand_smear_0_0 146 90
+@sprite tiles_gore.pix hand_smear_0_1 146 106
+@sprite tiles_gore.pix wall_smear_0_0 210 124
+@sprite tiles_gore.pix wall_smear_1_0 226 124
+@sprite tiles_gore.pix locker_bloody_0_0 16 128
+@sprite tiles_gore.pix locker_bloody_0_1 16 144
+@sprite tiles_gore.pix drag_0_0 150 144 flip
+@sprite tiles_gore.pix drag_1_0 134 144 flip
+@sprite tiles_gore.pix drag_0_0 182 144 flip
+@sprite tiles_gore.pix drag_1_0 166 144 flip
+@sprite tiles_gore.pix pool_0_0 214 144
+@sprite tiles_gore.pix pool_1_0 230 144
+@sprite tiles_gore.pix body_sheet_0_0 250 144
+@sprite tiles_gore.pix body_sheet_1_0 266 144
+@sprite tiles_gore.pix drip_1 300 16
+@sprite tiles_gore.pix pool_small 300 144
+@sprite tiles_gore.pix drops 96 144
+@sprite tiles_gore.pix hand_smear_0_0 58 104
+@sprite tiles_gore.pix hand_smear_0_1 58 120
+@sprite gore_corpses.pix slumped 48 128
+@sprite creature_bloody_student.pix idle_0 120 128
+@sprite protagonist_side.pix idle_0 186 128 flip
+@darkness K 0.86
+@cone 186 146 180 30 150
+@light 132 140 22
+@light 268 150 18
+@light 304 26 8
+@light 64 140 14
+@sprite fx_vignette.pix vignette 0 0 over

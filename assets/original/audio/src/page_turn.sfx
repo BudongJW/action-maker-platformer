@@ -1,0 +1,6 @@
+# Turning a page / opening the journal.
+@output ../sfx/page_turn.wav
+@length 0.5
+@seed 41
+layer noise amp=0.5 attack=0.06 dur=0.3 fade=0.15 hp=1200 lp=6000 lp_end=2500 trem=11 trem_depth=0.6
+layer noise at=0.28 amp=0.25 attack=0.003 decay=0.04 hp=2000

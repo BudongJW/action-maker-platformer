@@ -1,0 +1,396 @@
+# Gut tiles for top-down maps, 16x16: straw mat, paper-lattice wall faces,
+# altar from above, candles, blade trestle, drum, gong, white cloth, a painting
+# sized for the wall face. Flags, paper money and the soul boat: use the side
+# view tiles (tiles_gut.pix) as standing objects.
+@palette ../palette/night-school.pal
+@size 16 16
+@output ../tiles/tiles_gut_td.png
+@preview ../previews/tiles_gut_td_x4.png 4
+@columns 8
+
+# straw mat floor
+@frame mat_td
+hhsssssshhssssss
+sssssshhsssssshh
+sssshhsssssshhss
+sshhsssssshhssss
+hhsssssshhssssss
+sssssshhsssssshh
+sssshhsssssshhss
+hhhhhhhhhhhhhhhh
+hhsssssshhssssss
+sssssshhsssssshh
+sssshhsssssshhss
+sshhsssssshhssss
+hhsssssshhssssss
+sssssshhsssssshh
+sssshhsssssshhss
+hhhhhhhhhhhhhhhh
+
+# paper-lattice wall face, two rows (upper, lower)
+@frame hanji_face_upper
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pppppppppppppppp
+pppppppppppppppp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pppppppppppppppp
+pppppppppppppppp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+
+@frame hanji_face_lower
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pppppppppppppppp
+pppppppppppppppp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pWWWpWWWpWWWpWWp
+pppppppppppppppp
+PPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+
+# altar seen from above, 3x2
+@frame altar_td_0_0
+.KKKKKKKKKKKKKKK
+Kppppppppppppppp
+KpPPYPPPPPPPPPPP
+KpPPWPPPPPPPPPPP
+KpPPWPrrPrrPPPWW
+KpPPPrrrrrrrPPWW
+KpPPPrrrrrrrPPWW
+KpPPPPrrrrrPPPWW
+KpPPPPrrrrPPPPWW
+KpPPPPrrrrPPPPWW
+KpPPPPPrrPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+
+@frame altar_td_1_0
+KKKKKKKKKKKKKKKK
+pppppppppppppppp
+PPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+WWWWPPPPPPPPPPPP
+WWWWPPPPPPPPPPPP
+WWWWPPPPPPPPPPPP
+WWWWPPPPPPPPPPPP
+WWWWPPPPPPPPPPPP
+WWWWPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+PPPPPPPPPWWWWPPP
+PPPPPPPWWWWWWWWP
+PPPPPPPWWWWWWWWP
+PPPPPPWWWssssWWW
+PPPPPPWWssssssWW
+
+@frame altar_td_2_0
+KKKKKKKKKKKKKKK.
+pppppppppppppppK
+PPPPPPPPPPPYPPpK
+PPPPPPPPPPPWPPpK
+PPPPPhhPhhPWPPpK
+PPPPhhhhhhhPPPpK
+PPPPhhhhhhhPPPpK
+PPPPPhhhhhPPPPpK
+PPPPPPhhhhPPPPpK
+PPPPPPhhhhPPPPpK
+PPPPPPPhhPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+
+@frame altar_td_0_1
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPMMMMMMMM
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+KpPPPPPPPPPPPPPP
+Kppppppppppppppp
+.KKKKKKKKKKKKKKK
+
+@frame altar_td_1_1
+PPPPPPWWssssssWW
+PPPPPPWWssssssWW
+PPPPPPPWssssssWP
+PPPPPPPWWssssWWP
+PPPPPPPPPWWWWPPP
+PPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+MMMMMMMMMMMMMMMM
+PPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPP
+pppppppppppppppp
+KKKKKKKKKKKKKKKK
+
+@frame altar_td_2_1
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+MMMMMMMMMPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+PPPPPPPPPPPPPPpK
+pppppppppppppppK
+KKKKKKKKKKKKKKK.
+
+# candle, two frames
+@frame candle_td_0
+......KYK.......
+.....KYYYK......
+.....KYYYK......
+.....KYYYK......
+......KYWK......
+......KWWK......
+......KWWK......
+......KWWK......
+......KWWK......
+......KWWK......
+.....KhWWhK.....
+....KhhWWhhK....
+....KhhhhhhK....
+.....KhhhhK.....
+......KKKK......
+................
+
+@frame candle_td_1
+......KYK.......
+.....KYYYK......
+.....KYYYK......
+.....KYYYK......
+......KYWK......
+......KWWK......
+......KWWK......
+......KWWK......
+......KWWK......
+......KWWK......
+.....KhWWhK.....
+....KhhWWhhK....
+....KhhhhhhK....
+.....KhhhhK.....
+......KKKK......
+................
+
+# blade trestle from above, 2x1
+@frame jakdu_td_0_0
+................
+................
+..KKKKKKKKKKKKKK
+.Kpppppppppppppp
+.Kpppppppppppppp
+.KPPwwwwwwwwwwww
+.KPPMMMMMMMMMMMM
+.KPPPPPPPPPPPPPP
+.KPPPPPPPPPPPPPP
+.KPPwwwwwwwwwwww
+.KPPMMMMMMMMMMMM
+.KPPPPPPPPPPPPPP
+.KPPPPPPPPPPPPPP
+..KKKKKKKKKKKKKK
+................
+................
+
+@frame jakdu_td_1_0
+................
+................
+KKKKKKKKKKKKKK..
+ppppppppppppppK.
+ppppppppppppppK.
+wwwwwwwwwwwwPPK.
+MMMMMMMMMMMMPPK.
+PPPPPPPPPPPPPPK.
+PPPPPPPPPPPPPPK.
+wwwwwwwwwwwwPPK.
+MMMMMMMMMMMMPPK.
+PPPPPPPPPPPPPPK.
+PPPPPPPPPPPPPPK.
+KKKKKKKKKKKKKK..
+................
+................
+
+# janggu
+@frame janggu_td
+................
+................
+................
+................
+..KKKKKKKKKKKK..
+.KWWrrrrrrrrWWK.
+KWWWWrrrrrrWWWWK
+KWWWWrrrrrrWWWWK
+KWWWWrrrrrrWWWWK
+KWWWWrrrrrrWWWWK
+.KWWrrrrrrrrWWK.
+..KKKKKKKKKKKK..
+................
+................
+................
+................
+
+# jing gong lying on the floor
+@frame jing_td
+................
+......KKKK......
+....KKhhhhKK....
+...KhhhhhhhhK...
+..KhhsssssshhK..
+..KhsssssssshK..
+.KhhsswssssshhK.
+.KhhsssssssshhK.
+.KhhsssssssshhK.
+.KhhsssssssshhK.
+..KhsssssssshK..
+..KhhsssssshhK..
+...KhhhhhhhhK...
+....KKhhhhKK....
+......KKKK......
+................
+
+# long white cloth laid out (horizontal / vertical)
+@frame jilbe_td_h
+................
+................
+................
+................
+................
+................
+WWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWW
+MMMMMMMMMMMMMMMM
+................
+................
+................
+................
+................
+................
+
+@frame jilbe_td_v
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+......WWWM......
+
+# shaman-god painting for a two-row wall face, 2x2
+@frame musindo_small_0_0
+pppppppppppppppp
+KKKKKKKKKKKKKKKK
+pppppppppppppppp
+KUuuuuuuuuuuuuuu
+KUuuuuuuuuuuuuuu
+KUuWWWWWWWWWWWKK
+KUuWWWWWWWWWWWKK
+KUuWMMMMWWMKKKKK
+KUuWMMMMMMMKKKKK
+KUuWWWWMMMMWWsss
+KUuWWWWWWWWWWsss
+KUuWWWWWWWWWWsKs
+KUuWWWWWWWWWWsss
+KUuWWWWWWWWWWWss
+KUuWWWWWWWrrrrrK
+KUuWWWWWWWrrrrrK
+
+@frame musindo_small_1_0
+pppppppppppppppp
+KKKKKKKKKKKKKKKK
+pppppppppppppppp
+uuuuuuuuuuuuuuUK
+uuuuuuuuuuuuuuUK
+KKWWWWWWWWWWWuUK
+KKWWWWWWWWWWWuUK
+KKKKKWWWWWWWWuUK
+KKKKKWWWWWWWWuUK
+ssWWWWWWWWWWWuUK
+ssWWWWWWWWWWWuUK
+sKWWWWWWWWWWWuUK
+ssWWWWWWwWWWWuUK
+sWWWWWWWwWWWWuUK
+KrrrrrWWwWWWWuUK
+KrrrrrWwWWWWWuUK
+
+@frame musindo_small_0_1
+KUuWWWWWWrrrrrrK
+KUuWWWWWWrrrrrrR
+KUuWWWWWWrrrrrrR
+KUuWWWWWWrrrrrrR
+KUuWgWWgWrrrYYYY
+KUuGGGGGGrrrrrrR
+KUuGGGGGGrrrrrrR
+KUuGGGGGGrrrrrrR
+KUuGGGGGGrsrrrrR
+KUuGGGGGRRRRRRRR
+KUuuuuuuuuuuuuuu
+KUuuuuuuuuuuuuuu
+KUuuuuuuuuuuuuuu
+KUUUUUUUUUUUUUUU
+pppppppppppppppp
+KKKKKKKKKKKKKKKK
+
+@frame musindo_small_1_1
+KrrrrrrwWWWWWuUK
+RrrrrrrwWWWWWuUK
+RrrrrrrwWWWWWuUK
+RrrrrrrwWWWWWuUK
+YYYYrrrwWgWWWuUK
+RrrrrrwGGGGGGuUK
+RrrrrrwGGGGGGuUK
+RrrrrrwGGGGGGuUK
+RrrrrsrGGGGGGuUK
+RRRRRRRRGGGGGuUK
+uuuuuuuuuuuuuuUK
+uuuuuuuuuuuuuuUK
+uuuuuuuuuuuuuuUK
+UUUUUUUUUUUUUUUK
+pppppppppppppppp
+KKKKKKKKKKKKKKKK

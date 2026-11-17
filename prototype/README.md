@@ -10,7 +10,7 @@ GODOT_BIN=/path/to/Godot_v4.7-stable python3 tools/build_prototype.py --run
 
 | Source | When | Files |
 |---|---|---|
-| Private story pack | `assets/original/story/project.json` exists (git-ignored) | compiled story, `scares.json`, `proto_level.json`, characters |
+| Private story pack | `private/assets/original/story/project.json` exists (`private/` is git-ignored) | compiled story, `scares.json`, `proto_level.json`, characters |
 | Generic demo | otherwise, or `--story demo` | [`demo/story/`](demo/story/), [`demo/characters/`](demo/characters/) |
 
 The demo is placeholder English text with no game story. The prototype code contains no dialogue text.

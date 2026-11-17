@@ -1,0 +1,6 @@
+# Jump: push-off scuff and a cloth whoosh.
+@output ../sfx/jump.wav
+@length 0.3
+@seed 7
+layer noise amp=0.35 attack=0.001 decay=0.02 lp=2500 hp=200
+layer noise amp=0.3 at=0.02 attack=0.03 decay=0.07 hp=800 lp=4000

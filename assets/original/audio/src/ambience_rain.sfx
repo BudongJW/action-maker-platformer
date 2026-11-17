@@ -1,0 +1,9 @@
+# Rain on the windows, seamless 6 s loop: hiss plus scattered drops.
+@output ../ambience/rain_loop.wav
+@length 6.0
+@seed 32
+@peak -10
+@loop 0.3
+layer noise amp=0.35 hp=1500 lp=8000
+layer brown amp=0.25 lp=500 hp=60
+layer noise amp=0.5 dur=0.012 decay=0.004 hp=2500 lp=7000 repeat=60 every=0.1 jitter=0.9

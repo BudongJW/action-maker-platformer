@@ -1,0 +1,8 @@
+{
+  "format": 1,
+  "source_locale": "ko",
+  "locales": ["ko", "en"],
+  "emotes": ["exclaim", "silence"],
+  "max_chars": { "bubble": 36, "caption": 70, "window": 75 },
+  "external_flags": []
+}

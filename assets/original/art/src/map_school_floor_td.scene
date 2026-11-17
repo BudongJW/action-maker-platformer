@@ -1,0 +1,142 @@
+# Top-down mock-up: a whole floor of the school. Two classrooms to the
+# north, the corridor with doors, lockers and stairs, the shoe-locker
+# entrance and the restroom to the south. Zombie students are already in.
+@palette ../palette/night-school.pal
+@size 512 384
+@output ../mockups/map_school_floor_td.png
+@preview ../previews/map_school_floor_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@legend A tw:walltop_15
+@legend B td:face_upper
+@legend C td:face_lower
+@legend D tw:walltop_13
+@legend E td:floor_wood_shadow
+@legend F tw:walltop_05
+@legend G tw:walltop_07
+@legend H td:floor_wood
+@legend I td:floor_wood_b
+@legend J tw:walltop_14
+@legend K tw:walltop_12
+@legend L tw:walltop_06
+@legend M tw:walltop_02
+@legend N tw:walltop_10
+@legend O rr:wall_tile
+@legend P td:floor_tile_shadow
+@legend Q td:floor_tile
+@legend R ns:window_0_0
+@legend S ns:window_1_0
+@legend T ns:window_0_1
+@legend U ns:window_1_1
+@legend V cl:chalkboard_0_0
+@legend W cl:chalkboard_1_0
+@legend X cl:chalkboard_2_0
+@legend Y cl:chalkboard_3_0
+@legend Z cl:chalkboard_0_1
+@legend a cl:chalkboard_1_1
+@legend b cl:chalkboard_2_1
+@legend c cl:chalkboard_3_1
+@legend d cl:clock
+@legend e cl:tv_static0_0_0
+@legend f cl:tv_static0_1_0
+@legend g cl:tv_static0_0_1
+@legend h cl:tv_static0_1_1
+@legend i td:teacher_desk_0_0
+@legend j td:teacher_desk_1_0
+@legend k td:desk
+@legend l td:chair
+@legend m ns:sign_plate
+@legend n td:door_0_0
+@legend o td:door_0_1
+@legend p ns:locker_0_0
+@legend q ns:locker_0_1
+@legend r ns:candle_lit_0
+@legend s pr:trash_can
+@legend t td:note
+@legend u pr:water_fountain
+@legend v td:stairs_0_0
+@legend w td:stairs_1_0
+@legend x td:stairs_0_1
+@legend y td:stairs_1_1
+@legend z pr:shoe_locker_0_0
+@legend 0 pr:shoe_locker_1_0
+@legend 1 pr:shoe_locker_0_1
+@legend 2 pr:shoe_locker_1_1
+@legend 3 rr:mirror_figure_0_0
+@legend 4 rr:mirror_figure_0_1
+@legend 5 td:stall_0_0
+@legend 6 td:stall_0_1
+@legend 7 rr:sink
+
+@layer
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ABBBBBBBBBBBBBABBBBBBBBBBBBBBBAA
+ACCCCCCCCCCCCCACCCCCCCCCCCCCCCAA
+DEEEEEEEEEEEEEFEEEEEEEEEEEEEEEGA
+DHHHHHHHIHHIHIFHHHHHIHHHHIHHIHGA
+DIIHHIIHHIIHHHFIHHHHHHIHIHHHIHGA
+DIHIHHHHHHHHHHFHHHIIHHHHHHHIHHGA
+DHHHIHIIHHHIIHFHIHIHIHHHIHHIIIGA
+DHIIIIIIHHHIHHFHIHHIHHHHHHHHIIGA
+AJJJJJJJJJJJJJAJJJJJJJJJJJJJJJAA
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+HHHIIHIIHIHHHHHHIHHIHHHIHIHHHHII
+IHHHIHHIIHHIIHHHIIHIHHIHIIHHIHIH
+HIHIHHIIIHHHIHIHHIHIIHHHHHHHHHHH
+IIHIHHIIIHHHIHHHHIHIHIIHHHHHIHHH
+JJJKHHHLJJJJJJJJJJJJKHHMNNJJJJJJ
+ABBBIHIBBBBBBAAAAAAAOOOHIHOOOOOA
+ACCCIIICCCCCCAAAAAAAOOOIHHOOOOOA
+DEEEHIHEEEEEEGAAAAADPPPQQQPPPPPG
+DHHIHIHIHHHIIGAAAAADQQQQQQQQQQQG
+AJJJJJJJJJJJJAAAAAAAJJJJJJJJJJJA
+@layer
+................................
+................................
+.RS..VWXY.d...........VWXYef....
+.TU..Zabc.............Zabcgh....
+........ij..............ij......
+................................
+..k.k.k.k.k.....k.k.k.k.k.k.....
+..l.l.l.l.l.....l.l.l.l.l.l.....
+..k.k.k.k.k.....k.k.k.k.k.k.....
+..l.l.l.l.l.....l.l.l.l.l.l.....
+................................
+..mn..RS.pppp.n.m.n.RS..ppp.n...
+...o..TU.qqqq.o...o.TU..qqq.o...
+r.......s......t........u.....vw
+..............................xy
+................................
+................................
+................................
+................................
+.z0.....z0...........3.3.55.5...
+.12.....12...........7.7.66.6...
+................................
+................................
+................................
+
+@sprite protagonist_topdown.pix right_1 60 224
+@sprite zombie_student_topdown.pix down_1 316 64
+@sprite zombie_student_girl_topdown.pix left_1 364 112
+@sprite zombie_student_topdown.pix right_1 412 80
+@sprite zombie_student_topdown.pix left_1 284 224
+@sprite enemy_sobok_gwisin_topdown.pix down_1 380 312
+@darkness K 0.8
+@cone 86 248 0 34 140
+@light 40 56 28
+@light 104 216 18
+@light 440 40 30
+@light 344 344 24
+@light 168 72 20

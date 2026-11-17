@@ -1,0 +1,76 @@
+# Concept: the waiting room of the community service centre. Number 444
+# is called; every chair is taken by someone who will never stand up.
+@palette ../palette/night-school.pal
+@size 320 192
+@output ../concepts/concept_waiting_room.png
+@preview ../previews/concept_waiting_room_x3.png 3
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@legend A tw:walltop_15
+@legend B of:face_upper
+@legend C of:face_lower
+@legend D of:floor_carpet
+@legend E of:floor_marble
+@legend F of:number_display_0_0
+@legend G of:number_display_1_0
+@legend H of:exit_sign
+@legend I of:desk_pc_on
+@legend J of:counter_l
+@legend K of:counter_m
+@legend L of:counter_r
+@legend M of:bench_0_0
+@legend N of:bench_1_0
+@legend O of:ticket_machine
+
+@layer
+AAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCC
+DDDDDDDDDDDDDDDDDDDD
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+EEEEEEEEEEEEEEEEEEEE
+@layer
+....................
+...FG....H.....FG...
+....................
+..I..I...I..I...I...
+JKKKKKKKKKKKKKKKKKKL
+....................
+..MN.MN..MN.MN.MN...
+....................
+..MN.MN..MN.MN.MN...
+....................
+.O..................
+....................
+
+@sprite zombie_office_topdown.pix down_1 140 32
+@sprite zombie_elder_topdown.pix up_1 28 80
+@sprite zombie_student_topdown.pix up_1 76 80
+@sprite zombie_guard_topdown.pix up_1 204 80
+@sprite zombie_office_topdown.pix up_1 140 112
+@sprite zombie_student_girl_topdown.pix up_1 236 112
+@sprite zombie_elder_topdown.pix up_1 28 112
+@sprite protagonist_topdown.pix up_1 140 160
+@darkness K 0.84
+@cone 152 184 270 34 110
+@light 72 24 36
+@light 264 24 36
+@light 40 56 12
+@light 152 56 12
+@light 264 56 12
+@light 24 168 18
+@sprite fx_vignette.pix vignette 0 0 over

@@ -2,9 +2,10 @@
 """Build (and optionally run) the vertical-slice prototype as a standalone Godot project.
 
 The prototype wires the story runtime, scare director and track mixer to a graybox level.
-Content comes from the private story pack in assets/original/story/ and
-assets/original/characters/ when it is present (it must contain proto_level.json and
-scares.json), otherwise from the generic demo in prototype/demo/.
+Content comes from the private story pack in private/ (git-ignored; same layout as the
+repository: private/assets/original/story/ and private/assets/original/characters/) when it is
+present (it must contain proto_level.json and scares.json), otherwise from the generic demo in
+prototype/demo/.
 
 Usage:
     python3 tools/build_prototype.py                     # build into build/prototype/
@@ -33,8 +34,8 @@ sys.path.insert(0, str(REPO / "tools"))
 import storyc  # noqa: E402
 
 SCRIPT_DIRS = ("story", "scare", "tracks", "proto")
-PRIVATE_STORY = REPO / "assets/original/story"
-PRIVATE_CHARS = REPO / "assets/original/characters"
+PRIVATE_STORY = REPO / "private/assets/original/story"
+PRIVATE_CHARS = REPO / "private/assets/original/characters"
 DEMO = REPO / "prototype/demo"
 SUMMARY_RE = re.compile(r"prototype: (\d+) frames, (\d+) loops, (\d+) dialogues, (\d+) lines, (\d+) scares")
 
@@ -69,10 +70,10 @@ def choose_source(mode: str) -> tuple[str, Path, Path]:
     private_ok = (PRIVATE_STORY / "project.json").is_file()
     if mode == "private" or (mode == "auto" and private_ok):
         if not private_ok:
-            raise SystemExit("build_prototype: no private story pack in assets/original/story/")
+            raise SystemExit("build_prototype: no private story pack in private/assets/original/story/")
         for name in ("proto_level.json", "scares.json"):
             if not (PRIVATE_STORY / name).is_file():
-                raise SystemExit(f"build_prototype: assets/original/story/{name} is missing")
+                raise SystemExit(f"build_prototype: private/assets/original/story/{name} is missing")
         return "private", PRIVATE_STORY, PRIVATE_CHARS
     return "demo", DEMO / "story", DEMO / "characters"
 

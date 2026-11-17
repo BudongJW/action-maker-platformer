@@ -1,0 +1,20 @@
+# Music sketch: other world. Two beating low drones (A1 and Bb1), a faint
+# high E/F rub, swells every 6 s and a deep boom every 12 s (24 s loop).
+@output ../music/otherworld_loop.wav
+@length 24.0
+@rate 22050
+@seed 53
+@peak -3
+@loop 1.0
+@echo 0.6 0.4 0.35
+layer saw freq=55 amp=0.25 lp=300 trem=0.11 trem_depth=0.5
+layer saw freq=58.27 amp=0.22 lp=280 trem=0.07 trem_depth=0.5
+layer sine freq=1318.51 amp=0.025 trem=0.9 trem_depth=1.0
+layer sine freq=1396.91 amp=0.025 trem=1.3 trem_depth=1.0
+layer brown amp=0.25 lp=150 hp=20
+layer noise amp=0.25 at=0.0 attack=3.5 dur=4.0 fade=0.5 lp=200 lp_end=2500 hp=80
+layer noise amp=0.25 at=6.0 attack=3.5 dur=4.0 fade=0.5 lp=200 lp_end=2500 hp=80
+layer noise amp=0.25 at=12.0 attack=3.5 dur=4.0 fade=0.5 lp=200 lp_end=2500 hp=80
+layer noise amp=0.25 at=18.0 attack=3.5 dur=4.0 fade=0.5 lp=200 lp_end=2500 hp=80
+layer sine freq=41.2 freq_end=30 amp=0.7 at=0.0 attack=0.005 decay=1.5
+layer sine freq=41.2 freq_end=30 amp=0.7 at=12.0 attack=0.005 decay=1.5

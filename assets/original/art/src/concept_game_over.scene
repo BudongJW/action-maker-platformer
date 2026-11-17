@@ -1,0 +1,81 @@
+# Concept: caught. The flashlight rolls away, the Shadow Visitor stands over
+# the protagonist, the screen closes in.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../concepts/concept_game_over.png
+@preview ../previews/concept_game_over_x3.png 3
+@fill D
+@tiles t tiles_night_school.pix
+@legend C t:ceiling
+@legend P t:wall_plaster
+@legend X t:wall_plaster_crack
+@legend R t:wall_rail
+@legend w t:wall_wainscot
+@legend h t:wall_wainscot_hand
+@legend F t:floor_top
+@legend f t:floor_fill
+@legend 1 t:window_0_0
+@legend 2 t:window_1_0
+@legend 3 t:window_0_1
+@legend 4 t:window_1_1
+@legend 5 t:door_0_0
+@legend 6 t:door_1_0
+@legend 7 t:door_0_1
+@legend 8 t:door_1_1
+@legend 9 t:door_0_2
+@legend 0 t:door_1_2
+@legend L t:lamp_off
+@legend O t:lamp_on
+@legend g t:geumjul
+@legend s t:sign_plate
+@legend T t:talisman
+@legend d t:desk
+@legend k t:locker_0_0
+@legend l t:locker_0_1
+@legend c t:candle_lit_0
+@legend n t:note_glint
+
+# walls and structure
+@layer
+CCCCCCCCCCCCCCCCCCCC
+PPPPPPPPPPPPPPPPPPPP
+PP12PPPPPPPP12PPPPPP
+PP34PPPPPPXP34PPPPPP
+PPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPP
+RRRRRRR56RRRRRRRR56R
+wwwwwww78wwwwwwhw78w
+wwwwwww90wwwwwwww90w
+FFFFFFFFFFFFFFFFFFFF
+ffffffffffffffffffff
+
+# props
+@layer
+....L.....L....O....
+....................
+....................
+....................
+....................
+....................
+......gggg.......s..
+........T...........
+.k..................
+.lc........d.n......
+
+@sprite protagonist_side.pix death_2 120 128
+@sprite enemy_shadow_visitor.pix idle_0 150 104 flip
+@darkness K 0.92
+@light 140 152 26
+@cone 136 158 0 20 50
+@sprite enemy_shadow_visitor.pix _eye_glow 150 104 flip over
+@sprite fx_vignette.pix vignette 0 0 over
+@sprite fx_static.pix static_0 0 0 over
+@sprite fx_static.pix static_1 64 0 over
+@sprite fx_static.pix static_2 128 0 over
+@sprite fx_static.pix static_0 192 0 over
+@sprite fx_static.pix static_1 256 0 over
+@sprite fx_static.pix static_1 0 64 over
+@sprite fx_static.pix static_2 256 64 over
+@sprite fx_static.pix static_2 0 128 over
+@sprite fx_static.pix static_0 256 128 over

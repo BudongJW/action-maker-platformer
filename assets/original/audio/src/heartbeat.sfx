@@ -1,0 +1,8 @@
+# Heartbeat loop at about 75 bpm (lub-dub); play under hiding or tension.
+@output ../sfx/heartbeat_loop.wav
+@length 0.8
+@seed 34
+@loop 0.02
+layer sine freq=62 freq_end=44 amp=0.9 attack=0.003 decay=0.07
+layer sine at=0.2 freq=58 freq_end=42 amp=0.55 attack=0.003 decay=0.06
+layer brown amp=0.3 attack=0.003 dur=0.12 decay=0.05 lp=200

@@ -1,0 +1,6 @@
+# Picking up and unfolding a note.
+@output ../sfx/paper_pickup.wav
+@length 0.45
+@seed 13
+layer noise amp=0.4 attack=0.02 dur=0.35 fade=0.1 hp=1800 lp=7000 trem=17 trem_depth=0.8
+layer noise at=0.12 amp=0.3 attack=0.01 decay=0.08 hp=2500

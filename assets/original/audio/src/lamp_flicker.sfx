@@ -1,0 +1,6 @@
+# Fluorescent lamp buzzing on and off (light-out event).
+@output ../sfx/lamp_flicker.wav
+@length 1.4
+@seed 19
+layer square freq=120 amp=0.25 dur=0.12 attack=0.005 fade=0.03 lp=1800 hp=200 repeat=5 every=0.22 jitter=0.6
+layer noise amp=0.2 dur=0.01 decay=0.004 hp=3000 repeat=5 every=0.22 jitter=0.6

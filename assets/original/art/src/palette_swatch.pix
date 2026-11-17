@@ -1,0 +1,206 @@
+# Swatch of the night-school palette, one 8x8 square per colour in file order.
+@palette ../palette/night-school.pal
+@size 8 8
+@output ../palette/night-school.png
+@preview ../previews/palette_swatch_x4.png 4
+@columns 10
+
+@frame K
+KKKKKKKK
+KKKKKKKK
+KKKKKKKK
+KKKKKKKK
+KKKKKKKK
+KKKKKKKK
+KKKKKKKK
+KKKKKKKK
+
+@frame D
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+
+@frame N
+NNNNNNNN
+NNNNNNNN
+NNNNNNNN
+NNNNNNNN
+NNNNNNNN
+NNNNNNNN
+NNNNNNNN
+NNNNNNNN
+
+@frame U
+UUUUUUUU
+UUUUUUUU
+UUUUUUUU
+UUUUUUUU
+UUUUUUUU
+UUUUUUUU
+UUUUUUUU
+UUUUUUUU
+
+@frame c_u
+uuuuuuuu
+uuuuuuuu
+uuuuuuuu
+uuuuuuuu
+uuuuuuuu
+uuuuuuuu
+uuuuuuuu
+uuuuuuuu
+
+@frame M
+MMMMMMMM
+MMMMMMMM
+MMMMMMMM
+MMMMMMMM
+MMMMMMMM
+MMMMMMMM
+MMMMMMMM
+MMMMMMMM
+
+@frame W
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+
+@frame c_w
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+
+@frame G
+GGGGGGGG
+GGGGGGGG
+GGGGGGGG
+GGGGGGGG
+GGGGGGGG
+GGGGGGGG
+GGGGGGGG
+GGGGGGGG
+
+@frame c_g
+gggggggg
+gggggggg
+gggggggg
+gggggggg
+gggggggg
+gggggggg
+gggggggg
+gggggggg
+
+@frame c_p
+pppppppp
+pppppppp
+pppppppp
+pppppppp
+pppppppp
+pppppppp
+pppppppp
+pppppppp
+
+@frame P
+PPPPPPPP
+PPPPPPPP
+PPPPPPPP
+PPPPPPPP
+PPPPPPPP
+PPPPPPPP
+PPPPPPPP
+PPPPPPPP
+
+@frame c_s
+ssssssss
+ssssssss
+ssssssss
+ssssssss
+ssssssss
+ssssssss
+ssssssss
+ssssssss
+
+@frame c_h
+hhhhhhhh
+hhhhhhhh
+hhhhhhhh
+hhhhhhhh
+hhhhhhhh
+hhhhhhhh
+hhhhhhhh
+hhhhhhhh
+
+@frame H
+HHHHHHHH
+HHHHHHHH
+HHHHHHHH
+HHHHHHHH
+HHHHHHHH
+HHHHHHHH
+HHHHHHHH
+HHHHHHHH
+
+@frame R
+RRRRRRRR
+RRRRRRRR
+RRRRRRRR
+RRRRRRRR
+RRRRRRRR
+RRRRRRRR
+RRRRRRRR
+RRRRRRRR
+
+@frame c_r
+rrrrrrrr
+rrrrrrrr
+rrrrrrrr
+rrrrrrrr
+rrrrrrrr
+rrrrrrrr
+rrrrrrrr
+rrrrrrrr
+
+@frame Y
+YYYYYYYY
+YYYYYYYY
+YYYYYYYY
+YYYYYYYY
+YYYYYYYY
+YYYYYYYY
+YYYYYYYY
+YYYYYYYY
+
+@frame C
+CCCCCCCC
+CCCCCCCC
+CCCCCCCC
+CCCCCCCC
+CCCCCCCC
+CCCCCCCC
+CCCCCCCC
+CCCCCCCC
+
+@frame c_c
+cccccccc
+cccccccc
+cccccccc
+cccccccc
+cccccccc
+cccccccc
+cccccccc
+cccccccc

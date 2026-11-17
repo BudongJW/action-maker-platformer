@@ -1,0 +1,9 @@
+# CRT TV static with mains buzz, seamless 2 s loop.
+@output ../sfx/tv_static_loop.wav
+@length 2.0
+@seed 45
+@peak -4
+@loop 0.2
+layer noise amp=0.5 hp=500 lp=7000
+layer square freq=60 amp=0.05 lp=900
+layer noise amp=0.15 hp=3000 trem=30 trem_depth=0.6

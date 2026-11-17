@@ -1,0 +1,61 @@
+# PRIVATE (미방송분). Cut 1-12 (HI-FI): the same framing as 1-06: the water is bluer and a little higher; the third rule in her own words
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/112_hifi.png
+@preview ../previews/112_hifi_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend A s:water_0
+@legend M g:mat
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....MMMMMMMM........
+SSSSSSSSSSSSSAAAAAAA
+sssssssssssssaaaaaaa
+@sprite ../../../art/src/tiles_gut.pix obangki_0_0 30 112
+@sprite ../../../art/src/tiles_gut.pix obangki_1_0 46 112
+@sprite ../../../art/src/tiles_gut.pix obangki_0_1 30 128
+@sprite ../../../art/src/tiles_gut.pix obangki_1_1 46 128
+@sprite ../../../art/src/tiles_gut.pix obangki_0_2 30 144
+@sprite ../../../art/src/tiles_gut.pix obangki_1_2 46 144
+@sprite ../../../art/src/tiles_gut.pix altar_0_0 104 128
+@sprite ../../../art/src/tiles_gut.pix altar_1_0 120 128
+@sprite ../../../art/src/tiles_gut.pix altar_2_0 136 128
+@sprite ../../../art/src/tiles_gut.pix altar_0_1 104 144
+@sprite ../../../art/src/tiles_gut.pix altar_1_1 120 144
+@sprite ../../../art/src/tiles_gut.pix altar_2_1 136 144
+@sprite ../../../art/src/tiles_gut.pix candle_0 92 144
+@sprite ../../../art/src/tiles_gut.pix candle_1 156 144
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_0 196 112
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_1 196 128
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_2 196 144
+@sprite mbs_mijeong.pix sindae_0 64 121
+@sprite mbs_sunrye.pix rules 168 121 flip
+@sprite ../../../art/src/npc_onlookers.pix a_seated 10 152
+@sprite ../../../art/src/npc_onlookers.pix c_seated 52 150
+@sprite ../../../art/src/npc_onlookers.pix b_seated 96 153
+@sprite ../../../art/src/npc_onlookers.pix a_seated 138 151
+@darkness K 0.58
+@light 124 140 44
+@light 98 146 26
+@light 162 146 26
+@light 184 130 30
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

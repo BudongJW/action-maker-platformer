@@ -1,0 +1,23 @@
+# Dawn palette: the same keys as night-school.pal, for the escape / ending
+# moments. Night indigo becomes purple and rose at the horizon, moonlight
+# turns into warm morning light. Keep the keys identical to night-school.pal.
+K 1a1220 outline, purple-black
+D 3c2a4e high sky purple
+N 6a3e64 mauve
+U b25a5c rose at the horizon
+u e08a62 orange
+M f2c38a warm light
+W e8d8c0 pale warm
+w fff2dc bright
+G 3e4a3a moss dark
+g 5e6e4c moss
+p 5a3a2e wood dark
+P 8a5a3e wood
+s f0c0a0 skin
+h c08870 skin shadow
+H 2e2026 hair
+R d84a3a accent red
+r 8a2a26 accent red dark
+Y ffe08a sunlight
+C a8e8d8 spirit (pale)
+c 5aa8a0 spirit dark

@@ -1,0 +1,64 @@
+# Concept: the edge of the candlelight. The protagonist kneels inside the
+# circle of a checkpoint candle; the reaper stops exactly where the light ends.
+@palette ../palette/night-school.pal
+@size 320 192
+@output ../concepts/concept_candle_boundary.png
+@preview ../previews/concept_candle_boundary_x3.png 3
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@tiles tn tiles_town_td.pix
+@tiles of tiles_office_td.pix
+@legend A tw:walltop_15
+@legend B td:face_upper
+@legend C td:face_lower
+@legend D td:floor_wood_shadow
+@legend E td:floor_wood
+@legend F td:floor_wood_b
+@legend G ns:window_0_0
+@legend H ns:window_1_0
+@legend I ns:window_0_1
+@legend J ns:window_1_1
+@legend K td:door_0_0
+@legend L td:door_0_1
+@legend M ns:candle_lit_0
+
+@layer
+AAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCC
+DDDDDDDDDDDDDDDDDDDD
+EFEEEEEEEFEFFEFEFEEE
+FEEEEEEEFEEFEFEEEEEE
+EFFEEFFEEFFEEEEFEEEE
+EFEFEEEEEEEEEEEEEEFF
+EEEEFEFFEEEFFEEEFEFE
+EEFFFFFFEEEFEEFEFEEF
+FFEFEEEFFFEEFEFEEEEF
+FEEFEEFEEFEFEFFFEEFF
+@layer
+....................
+..GH....K.....GH....
+..IJ....L.....IJ....
+....................
+....................
+.......M............
+....................
+....................
+....................
+....................
+....................
+....................
+
+@sprite protagonist_topdown.pix down_1 108 80
+@sprite creature_reaper.pix summon 200 80 flip
+@darkness K 0.9
+@light 120 88 56
+@light 40 40 24
+@light 232 40 24
+@sprite fx_vignette.pix vignette 0 0 over

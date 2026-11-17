@@ -1,0 +1,11 @@
+# Caught: a dissonant low hit that rings out, before the blackout.
+@output ../sfx/death_sting.wav
+@length 2.8
+@seed 15
+@echo 0.23 0.45 0.35
+layer sine freq=110 amp=0.3 attack=0.02 decay=1.2
+layer sine freq=116.54 amp=0.3 attack=0.02 decay=1.2
+layer sine freq=155.56 amp=0.25 attack=0.02 decay=1.0
+layer sine freq=164.81 amp=0.25 attack=0.02 decay=1.0
+layer saw freq=55 amp=0.3 attack=0.01 decay=0.9 lp=400
+layer noise amp=0.5 attack=0.002 decay=0.25 lp=1200 hp=60

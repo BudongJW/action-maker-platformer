@@ -1,0 +1,37 @@
+# Line-up of every ghost, monster and creature next to the protagonist,
+# for scale. Left to right: protagonist, Shadow Visitor, sobok ghost,
+# dokkaebi-bul, egg ghost, reaper, gumiho, water ghost, skeleton model,
+# reading statue, floor hands, dokkaebi, straw doll.
+@palette ../palette/night-school.pal
+@size 448 96
+@output ../mockups/creatures_lineup.png
+@preview ../previews/creatures_lineup_x3.png 3
+@fill D
+
+@tiles t tiles_night_school.pix
+@legend P t:wall_plaster
+@legend R t:wall_rail
+@legend w t:wall_wainscot
+@legend F t:floor_top
+
+@layer
+PPPPPPPPPPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPPPPPPPPPP
+RRRRRRRRRRRRRRRRRRRRRRRRRRRR
+wwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww
+FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+
+@sprite protagonist_side.pix idle_0 12 48
+@sprite enemy_shadow_visitor.pix idle_0 42 24
+@sprite enemy_sobok_gwisin.pix float_0 80 37
+@sprite enemy_dokkaebi_bul.pix flicker_0 110 34
+@sprite creature_egg_ghost.pix idle_0 132 40
+@sprite creature_reaper.pix idle_0 162 32
+@sprite creature_gumiho.pix idle_0 200 48
+@sprite creature_water_ghost.pix idle_0 254 42
+@sprite creature_skeleton_model.pix awake 284 40
+@sprite creature_reading_statue.pix look 314 40
+@sprite creature_floor_hands.pix grab 344 58
+@sprite creature_dokkaebi.pix idle_0 382 32
+@sprite creature_straw_doll.pix still 420 56

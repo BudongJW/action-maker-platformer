@@ -1,0 +1,62 @@
+# PRIVATE (미방송분). Cut 2-09: lanterns hold after the generator dies: Sunrye finishes chogamangseok with the paper money
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/209.png
+@preview ../previews/209_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend A s:water_0
+@legend M g:mat
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+...MMMMMMMMMMMM.....
+SSSSSSSSSSSSSSSAAAAA
+sssssssssssssssaaaaa
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 8 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 8 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 8 144
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 216 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 216 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 216 144
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 296 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 296 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 296 144
+@sprite mbs_tiles_shore.pix generator_0_0 24 128
+@sprite mbs_tiles_shore.pix generator_1_0 40 128
+@sprite mbs_tiles_shore.pix generator_0_1 24 144
+@sprite mbs_tiles_shore.pix generator_1_1 40 144
+@sprite ../../../art/src/tiles_gut.pix altar_0_0 120 128
+@sprite ../../../art/src/tiles_gut.pix altar_1_0 136 128
+@sprite ../../../art/src/tiles_gut.pix altar_2_0 152 128
+@sprite ../../../art/src/tiles_gut.pix altar_0_1 120 144
+@sprite ../../../art/src/tiles_gut.pix altar_1_1 136 144
+@sprite ../../../art/src/tiles_gut.pix altar_2_1 152 144
+@sprite mbs_mijeong.pix sindae_1 84 121
+@sprite mbs_sunrye.pix jijeon_0 176 121 flip
+@sprite ../../../art/src/npc_onlookers.pix b_seated 40 152
+@sprite ../../../art/src/npc_onlookers.pix a_seated 100 151
+@sprite ../../../art/src/npc_onlookers.pix c_seated 150 153
+@darkness K 0.78
+@light 20 124 40
+@light 228 124 40
+@light 304 124 30
+@light 136 140 30
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

@@ -1,0 +1,85 @@
+# Concept: the rite goes wrong. The candles are out, the musicians have fled
+# and left the drum, the painting's eyes have turned red, the mudang turns
+# with spirit eyes and knives, and the Shadow Visitor rises behind the altar.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../concepts/concept_gut_gone_wrong.png
+@preview ../previews/concept_gut_gone_wrong_x3.png 3
+@fill D
+@tiles g tiles_gut.pix
+@tiles t tiles_night_school.pix
+@legend B g:beam
+@legend H g:hanji_wall
+@legend h g:hanji_wall_warm
+@legend | g:post
+@legend m g:mat
+@legend F t:floor_top
+@legend f t:floor_fill
+@layer
+BBBBBBBBBBBBBBBBBBBB
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+FFFFFFFFFFFFFFFFFFFF
+ffffffffffffffffffff
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+..mmmmmmmmmmmmmmmm..
+@sprite tiles_gut.pix jijeon_0_0 40 16
+@sprite tiles_gut.pix jijeon_0_1 40 32
+@sprite tiles_gut.pix jijeon_0_0 104 16
+@sprite tiles_gut.pix jijeon_0_1 104 32
+@sprite tiles_gut.pix jijeon_0_0 200 16
+@sprite tiles_gut.pix jijeon_0_1 200 32
+@sprite tiles_gut.pix jijeon_0_0 264 16
+@sprite tiles_gut.pix jijeon_0_1 264 32
+@sprite tiles_gut.pix ribbons_0_0 72 16
+@sprite tiles_gut.pix ribbons_0_1 72 32
+@sprite tiles_gut.pix ribbons_0_0 232 16
+@sprite tiles_gut.pix ribbons_0_1 232 32
+@sprite enemy_shadow_visitor.pix walk_0 148 104
+@sprite tiles_gut.pix musindo_watch_0_0 144 40
+@sprite tiles_gut.pix musindo_watch_1_0 160 40
+@sprite tiles_gut.pix musindo_watch_0_1 144 56
+@sprite tiles_gut.pix musindo_watch_1_1 160 56
+@sprite tiles_gut.pix musindo_watch_0_2 144 72
+@sprite tiles_gut.pix musindo_watch_1_2 160 72
+@sprite tiles_gut.pix altar_0_0 136 128
+@sprite tiles_gut.pix altar_1_0 152 128
+@sprite tiles_gut.pix altar_2_0 168 128
+@sprite tiles_gut.pix altar_0_1 136 144
+@sprite tiles_gut.pix altar_1_1 152 144
+@sprite tiles_gut.pix altar_2_1 168 144
+@sprite tiles_gut.pix candle_out 116 144
+@sprite tiles_gut.pix candle_out 188 144
+@sprite tiles_gut.pix janggu_0_0 16 144
+@sprite tiles_gut.pix janggu_1_0 32 144
+@sprite tiles_gut.pix obangki_0_0 264 112
+@sprite tiles_gut.pix obangki_1_0 280 112
+@sprite tiles_gut.pix obangki_0_1 264 128
+@sprite tiles_gut.pix obangki_1_1 280 128
+@sprite tiles_gut.pix obangki_0_2 264 144
+@sprite tiles_gut.pix obangki_1_2 280 144
+@sprite npc_mudang.pix possessed_1 204 120 flip
+@sprite protagonist_side.pix hurt 72 128
+@darkness K 0.85
+@light 218 122 30
+@light 160 100 22
+@light 84 140 16
+@sprite enemy_shadow_visitor.pix _eye_glow 148 104 over
+@sprite fx_ghost_swirl.pix swirl_2 208 112 over
+@sprite fx_vignette.pix vignette 0 0 over

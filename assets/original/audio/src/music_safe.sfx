@@ -1,0 +1,129 @@
+# Music sketch: safe room (candle checkpoint). C major, 60 bpm, 6 bars
+# (24 s loop): warm pads and slow, quiet arpeggios.
+@output ../music/safe_loop.wav
+@length 24.0
+@rate 22050
+@seed 52
+@peak -4
+@loop 1.0
+@echo 0.5 0.3 0.3
+layer triangle freq=130.81 amp=0.055 at=0.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=131.33 amp=0.038 at=0.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=196.0 amp=0.055 at=0.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=196.78 amp=0.038 at=0.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=261.63 amp=0.055 at=0.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=262.68 amp=0.038 at=0.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=329.63 amp=0.055 at=0.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=330.95 amp=0.038 at=0.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer sine freq=523.25 amp=0.12 at=0.0 attack=0.003 decay=0.7
+layer sine freq=1569.75 amp=0.022 at=0.0 attack=0.002 decay=0.15
+layer sine freq=1051.73 amp=0.014 at=0.0 attack=0.002 decay=0.3
+layer sine freq=659.26 amp=0.12 at=1.0 attack=0.003 decay=0.7
+layer sine freq=1977.78 amp=0.022 at=1.0 attack=0.002 decay=0.15
+layer sine freq=1325.11 amp=0.014 at=1.0 attack=0.002 decay=0.3
+layer sine freq=783.99 amp=0.12 at=2.0 attack=0.003 decay=0.7
+layer sine freq=2351.97 amp=0.022 at=2.0 attack=0.002 decay=0.15
+layer sine freq=1575.82 amp=0.014 at=2.0 attack=0.002 decay=0.3
+layer sine freq=659.26 amp=0.12 at=3.0 attack=0.003 decay=0.7
+layer sine freq=1977.78 amp=0.022 at=3.0 attack=0.002 decay=0.15
+layer sine freq=1325.11 amp=0.014 at=3.0 attack=0.002 decay=0.3
+layer triangle freq=110.0 amp=0.055 at=4.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=110.44 amp=0.038 at=4.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=164.81 amp=0.055 at=4.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=165.47 amp=0.038 at=4.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=220.0 amp=0.055 at=4.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=220.88 amp=0.038 at=4.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=261.63 amp=0.055 at=4.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=262.68 amp=0.038 at=4.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer sine freq=440.0 amp=0.12 at=4.0 attack=0.003 decay=0.7
+layer sine freq=1320.0 amp=0.022 at=4.0 attack=0.002 decay=0.15
+layer sine freq=884.4 amp=0.014 at=4.0 attack=0.002 decay=0.3
+layer sine freq=523.25 amp=0.12 at=5.0 attack=0.003 decay=0.7
+layer sine freq=1569.75 amp=0.022 at=5.0 attack=0.002 decay=0.15
+layer sine freq=1051.73 amp=0.014 at=5.0 attack=0.002 decay=0.3
+layer sine freq=659.26 amp=0.12 at=6.0 attack=0.003 decay=0.7
+layer sine freq=1977.78 amp=0.022 at=6.0 attack=0.002 decay=0.15
+layer sine freq=1325.11 amp=0.014 at=6.0 attack=0.002 decay=0.3
+layer sine freq=523.25 amp=0.12 at=7.0 attack=0.003 decay=0.7
+layer sine freq=1569.75 amp=0.022 at=7.0 attack=0.002 decay=0.15
+layer sine freq=1051.73 amp=0.014 at=7.0 attack=0.002 decay=0.3
+layer triangle freq=87.31 amp=0.055 at=8.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=87.66 amp=0.038 at=8.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=130.81 amp=0.055 at=8.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=131.33 amp=0.038 at=8.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=174.61 amp=0.055 at=8.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=175.31 amp=0.038 at=8.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=220.0 amp=0.055 at=8.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=220.88 amp=0.038 at=8.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer sine freq=349.23 amp=0.12 at=8.0 attack=0.003 decay=0.7
+layer sine freq=1047.69 amp=0.022 at=8.0 attack=0.002 decay=0.15
+layer sine freq=701.95 amp=0.014 at=8.0 attack=0.002 decay=0.3
+layer sine freq=440.0 amp=0.12 at=9.0 attack=0.003 decay=0.7
+layer sine freq=1320.0 amp=0.022 at=9.0 attack=0.002 decay=0.15
+layer sine freq=884.4 amp=0.014 at=9.0 attack=0.002 decay=0.3
+layer sine freq=523.25 amp=0.12 at=10.0 attack=0.003 decay=0.7
+layer sine freq=1569.75 amp=0.022 at=10.0 attack=0.002 decay=0.15
+layer sine freq=1051.73 amp=0.014 at=10.0 attack=0.002 decay=0.3
+layer sine freq=440.0 amp=0.12 at=11.0 attack=0.003 decay=0.7
+layer sine freq=1320.0 amp=0.022 at=11.0 attack=0.002 decay=0.15
+layer sine freq=884.4 amp=0.014 at=11.0 attack=0.002 decay=0.3
+layer triangle freq=98.0 amp=0.055 at=12.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=98.39 amp=0.038 at=12.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=146.83 amp=0.055 at=12.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=147.42 amp=0.038 at=12.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=196.0 amp=0.055 at=12.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=196.78 amp=0.038 at=12.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=246.94 amp=0.055 at=12.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=247.93 amp=0.038 at=12.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer sine freq=392.0 amp=0.12 at=12.0 attack=0.003 decay=0.7
+layer sine freq=1176.0 amp=0.022 at=12.0 attack=0.002 decay=0.15
+layer sine freq=787.92 amp=0.014 at=12.0 attack=0.002 decay=0.3
+layer sine freq=493.88 amp=0.12 at=13.0 attack=0.003 decay=0.7
+layer sine freq=1481.64 amp=0.022 at=13.0 attack=0.002 decay=0.15
+layer sine freq=992.7 amp=0.014 at=13.0 attack=0.002 decay=0.3
+layer sine freq=587.33 amp=0.12 at=14.0 attack=0.003 decay=0.7
+layer sine freq=1761.99 amp=0.022 at=14.0 attack=0.002 decay=0.15
+layer sine freq=1180.53 amp=0.014 at=14.0 attack=0.002 decay=0.3
+layer sine freq=493.88 amp=0.12 at=15.0 attack=0.003 decay=0.7
+layer sine freq=1481.64 amp=0.022 at=15.0 attack=0.002 decay=0.15
+layer sine freq=992.7 amp=0.014 at=15.0 attack=0.002 decay=0.3
+layer triangle freq=130.81 amp=0.055 at=16.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=131.33 amp=0.038 at=16.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=196.0 amp=0.055 at=16.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=196.78 amp=0.038 at=16.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=261.63 amp=0.055 at=16.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=262.68 amp=0.038 at=16.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=329.63 amp=0.055 at=16.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=330.95 amp=0.038 at=16.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer sine freq=523.25 amp=0.12 at=16.0 attack=0.003 decay=0.7
+layer sine freq=1569.75 amp=0.022 at=16.0 attack=0.002 decay=0.15
+layer sine freq=1051.73 amp=0.014 at=16.0 attack=0.002 decay=0.3
+layer sine freq=659.26 amp=0.12 at=17.0 attack=0.003 decay=0.7
+layer sine freq=1977.78 amp=0.022 at=17.0 attack=0.002 decay=0.15
+layer sine freq=1325.11 amp=0.014 at=17.0 attack=0.002 decay=0.3
+layer sine freq=783.99 amp=0.12 at=18.0 attack=0.003 decay=0.7
+layer sine freq=2351.97 amp=0.022 at=18.0 attack=0.002 decay=0.15
+layer sine freq=1575.82 amp=0.014 at=18.0 attack=0.002 decay=0.3
+layer sine freq=1046.5 amp=0.12 at=19.0 attack=0.003 decay=0.7
+layer sine freq=3139.5 amp=0.022 at=19.0 attack=0.002 decay=0.15
+layer sine freq=2103.46 amp=0.014 at=19.0 attack=0.002 decay=0.3
+layer triangle freq=87.31 amp=0.055 at=20.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=87.66 amp=0.038 at=20.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=130.81 amp=0.055 at=20.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=131.33 amp=0.038 at=20.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=220.0 amp=0.055 at=20.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=220.88 amp=0.038 at=20.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer triangle freq=261.63 amp=0.055 at=20.0 dur=5.2 attack=1.2 fade=1.4 lp=900
+layer triangle freq=262.68 amp=0.038 at=20.0 dur=5.2 attack=1.4 fade=1.4 lp=900
+layer sine freq=349.23 amp=0.12 at=20.0 attack=0.003 decay=0.7
+layer sine freq=1047.69 amp=0.022 at=20.0 attack=0.002 decay=0.15
+layer sine freq=701.95 amp=0.014 at=20.0 attack=0.002 decay=0.3
+layer sine freq=440.0 amp=0.12 at=21.0 attack=0.003 decay=0.7
+layer sine freq=1320.0 amp=0.022 at=21.0 attack=0.002 decay=0.15
+layer sine freq=884.4 amp=0.014 at=21.0 attack=0.002 decay=0.3
+layer sine freq=523.25 amp=0.12 at=22.0 attack=0.003 decay=0.7
+layer sine freq=1569.75 amp=0.022 at=22.0 attack=0.002 decay=0.15
+layer sine freq=1051.73 amp=0.014 at=22.0 attack=0.002 decay=0.3
+layer sine freq=392.0 amp=0.12 at=23.0 attack=0.003 decay=0.7
+layer sine freq=1176.0 amp=0.022 at=23.0 attack=0.002 decay=0.15
+layer sine freq=787.92 amp=0.014 at=23.0 attack=0.002 decay=0.3

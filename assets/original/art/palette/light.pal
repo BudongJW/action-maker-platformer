@@ -1,0 +1,6 @@
+# Light texture palette: white at four opacity steps (for Godot PointLight2D
+# textures). Banded on purpose so lights match the pixel-art look.
+1 ffffff40 25%
+2 ffffff80 50%
+3 ffffffc0 75%
+4 ffffffff 100%

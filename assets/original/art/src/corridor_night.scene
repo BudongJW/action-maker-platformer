@@ -1,0 +1,83 @@
+# Mock-up: night corridor of the school, side view, 320x180 (16x16 tiles).
+# Not a level layout, just a check that the palette, tiles and characters
+# read together under darkness and light.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../mockups/corridor_night.png
+@preview ../previews/corridor_night_x3.png 3
+@fill D
+
+@tiles t tiles_night_school.pix
+@legend C t:ceiling
+@legend P t:wall_plaster
+@legend X t:wall_plaster_crack
+@legend R t:wall_rail
+@legend w t:wall_wainscot
+@legend h t:wall_wainscot_hand
+@legend F t:floor_top
+@legend f t:floor_fill
+@legend 1 t:window_0_0
+@legend 2 t:window_1_0
+@legend 3 t:window_0_1
+@legend 4 t:window_1_1
+@legend 5 t:door_0_0
+@legend 6 t:door_1_0
+@legend 7 t:door_0_1
+@legend 8 t:door_1_1
+@legend 9 t:door_0_2
+@legend 0 t:door_1_2
+@legend L t:lamp_off
+@legend O t:lamp_on
+@legend g t:geumjul
+@legend s t:sign_plate
+@legend T t:talisman
+@legend d t:desk
+@legend k t:locker_0_0
+@legend l t:locker_0_1
+@legend c t:candle_lit_0
+@legend n t:note_glint
+
+# walls and structure
+@layer
+CCCCCCCCCCCCCCCCCCCC
+PPPPPPPPPPPPPPPPPPPP
+PP12PPPPPPPP12PPPPPP
+PP34PPPPPPXP34PPPPPP
+PPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPP
+RRRRRRR56RRRRRRRR56R
+wwwwwww78wwwwwwhw78w
+wwwwwww90wwwwwwww90w
+FFFFFFFFFFFFFFFFFFFF
+ffffffffffffffffffff
+
+# props
+@layer
+....L.....L....O....
+....................
+....................
+....................
+....................
+....................
+......gggg.......s..
+........T...........
+.k..................
+.lc........d.n......
+
+@sprite protagonist_side.pix idle_0 56 128
+@sprite enemy_shadow_visitor.pix walk_0 262 104 flip
+
+@darkness K 0.78
+@cone 80 152 0 34 130
+@light 248 26 46
+@light 48 48 22
+@light 208 48 22
+@light 108 92 20
+@light 138 76 18
+@light 40 150 20
+@light 216 152 14
+
+@sprite enemy_shadow_visitor.pix _eye_glow 262 104 flip over
+@sprite enemy_dokkaebi_bul.pix flicker_0 100 84 over
+@sprite enemy_dokkaebi_bul.pix flicker_2 130 68 over

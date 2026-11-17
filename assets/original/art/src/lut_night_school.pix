@@ -1,0 +1,46 @@
+# Palette lookup strip for a palette-swap shader: one pixel per key in
+# night-school.pal order (KDNUuMWwGgpPshHRrYCc).
+@palette ../palette/night-school.pal
+@size 1 1
+@output ../palette/lut_night_school.png
+@columns 20
+@frame c00
+K
+@frame c01
+D
+@frame c02
+N
+@frame c03
+U
+@frame c04
+u
+@frame c05
+M
+@frame c06
+W
+@frame c07
+w
+@frame c08
+G
+@frame c09
+g
+@frame c10
+p
+@frame c11
+P
+@frame c12
+s
+@frame c13
+h
+@frame c14
+H
+@frame c15
+R
+@frame c16
+r
+@frame c17
+Y
+@frame c18
+C
+@frame c19
+c

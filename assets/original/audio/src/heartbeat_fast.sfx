@@ -1,0 +1,7 @@
+# Heartbeat loop at about 125 bpm (chase, being searched for).
+@output ../sfx/heartbeat_fast_loop.wav
+@length 0.48
+@seed 35
+@loop 0.02
+layer sine freq=64 freq_end=45 amp=0.9 attack=0.003 decay=0.06
+layer sine at=0.15 freq=60 freq_end=43 amp=0.6 attack=0.003 decay=0.05

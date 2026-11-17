@@ -1,0 +1,46 @@
+# PRIVATE (미방송분). Cut 1-03: Jonggil reads the three filming rules over the megaphone; villagers listen (the reference sound)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/103.png
+@preview ../previews/103_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@legend S s:shore_top
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSSSSSS
+ssssssssssssssssssss
+@sprite mbs_tiles_shore.pix pole_0_0 32 64
+@sprite mbs_tiles_shore.pix pole_0_1 32 80
+@sprite mbs_tiles_shore.pix pole_0_2 32 96
+@sprite mbs_tiles_shore.pix pole_0_3 32 112
+@sprite mbs_tiles_shore.pix pole_0_4 32 128
+@sprite mbs_tiles_shore.pix pole_0_5 32 144
+@sprite mbs_jonggil.pix megaphone 76 121
+@sprite ../../../art/src/npc_onlookers.pix a_standing 140 128
+@sprite ../../../art/src/npc_onlookers.pix b_standing 166 128
+@sprite ../../../art/src/npc_onlookers.pix c_standing 192 128
+@sprite ../../../art/src/npc_onlookers.pix a_seated 150 150
+@sprite ../../../art/src/npc_onlookers.pix b_seated 182 150
+@sprite ../../../art/src/npc_onlookers.pix c_seated 214 150
+@darkness K 0.55
+@light 96 130 50
+@light 180 140 40
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over

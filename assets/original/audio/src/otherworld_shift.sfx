@@ -1,0 +1,9 @@
+# Shift into the other world: a reversed-sounding swell, then a low drop.
+@output ../sfx/otherworld_shift.wav
+@length 3.0
+@seed 46
+@echo 0.33 0.5 0.4
+layer noise amp=0.7 attack=1.4 dur=1.5 lp=300 lp_end=6000 hp=100
+layer saw freq=55 freq_end=110 amp=0.2 attack=1.4 dur=1.5 lp=800
+layer sine at=1.5 freq=48 freq_end=30 amp=0.9 attack=0.002 decay=0.8
+layer brown at=1.5 amp=0.8 attack=0.002 decay=0.5 lp=300

@@ -1,0 +1,9 @@
+# Old sliding classroom door opening: rattling roll, then it stops.
+@output ../sfx/door_slide_open.wav
+@length 0.95
+@seed 3
+@echo 0.09 0.35 0.3
+layer noise amp=0.5 attack=0.08 dur=0.7 fade=0.15 lp=700 lp_end=1200 hp=120 trem=22 trem_depth=0.6
+layer sine freq=58 amp=0.25 attack=0.05 dur=0.7 fade=0.2
+layer noise at=0.68 amp=0.7 decay=0.05 lp=1500 hp=100
+layer sine at=0.68 freq=90 freq_end=60 amp=0.6 decay=0.07
