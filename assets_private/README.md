@@ -1,13 +1,13 @@
-# assets_private (커밋하지 않음)
+# assets_private (never committed)
 
-이 폴더의 파일은 `.gitignore`로 제외되며, 이 README만 저장소에 추적됩니다.
+Files in this folder are excluded by `.gitignore`; only this README is tracked.
 
-**재배포가 금지된 에셋**(GGG RTP·DLC·내장 에셋, 일본 무료 BGM·효과음, 유료 팩 등)을 여기에 둡니다. 게임 빌드에는 포함되지만 공개 저장소에는 올라가지 않습니다.
+Put **assets that must not be redistributed** here (GGG RTP/DLC and built-in assets, Japanese free BGM/SFX, paid packs, etc.). They are included in game builds but never pushed to the public repository.
 
-## 규칙
+## Rules
 
-1. 에셋을 넣을 때마다 저장소 루트의 [`SOURCES.md`](../SOURCES.md)에 입수처·배치 경로·약관 요지·확인일을, [`CREDITS.md`](../CREDITS.md)에 크레딧을 추가합니다.
-2. 하위 폴더는 `assets/`와 같은 분류로 나눕니다.
+1. Every time you add an asset, record where it came from, its path, a summary of its terms and the date you checked them in [`SOURCES.md`](../SOURCES.md), and add its credit to [`CREDITS.md`](../CREDITS.md).
+2. Organize subfolders the same way as `assets/`.
 
 ```
 assets_private/
@@ -18,11 +18,11 @@ assets_private/
 │   ├── tilesets/
 │   ├── characters/
 │   └── portraits/
-└── ggg_dlc/<팩 이름>/      # GGG 공식 DLC (팩 readme 조건 확인)
+└── ggg_dlc/<pack name>/      # Official GGG DLC (check the pack's readme conditions)
 ```
 
-3. 커밋 전에 `git status`로 이 폴더의 파일이 추적되지 않는지 확인합니다. 실수로 커밋했다면 푸시하기 전에 되돌리고, 이미 푸시했다면 기록에서 제거해야 합니다.
+3. Before committing, run `git status` to confirm nothing in this folder is tracked. If something was committed by mistake, undo it before pushing; if it was already pushed, it has to be removed from the history.
 
-## 새로 받은 저장소에서
+## In a fresh clone
 
-`SOURCES.md`의 목록대로 파일을 입수해 지정 경로에 두면 빌드할 수 있습니다. 파일이 없으면 해당 리소스를 참조하는 씬에서 누락 경고가 납니다.
+Obtain the files listed in `SOURCES.md` and place them at the listed paths to be able to build. Scenes that reference missing files will show missing-resource warnings.

@@ -1,5 +1,5 @@
 # assets/third_party
 
-원본 파일 재배포가 **명시적으로 허용된** 외부 에셋만 둡니다. 출처 하나당 폴더 하나, 폴더마다 `LICENSE`와 `SOURCE.md`가 필수입니다.
+Only third-party assets whose license **explicitly allows** redistributing the original files go here. Use one folder per source; each folder must contain a `LICENSE` and a `SOURCE.md`.
 
-분류 기준, `SOURCE.md` 템플릿, 커밋 가능한 것으로 확인된 소스 목록은 [`../README.md`](../README.md)를 참고하세요.
+See [`../README.md`](../README.md) for the classification rules, the `SOURCE.md` template and the list of sources confirmed safe to commit.
