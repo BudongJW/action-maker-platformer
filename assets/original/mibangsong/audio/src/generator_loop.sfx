@@ -1,0 +1,11 @@
+# AMB-04: the broadcast generator running. Low engine, piston rattle. Seamless 4 s loop.
+@output ../ambience/generator_loop.wav
+@length 4
+@rate 22050
+@seed 44
+@peak -14
+@loop 0.5
+layer saw freq=30 amp=0.5 lp=220
+layer square freq=60 amp=0.2 lp=400
+layer noise amp=0.25 lp=1400 hp=200 trem=30 trem_depth=0.8
+layer brown amp=0.3 lp=300

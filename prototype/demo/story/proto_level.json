@@ -358,5 +358,37 @@
         "anchor": "center"
       }
     }
+  },
+  "audio": {
+    "ambience": {
+      "linear": "assets/original/audio/ambience/wind_loop.wav",
+      "hifi": "assets/original/audio/ambience/rain_loop.wav",
+      "hub": "assets/original/audio/ambience/corridor_loop.wav"
+    },
+    "ambience_db": -6,
+    "stingers": {
+      "demo_jump": "assets/original/audio/sfx/jumpscare.wav",
+      "demo_dark": "assets/original/audio/sfx/ghost_appear.wav",
+      "demo_caught": "assets/original/audio/sfx/death_sting.wav",
+      "demo_phone": "assets/original/audio/sfx/switch_click.wav"
+    },
+    "sfx": {
+      "step": {
+        "file": [
+          "assets/original/audio/sfx/footstep_wood_a.wav",
+          "assets/original/audio/sfx/footstep_wood_b.wav",
+          "assets/original/audio/sfx/footstep_wood_c.wav"
+        ],
+        "db": -12
+      },
+      "rec_on": {
+        "file": "assets/original/audio/sfx/flashlight_click.wav",
+        "db": -12
+      },
+      "rec_off": {
+        "file": "assets/original/audio/sfx/flashlight_click.wav",
+        "db": -12
+      }
+    }
   }
 }

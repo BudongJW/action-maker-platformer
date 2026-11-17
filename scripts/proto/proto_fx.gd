@@ -1,7 +1,8 @@
 ## Placeholder scare effects for the prototype: generated stinger noise, an ambience bed on its
 ## own bus (so ScareDirector can duck it), flash, camera shake, and either a frame from the
 ## level's art block ("scares": {id: {"sheet", "frame", "anchor"}}) or graybox glitch blocks.
-## Real sound replaces the noise; the timing comes from ScareDirector either way.
+## A stinger file from the level's "audio" block (ProtoAudio) replaces the noise; the timing
+## comes from ScareDirector either way.
 class_name ProtoFX
 extends Node
 
@@ -12,6 +13,7 @@ const SFX_BUS := "Stinger"
 var ui: ProtoUI
 var camera: Camera2D
 var art: ProtoArt
+var audio: ProtoAudio
 var _stinger: AudioStreamPlayer
 var _bed: AudioStreamPlayer
 var _glitch: Control
@@ -46,6 +48,11 @@ func _exit_tree() -> void:
 	_cache.clear()
 
 
+func stop_audio() -> void:
+	for player in [_bed, _stinger]:
+		player.stop()
+
+
 func attach(layer: CanvasLayer) -> void:
 	layer.add_child(_glitch)
 
@@ -59,10 +66,14 @@ func start_bed() -> void:
 func onset(id: String, info: Dictionary) -> void:
 	var rise: float = float(info.get("rise_ms", 2.0))
 	var body: float = float(info.get("body_ms", 500.0))
-	var key := "%d_%d" % [int(rise), int(body)]
-	if not _cache.has(key):
-		_cache[key] = _noise(body / 1000.0, rise, 0.1, 0.9, false)
-	_stinger.stream = _cache[key]
+	var file: AudioStream = audio.stinger(id) if audio != null and audio.enabled() else null
+	if file != null:
+		_stinger.stream = file
+	else:
+		var key := "%d_%d" % [int(rise), int(body)]
+		if not _cache.has(key):
+			_cache[key] = _noise(body / 1000.0, rise, 0.1, 0.9, false)
+		_stinger.stream = _cache[key]
 	# Stingers are normalized to +20 LU over dialogue; level_lu sets the gain below that.
 	_stinger.volume_db = float(info.get("level_lu", 12.0)) - 20.0
 	_stinger.play()

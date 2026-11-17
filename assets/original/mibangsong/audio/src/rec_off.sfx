@@ -1,0 +1,6 @@
+# SFX-02: camcorder REC off (one falling beep).
+@output ../sfx/rec_off.wav
+@length 0.12
+@seed 59
+@peak -6
+layer sine freq=2900 freq_end=2000 amp=0.5 attack=0.003 dur=0.08 fade=0.02

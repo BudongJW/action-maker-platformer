@@ -1,0 +1,7 @@
+# SFX-02: camcorder REC on (two rising beeps).
+@output ../sfx/rec_on.wav
+@length 0.16
+@seed 58
+@peak -6
+layer sine freq=2200 amp=0.5 attack=0.003 dur=0.05 fade=0.01
+layer sine freq=2900 amp=0.5 at=0.07 attack=0.003 dur=0.05 fade=0.01

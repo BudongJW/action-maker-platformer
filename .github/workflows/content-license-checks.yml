@@ -91,3 +91,15 @@ jobs:
 
       - name: Render assets/original/mibangsong/art/src and compare
         run: python3 tools/pixelart.py --check --root assets/original/mibangsong/art/src
+
+  sound:
+    name: Sound files match their recipes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Render assets/original/audio/src and compare
+        run: python3 tools/sfxsynth.py --check
+
+      - name: Render assets/original/mibangsong/audio/src and compare
+        run: python3 tools/sfxsynth.py --check --root assets/original/mibangsong/audio/src

@@ -1,0 +1,16 @@
+# AMB-03: the same night on the HI-FI (original) track. Fuller lows, the water close by,
+# no tape hiss. Seamless 12 s loop, same loudness (RMS) as AMB-02 so the crossfade does not jump.
+@output ../ambience/amb_hifi_loop.wav
+@length 12
+@rate 22050
+@seed 42
+@peak -12
+@loop 1.0
+# wind
+layer brown amp=0.8 lp=600 hp=40 trem=0.09 trem_depth=0.5
+# water lapping close by
+layer brown amp=0.6 lp=1200 hp=120 trem=0.33 trem_depth=0.9
+layer noise amp=0.03 lp=2500 hp=900 trem=0.33 trem_depth=0.9
+# insects
+layer sine freq=4300 amp=0.015 dur=0.6 repeat=7 every=1.6 jitter=0.4 trem=28 trem_depth=1 attack=0.05 fade=0.2
+layer sine freq=3900 amp=0.013 at=0.7 dur=0.5 repeat=6 every=1.9 jitter=0.4 trem=33 trem_depth=1 attack=0.05 fade=0.2

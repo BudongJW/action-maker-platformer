@@ -26,7 +26,9 @@ The demo is placeholder English text with no game story. The prototype code cont
 | 1-4 | Choose |
 | Z / X / C | LINEAR / HI-FI / MIX (HI-FI and MIX unlock through the story) |
 | R | Camera REC (records evidence inside an evidence area) |
-| F | Fast-forward the tape (x4) |
+| F | Fast-forward the tape (x4). It pauses while a scare is pending or relaxing, because the scare director runs in real time |
+| M | Scare mode: default / soft (quieter, with a short prepulse) / off (no sudden onsets) |
+| P | Photosensitivity-safe scares (no flash) |
 
 ## Level file (`proto_level.json`)
 
@@ -44,6 +46,7 @@ The demo is placeholder English text with no game story. The prototype code cont
 | `end_flag`, `report_flags` | Flag that ends the slice; flags printed by the bot |
 | `bot_route` | Optional `{from, to, x}` windows the bot walks to (smoke test) |
 | `art` | Optional pixel art (next section) |
+| `audio` | Optional sound ("Audio block" below) |
 
 ## Art block
 
@@ -61,9 +64,24 @@ Paths are relative to the repository root. `build_prototype.py` copies every `.p
 | `viewfinder` | Camera overlay `sheet` with `rec` and `standby` frames; the live timecode is drawn over it |
 | `badges` | Track badge frames (`linear`, `hifi`, `mix`) |
 | `scares` | Per scare id: `{"sheet", "frame", "anchor": "left" / "right" / "center" / "full", "min_seconds"}`, shown at the onset for the scare's body duration. Without an entry the scare is sound only |
+| `voice_wave` | `{"speakers": [character ids], "color"}`: a soft waveform above the dialogue window while those speakers talk (for voices with no body on screen) |
 
-The demo uses the generic art in `assets/original/art/`. Scare frames are the art's own; check them against the photosensitivity rules in [`docs/scare-director.md`](../docs/scare-director.md) (drawn area, no saturated red, one flash per scare).
+The demo uses the generic art in `assets/original/art/`.
+
+## Audio block
+
+Paths are relative to the repository root and are copied into the build like the art. Without the block the prototype plays a generated noise bed and noise stingers.
+
+| Key | Meaning |
+|---|---|
+| `ambience` | `linear` and `hifi` loops play together on the `Linear` and `HiFi` buses, which the track mixer crossfades and which send into `Ambience` (the bus the scare director ducks); `hub` plays in the workroom |
+| `ambience_db` | Gain for the ambience players |
+| `loops` | `{"file", "db", "from", "to", "until_event", "stop"}`: plays during that tape time, stops for good when the timeline event fires and then plays `stop` once (for example a generator cutting out) |
+| `stingers` | Per scare id: a file played at the onset instead of noise, at `level_lu - 20` dB (files are normalized to a -1 dBFS peak, which stands for +20 LU over dialogue) |
+| `sfx` | Named one-shots: a path, a list (one picked at random) or `{"file", "db"}`. The prototype uses `step`, `rec_on`, `rec_off`, `prepulse` (soft mode), `deck_play`, `deck_rewind` and `tape_start` |
+| `step_interval` | Seconds between footsteps. Footsteps stop in the scare director's quiet window (a sound 30-500 ms before a startle stimulus weakens it) |
+ Scare frames are the art's own; check them against the photosensitivity rules in [`docs/scare-director.md`](../docs/scare-director.md) (drawn area, no saturated red, one flash per scare).
 
 ## Bot
 
-`--smoke` runs the game headless with `-- --bot`: it advances dialogue, picks the first enabled choice, keeps REC on, switches to HI-FI once unlocked and walks the level (or the `bot_route`). It prints one summary line and fails on script errors and missing art. Falling below the level respawns the player on the last safe ground.
+`--smoke` runs the game headless with `-- --bot`: it advances dialogue, picks the first enabled choice, keeps REC on, switches to HI-FI once unlocked and walks the level (or the `bot_route`). It prints one summary line and fails on script errors, missing art or sound, and objects leaked at exit. Falling below the level respawns the player on the last safe ground.

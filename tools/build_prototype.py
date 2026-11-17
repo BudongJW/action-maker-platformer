@@ -38,7 +38,7 @@ import storyc  # noqa: E402
 SCRIPT_DIRS = ("story", "scare", "tracks", "proto")
 # Pixel-art sources whose @output PNGs a level's "art" block may use (frame layouts for the atlas).
 ART_SOURCE_ROOTS = ("assets/original/art/src", "assets/original/mibangsong/art/src")
-ART_SUFFIXES = (".png", ".pal")
+ART_SUFFIXES = (".png", ".pal", ".wav", ".ogg")
 PRIVATE_STORY = REPO / "private/assets/original/story"
 PRIVATE_CHARS = REPO / "private/assets/original/characters"
 DEMO = REPO / "prototype/demo"
@@ -103,7 +103,7 @@ def build(out: Path, mode: str) -> str:
         print(log.getvalue(), file=sys.stderr)
         raise SystemExit("build_prototype: story failed to compile")
     art = copy_art(out)
-    print(f"build_prototype: built {out} from the {source} story" + (f" with {art} art file(s)" if art else ""))
+    print(f"build_prototype: built {out} from the {source} story" + (f" with {art} art and sound file(s)" if art else ""))
     return source
 
 
@@ -130,10 +130,10 @@ def _sources_by_output() -> dict[str, Path]:
 
 
 def copy_art(out: Path) -> int:
-    """Copies the files named in the level's "art" block, the palette-swap shader, and writes
-    assets/art_atlas.json with each sprite sheet's frame size, columns and frame names."""
+    """Copies the files named in the level's "art" and "audio" blocks, the palette-swap shader,
+    and writes assets/art_atlas.json with each sprite sheet's frame size, columns and frame names."""
     level = json.loads((out / "assets/original/story/proto_level.json").read_text(encoding="utf-8"))
-    paths = sorted(set(_art_paths(level.get("art", {}))))
+    paths = sorted(set(_art_paths(level.get("art", {})) + _art_paths(level.get("audio", {}))))
     if not paths:
         return 0
     missing = [p for p in paths if not (REPO / p).is_file()]
@@ -169,7 +169,7 @@ def smoke(godot: str, out: Path) -> int:
     summary = SUMMARY_RE.search(output)
     errors = [line for line in output.splitlines()
               if "SCRIPT ERROR" in line or "Parse Error" in line or line.startswith("ERROR:")
-              or "ProtoArt:" in line]
+              or "ProtoArt:" in line or "ProtoAudio:" in line or "leaked at exit" in line]
     if proc.returncode != 0 or summary is None or errors or int(summary.group(3)) == 0:
         print(output)
         print(f"build_prototype: smoke FAILED (exit {proc.returncode}, {len(errors)} error line(s)"

@@ -165,7 +165,7 @@ Rules, numbers and sources are in [`docs/scare-director.md`](docs/scare-director
 
 ## Prototype
 
-A vertical slice wires the story runtime, scare director and track mixer to a playable level, so the loop, the two tracks and the scares can be played and playtested before the ACTION GAME MAKER G version exists. It is built in plain Godot 4.7 with generated placeholder sounds. A level's optional `art` block draws it with the pixel art in `assets/original/` (sprites, tiles, backdrop, per-track palettes through `shaders/palette_swap.gdshader`, the camera viewfinder, scare frames); without one it is a graybox. ACTION GAME MAKER G's own player and level tools are expected to replace the player and level code, while the runtime modules carry over.
+A vertical slice wires the story runtime, scare director and track mixer to a playable level, so the loop, the two tracks and the scares can be played and playtested before the ACTION GAME MAKER G version exists. It is built in plain Godot 4.7. A level's optional `art` block draws it with the pixel art in `assets/original/` (sprites, tiles, backdrop, per-track palettes through `shaders/palette_swap.gdshader`, the camera viewfinder, scare frames), and an optional `audio` block plays the sounds there (per-track ambience crossfaded by the track mixer, timed loops, stingers, footsteps that fall silent before a scare); without them it is a graybox with generated noise. ACTION GAME MAKER G's own player and level tools are expected to replace the player and level code, while the runtime modules carry over.
 
 ```bash
 python3 tools/build_prototype.py --run      # build into build/prototype/ and open the game window

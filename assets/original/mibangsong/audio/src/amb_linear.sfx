@@ -1,0 +1,17 @@
+# AMB-02: the reservoir at night as the LINEAR (dubbed) track hears it.
+# Thinner lows, constant tape hiss, distant water, insects. Seamless 12 s loop.
+@output ../ambience/amb_linear_loop.wav
+@length 12
+@rate 22050
+@seed 41
+@peak -10.5
+@loop 1.0
+# wind, high-passed so the low end feels thin
+layer brown amp=0.7 lp=500 hp=180 trem=0.11 trem_depth=0.6
+# tape hiss
+layer noise amp=0.05 hp=3500 lp=8000
+# distant water lapping
+layer brown amp=0.3 lp=900 hp=250 trem=0.42 trem_depth=0.8
+# insects
+layer sine freq=4300 amp=0.012 dur=0.6 repeat=7 every=1.6 jitter=0.4 trem=28 trem_depth=1 attack=0.05 fade=0.2
+layer sine freq=3900 amp=0.01 at=0.7 dur=0.5 repeat=6 every=1.9 jitter=0.4 trem=33 trem_depth=1 attack=0.05 fade=0.2

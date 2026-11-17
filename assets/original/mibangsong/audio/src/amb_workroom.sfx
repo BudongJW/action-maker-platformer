@@ -1,0 +1,13 @@
+# AMB-05: 2026 basement workroom. Fluorescent hum (60 Hz mains, 120 Hz buzz) and the deck motor.
+@output ../ambience/amb_workroom_loop.wav
+@length 6
+@rate 22050
+@seed 43
+@peak -18
+@loop 0.5
+layer sine freq=120 amp=0.4
+layer sine freq=240 amp=0.15
+layer sine freq=360 amp=0.06
+layer square freq=120 amp=0.03 lp=2500
+layer noise amp=0.04 hp=300 lp=3000
+layer sine freq=47 amp=0.15 trem=0.5 trem_depth=0.3

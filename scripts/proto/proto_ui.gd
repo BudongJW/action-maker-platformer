@@ -1,5 +1,5 @@
 ## Prototype dialogue window, captions, bark bubble, HUD and hub overlay, plus optional
-## screen art: the camera viewfinder, a hub backdrop and the track badge.
+## screen art: the camera viewfinder, a hub backdrop, the track badge and a voice waveform.
 ##
 ## Shows whatever StoryRunner sends; it contains no dialogue text. Labels the prototype itself
 ## needs (REC, track names, key hints) are short English placeholders, not game text.
@@ -24,6 +24,9 @@ var _badge: TextureRect
 var _timecode: Label
 var _vf_rec: Texture2D
 var _vf_standby: Texture2D
+var _wave: Control
+var _wave_color := Color(0.5, 0.88, 0.82)
+var _wave_time := 0.0
 var _captions: Array = []
 var _caption_clock := 0.0
 var _bubble_left := 0.0
@@ -65,6 +68,15 @@ func _ready() -> void:
 	box.add_child(_choices)
 	add_child(_window)
 	_window.visible = false
+	_wave = Control.new()
+	_wave.anchor_left = 0.08
+	_wave.anchor_right = 0.36
+	_wave.anchor_top = 0.62
+	_wave.anchor_bottom = 0.69
+	_wave.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_wave.visible = false
+	_wave.draw.connect(_draw_wave)
+	add_child(_wave)
 	_caption = _anchored_label(0.1, 0.9, 0.86, 0.93, 20)
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_bubble = _anchored_label(0.3, 0.7, 0.18, 0.26, 18)
@@ -84,6 +96,15 @@ func set_viewfinder(rec: Texture2D, standby: Texture2D) -> void:
 	# The art has a placeholder timecode; the live one is drawn over it (see _process).
 	_hud.anchor_top = 0.15 if rec != null else 0.01
 	_hud.anchor_bottom = 0.22 if rec != null else 0.08
+
+
+## A soft waveform above the dialogue window for a voice with no body on screen.
+func set_voice(on: bool) -> void:
+	_wave.visible = on
+
+
+func set_voice_color(color: Color) -> void:
+	_wave_color = color
 
 
 func set_recording(on: bool) -> void:
@@ -163,6 +184,9 @@ func flash(alpha: float) -> void:
 func _process(delta: float) -> void:
 	_flash.color.a = maxf(0.0, _flash.color.a - delta * 8.0)
 	_caption_clock += delta
+	if _wave.visible:
+		_wave_time += delta
+		_wave.queue_redraw()
 	_timecode.visible = _vf_rec != null and not _backdrop.visible
 	var shown: PackedStringArray = []
 	for line in _captions:
@@ -181,6 +205,24 @@ func _process(delta: float) -> void:
 	_toast_left -= delta
 	if _toast_left <= 0.0:
 		_toast.text = ""
+
+
+func _draw_wave() -> void:
+	var size := _wave.size
+	var mid := size.y / 2.0
+	var points := PackedVector2Array()
+	var steps := 96
+	# Small and gentle on purpose: the voice is not a threat.
+	var level := 0.35 + 0.25 * sin(_wave_time * 2.3) * sin(_wave_time * 0.7)
+	for i in steps + 1:
+		var x := size.x * float(i) / steps
+		var u := float(i) / steps
+		var taper := sin(u * PI)
+		var y := sin(u * 23.0 + _wave_time * 5.0) * 0.6 + sin(u * 41.0 - _wave_time * 7.0) * 0.4
+		points.append(Vector2(x, mid + y * taper * level * mid))
+	var faded := _wave_color
+	faded.a = 0.8
+	_wave.draw_polyline(points, faded, 2.0, true)
 
 
 func _full_texture() -> TextureRect:

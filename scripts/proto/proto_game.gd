@@ -8,7 +8,8 @@
 ## Build and run with tools/build_prototype.py. Pass `-- --bot` to let it play itself (CI).
 ##
 ## Keys: A/D or arrows move, Space jump, W/S climb, Enter/E advance or play, 1-4 choose,
-## Z LINEAR, X HI-FI, C MIX, R camera REC, F fast-forward.
+## Z LINEAR, X HI-FI, C MIX, R camera REC, F fast-forward, M scare mode (default / soft / off),
+## P photosensitivity-safe scares.
 class_name ProtoGame
 extends Node2D
 
@@ -29,6 +30,7 @@ var player: ProtoPlayer
 var ui: ProtoUI
 var fx: ProtoFX
 var art: ProtoArt
+var audio: ProtoAudio
 var font: Font
 var data: Dictionary = {}
 var phase: Phase = Phase.HUB
@@ -52,6 +54,10 @@ var _max_frames := 40000
 var _bot_loops := 4
 var _last_safe := Vector2.ZERO
 var _tint: CanvasModulate
+var _step_timer := 0.0
+var _last_rec := false
+var _voice_speakers: Array = []
+var _finished := false
 
 
 func _ready() -> void:
@@ -85,6 +91,13 @@ func _ready() -> void:
 	add_child(mixer)
 	mixer.bind_story(runner)
 
+	audio = ProtoAudio.new()
+	add_child(audio)
+	if audio.setup(data.get("audio", {})):
+		mixer.hifi_bus = ProtoAudio.HIFI_BUS
+		mixer.linear_bus = ProtoAudio.LINEAR_BUS
+		director.prepulse.connect(func(_scare_id): audio.play("prepulse", ProtoAudio.STINGER_BUS))
+
 	RenderingServer.set_default_clear_color(Color(0.06, 0.07, 0.09))
 	art = ProtoArt.new()
 	art.setup(data.get("art", {}))
@@ -112,16 +125,21 @@ func _ready() -> void:
 	fx = ProtoFX.new()
 	fx.ui = ui
 	fx.art = art
+	fx.audio = audio
 	fx.camera = player.camera()
 	add_child(fx)
 	fx.attach(ui)
-	fx.start_bed()
+	if not audio.enabled():
+		fx.start_bed()
 	if art.enabled():
 		var vf: Dictionary = art.cfg.get("viewfinder", {})
 		if not vf.is_empty():
 			var sheet: String = String(vf.get("sheet", ""))
 			ui.set_viewfinder(art.frame(sheet, String(vf.get("rec", "rec"))),
 				art.frame(sheet, String(vf.get("standby", "standby"))))
+		var wave: Dictionary = art.cfg.get("voice_wave", {})
+		_voice_speakers = wave.get("speakers", [])
+		ui.set_voice_color(Color.html(String(wave.get("color", "7fe0d0"))))
 
 	runner.dialogue_started.connect(func(_id): _stats["dialogues"] += 1)
 	runner.line_started.connect(_on_line)
@@ -145,6 +163,7 @@ func _enter_hub(first: bool) -> void:
 	player.frozen = true
 	ui.set_darkness(0.0)
 	_show_hub_art(true)
+	audio.enter_hub()
 	var hub: Dictionary = data.get("hub", {})
 	_hub_queue = (hub.get("start", []) if first else []) + hub.get("between", [])
 	_run_hub_queue()
@@ -167,6 +186,7 @@ func _run_hub_queue() -> void:
 
 func _on_play() -> void:
 	ui.set_hub("")
+	audio.play("deck_play")
 	for entry in data.get("hub", {}).get("on_play", []):
 		var id: String = String(entry.get("dialogue", ""))
 		if id != "" and runner.is_available(id):
@@ -185,6 +205,8 @@ func _start_loop() -> void:
 	ui.set_hub("")
 	_show_hub_art(false)
 	mixer.rewind()
+	audio.enter_tape()
+	audio.play("tape_start")
 	_done.clear()
 	_events.clear()
 	_chaser_on = false
@@ -206,6 +228,7 @@ func _start_loop() -> void:
 func _end_loop() -> void:
 	_stats["loops"] += 1
 	director.cancel_all()
+	audio.play("deck_rewind")
 	runner.stop()
 	ui.hide_window()
 	_choices.clear()
@@ -235,11 +258,16 @@ func _process(delta: float) -> void:
 	if phase == Phase.TAPE:
 		var talking := runner.is_running()
 		player.frozen = talking or _catching
-		mixer.tick(0.0 if talking else delta * ff)
+		# Fast-forward pauses while a scare is pending or relaxing: the director runs in real
+		# time, so a sped-up tape would push the next scare past its moment.
+		var speed := 1.0 if director.is_busy() or director.is_relaxing() else ff
+		mixer.tick(0.0 if talking else delta * speed)
 		_keep_in_level()
 		_check_triggers()
 		_update_chaser(delta)
 		level.update_backdrop(player.camera().get_screen_center_position().x, player.camera().zoom.x)
+		audio.update(mixer.tape_time(), _events)
+		_footsteps(delta)
 		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)):
 			_end_loop()
 	_update_hud()
@@ -272,6 +300,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		player.recording = not player.recording
 	elif key == KEY_F:
 		ff = 1.0 if ff > 1.0 else 4.0
+	elif key == KEY_M:
+		director.mode = ((int(director.mode) + 1) % 3) as ScareDirector.Mode
+		ui.toast("SCARES " + ["DEFAULT", "SOFT", "OFF"][int(director.mode)])
+	elif key == KEY_P:
+		director.photosafe = not director.photosafe
+		ui.toast("PHOTOSAFE " + ("ON" if director.photosafe else "OFF"))
 
 
 # --- Story and scares ----------------------------------------------------------------------
@@ -281,6 +315,8 @@ func _on_line(_id: String, speaker: String, _expression: String, attrs: Dictiona
 	_stats["lines"] += 1
 	_choices.clear()
 	ui.show_line(String(attrs.get("display_name", speaker)), text)
+	# Some voices have no body on screen; a soft waveform stands in for them.
+	ui.set_voice(speaker in _voice_speakers)
 
 
 func _on_choices(options: Array) -> void:
@@ -297,6 +333,7 @@ func _choose(index: int) -> void:
 
 func _on_dialogue_finished(_id: String) -> void:
 	ui.hide_window()
+	ui.set_voice(false)
 	_choices.clear()
 	var end_flag: String = String(data.get("end_flag", ""))
 	if end_flag != "" and runner.get_flag(end_flag) == true:
@@ -467,6 +504,18 @@ func _show_hub_art(on: bool) -> void:
 	ui.set_backdrop(art.frame(String(spec.get("texture", "")), String(spec.get("frame", ""))) if on else null)
 
 
+## Footsteps while walking on the ground; silent in the scare director's quiet window, since a
+## sound 30-500 ms before a startle stimulus weakens it.
+func _footsteps(delta: float) -> void:
+	if player.frozen or not player.is_on_floor() or absf(player.velocity.x) < 1.0 or director.is_quiet():
+		_step_timer = 0.0
+		return
+	_step_timer -= delta
+	if _step_timer <= 0.0:
+		_step_timer = float(data.get("audio", {}).get("step_interval", 0.32))
+		audio.play("step")
+
+
 # --- Tracks and HUD ------------------------------------------------------------------------
 
 
@@ -524,10 +573,16 @@ func _update_hud() -> void:
 	var tc := "%02d:%02d:%02d" % [t / 3600, (t / 60) % 60, t % 60]
 	ui.set_timecode(tc)
 	ui.set_recording(player.recording)
+	if player.recording != _last_rec:
+		_last_rec = player.recording
+		audio.play("rec_on" if player.recording else "rec_off")
 	var names := ["HI-FI", "LINEAR", "MIX"]
-	ui.set_hud("%s %s  TC %s  PLAY %d%s\n[Z]LIN [X]HIFI [C]MIX [R]REC [F]FF" % [
+	var mode := ""
+	if director.mode != ScareDirector.Mode.DEFAULT or director.photosafe:
+		mode = "  SCARES %s%s" % [["DEFAULT", "SOFT", "OFF"][int(director.mode)], " PHOTOSAFE" if director.photosafe else ""]
+	ui.set_hud("%s %s  TC %s  PLAY %d%s%s\n[Z]LIN [X]HIFI [C]MIX [R]REC [F]FF [M]SCARES [P]PHOTOSAFE" % [
 		"REC" if player.recording else "   ", names[mixer.get_track()], tc,
-		int(runner.get_flag("sys.loop_count")), "  FF x%d" % int(ff) if ff > 1.0 else ""])
+		int(runner.get_flag("sys.loop_count")), "  FF x%d" % int(ff) if ff > 1.0 else "", mode])
 
 
 # --- Bot -----------------------------------------------------------------------------------
@@ -578,12 +633,20 @@ func _bot_step(delta: float) -> void:
 
 
 func _finish_bot(reason: String) -> void:
+	if _finished:
+		return
+	_finished = true
 	var flags: PackedStringArray = []
 	for f in data.get("report_flags", []):
 		flags.append("%s=%s" % [f, str(runner.get_flag(String(f)))])
 	print("prototype: %d frames, %d loops, %d dialogues, %d lines, %d scares, %d triggers (%s) %s" % [
 		_stats["frames"], _stats["loops"], _stats["dialogues"], _stats["lines"], _stats["scares"],
 		_stats["triggers"], reason, " ".join(flags)])
+	# Stop every sound and give the audio thread a moment to release its playbacks, so a
+	# headless run exits without leaked audio objects.
+	audio.stop_all()
+	fx.stop_audio()
+	OS.delay_msec(150)
 	get_tree().quit(0)
 
 
