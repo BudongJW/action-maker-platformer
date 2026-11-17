@@ -152,6 +152,11 @@ class PixelArtTest(unittest.TestCase):
         self.assertEqual(pixels[0], (2, 2, 2, 255))  # tile drawn with the swap palette
         self.assertEqual(pixels[1], (3, 3, 3, 255))  # sprite swapped too
         self.assertEqual(pixels[2], (255, 0, 0, 255))  # "keep" uses its own palette
+        (self.dir / "o.pal").write_text("4 00000080\n", encoding="utf-8")
+        self.write("o.pix", "@palette o.pal\n@size 1 1\n@output o.png\n@frame dim\n4\n")
+        other = self.write("x2.scene", "@palette p.pal\n@size 1 1\n@output x2.png\n@swap q.pal\n@fill W\n"
+                           "@sprite o.pix dim 0 0\n")
+        self.assertEqual(self.render(other)["x2.png"][0][0], (1, 1, 1, 255))  # own palette, blended over swapped fill
         (self.dir / "bad.pal").write_text("K 010101\n", encoding="utf-8")
         bad = self.write("b.scene", "@palette p.pal\n@size 1 1\n@output b.png\n@swap bad.pal\n@fill K\n")
         with self.assertRaises(pixelart.ArtError):

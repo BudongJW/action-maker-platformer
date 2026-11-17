@@ -1,0 +1,90 @@
+# Concept: the classroom slips into the other world. Rust and dried blood
+# replace the night blues, the ghost lifts her hair, the TV screams static.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../concepts/concept_otherworld_classroom.png
+@preview ../previews/concept_otherworld_classroom_x3.png 3
+@swap ../palette/otherworld.pal
+@fill D
+
+@tiles t tiles_night_school.pix
+@tiles c tiles_classroom.pix
+@legend a t:ceiling
+@legend b t:wall_plaster
+@legend c t:wall_rail
+@legend d t:wall_wainscot
+@legend e t:floor_top
+@legend f t:floor_fill
+@legend g t:window_0_0
+@legend h t:window_1_0
+@legend i t:window_0_1
+@legend j t:window_1_1
+@legend k c:chalkboard_0_0
+@legend l c:chalkboard_1_0
+@legend m c:chalkboard_2_0
+@legend n c:chalkboard_3_0
+@legend o c:chalkboard_0_1
+@legend p c:chalkboard_1_1
+@legend q c:chalkboard_2_1
+@legend r c:chalkboard_3_1
+@legend s c:clock
+@legend t c:bulletin_0_0
+@legend u c:bulletin_1_0
+@legend v c:tv_static0_0_0
+@legend w c:tv_static0_1_0
+@legend x c:tv_static0_0_1
+@legend y c:tv_static0_1_1
+@legend z c:cabinet_0_0
+@legend A c:cabinet_1_0
+@legend B c:cabinet_0_1
+@legend C c:cabinet_1_1
+@legend D c:teacher_desk_0_0
+@legend E c:teacher_desk_1_0
+@legend F c:plant_dead
+@legend G t:desk
+@legend H c:chair
+@legend I c:chair_fallen
+@legend J t:lamp_off
+
+@layer
+aaaaaaaaaaaaaaaaaaaa
+bbbbbbbbbbbbbbbbbbbb
+bghbbbbbbbbbbbbghbbb
+bijbbbbbbbbbbbbijbbb
+bbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbb
+cccccccccccccccccccc
+dddddddddddddddddddd
+dddddddddddddddddddd
+eeeeeeeeeeeeeeeeeeee
+ffffffffffffffffffff
+
+@layer
+....................
+....J......J.....vw.
+......klmn..s....xy.
+......opqr..........
+............tu......
+....................
+....................
+....................
+..................zA
+....F..DE..GHGHGI.BC
+....................
+....................
+
+@sprite protagonist_side.pix crouch 24 128 keep
+@sprite enemy_sobok_gwisin.pix reveal 152 120
+@darkness K 0.8
+@cone 48 152 0 30 120
+@light 32 48 24
+@light 256 48 24
+@light 288 28 44
+@light 164 140 16
+@sprite tiles_classroom.pix tv_static1_0_0 272 16 over
+@sprite tiles_classroom.pix tv_static1_1_0 288 16 over
+@sprite tiles_classroom.pix tv_static1_0_1 272 32 over
+@sprite tiles_classroom.pix tv_static1_1_1 288 32 over
+@sprite fx_ghost_swirl.pix swirl_2 152 128 over
+@sprite fx_vignette.pix vignette 0 0 over

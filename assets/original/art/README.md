@@ -140,6 +140,24 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 
 도깨비의 옷은 일본 오니의 호랑이 가죽 대신 짚 도롱이로 그렸습니다. 학교 동상 괴담은 실존 인물 동상 대신 이름 없는 "책 읽는 소녀상"으로 옮겼습니다.
 
+## 좀비
+
+![zombies in the street](previews/concept_town_zombies_x3.png)
+
+주인공과 같은 24x32 크기의 매개변수형 인간 그리기로 만들어, 옷차림 정의 하나에서 횡스크롤 시트와 탑다운 시트가 함께 나옵니다. 고어 없음(D9)에 따라 피 대신 회녹색 피부와 때 얼룩을 쓰고, 빨강은 눈의 한 점에만 썼습니다.
+
+| 횡스크롤 시트 | 탑다운 시트 | 차림 |
+|---|---|---|
+| [`zombie_student`](previews/zombie_student_x6.png) | [`$zombie_student_topdown`](previews/zombie_student_topdown_x4.png) | 남학생 교복 |
+| [`zombie_student_girl`](previews/zombie_student_girl_x6.png) | [`$zombie_student_girl_topdown`](previews/zombie_student_girl_topdown_x4.png) | 여학생 교복, 긴 머리, 치마 |
+| [`zombie_office`](previews/zombie_office_x6.png) | [`$zombie_office_topdown`](previews/zombie_office_topdown_x4.png) | 회사원(흰 셔츠, 넥타이) |
+| [`zombie_guard`](previews/zombie_guard_x6.png) | [`$zombie_guard_topdown`](previews/zombie_guard_topdown_x4.png) | 공무원·경비(모자, 배지) |
+| [`zombie_elder`](previews/zombie_elder_x6.png) | [`$zombie_elder_topdown`](previews/zombie_elder_topdown_x4.png) | 마을 노인(무늬 조끼, 헐렁한 바지) |
+| [`zombie_crawler`](previews/zombie_crawler_x6.png) | — | 바닥을 기어 다님, 32x16, 4프레임. 책상 밑·환기구 |
+| [`zombie_brute`](previews/zombie_brute_x4.png) | — | 셔츠가 터진 거구, 32x48, 두 주먹 내려치기 |
+
+횡스크롤 프레임: `idle_0 idle_1 walk_0~3(한쪽 발을 끄는 걸음) lunge(덮침) stun(손전등 빛에 눈을 가림)`. 탑다운은 MV/MZ `$` 배치이며 좌우는 횡스크롤 걸음을 재사용합니다. `stun`은 "손전등을 비추면 잠깐 멈춘다"는 숨기·도주용 규칙 제안에 맞춘 프레임입니다.
+
 ## 탑다운 (쯔꾸르식 3/4 시점)
 
 횡스크롤 본편과 별도로, 쯔꾸르처럼 위에서 내려다보는 구간에 쓸 타일과 캐릭터입니다(D7: 첫 플레이어블에는 넣지 않지만 미리 준비). 타일은 **16x16**, 캐릭터 셀은 **24x32**로, 쯔꾸르 2000과 같은 비율입니다.
@@ -159,6 +177,26 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 | [`characters/$enemy_sobok_gwisin_topdown.png`](characters/$enemy_sobok_gwisin_topdown.png) | 소복 귀신, 24x40 셀, MV/MZ `$` 배치. 떠 있으므로 걸음 프레임 대신 1px 위아래로 흔들림 | [x4](previews/enemy_sobok_gwisin_topdown_x4.png) |
 | [`mockups/map_corridor_td.png`](mockups/map_corridor_td.png), [`map_classroom_td.png`](mockups/map_classroom_td.png), [`map_schoolyard_td.png`](mockups/map_schoolyard_td.png) | 복도(480x160), 교실(320x224), 운동장(384x224) 맵 목업 | [복도](previews/map_corridor_td_x2.png), [교실](previews/map_classroom_td_x2.png), [운동장](previews/map_schoolyard_td_x2.png) |
 
+### 마을·학교·관공서·회사 맵
+
+| ![village](previews/map_village_td_x2.png) | ![school floor](previews/map_school_floor_td_x2.png) |
+|---|---|
+| 마을 거리 ([`map_village_td`](mockups/map_village_td.png), 512x288) | 학교 한 층 ([`map_school_floor_td`](mockups/map_school_floor_td.png), 512x384) |
+| ![community centre](previews/map_civic_td_x2.png) | ![office](previews/map_office_td_x2.png) |
+| 주민센터 ([`map_civic_td`](mockups/map_civic_td.png), 416x288) | 회사 사무실 ([`map_office_td`](mockups/map_office_td.png), 480x256) |
+
+- **마을**: 3층 벽돌 빌라(방범창), 셔터 내린 가게, 혼자 불 켜진 편의점, 창가에 선 사람, 횡단보도, 전봇대, 주차된 차, 버스 정류장, 골목(쓰레기봉투, 스티로폼 화분). 좀비가 도로에 있고 주인공은 차 뒤에 숨음.
+- **학교 한 층**: 북쪽 교실 두 칸(칠판, TV, 책상 줄), 복도(문, 사물함, 계단, 촛불), 남쪽 신발장 현관과 화장실(형체가 비친 거울과 소복 귀신). 교실에 좀비 학생.
+- **주민센터**: 번호 표시기가 444에 멈춘 대기실, 대기 의자에 앉은 좀비들, 창구 뒤 직원 좀비, 번호표 발급기.
+- **회사**: 정전된 층, 몇 대만 켜진 모니터, 칸막이 사이의 회사원 좀비, 엘리베이터 로비, 유리 회의실, 탕비실.
+
+타일셋:
+
+| 파일 | 내용 | 미리보기 |
+|---|---|---|
+| [`tiles/tiles_town_td.png`](tiles/tiles_town_td.png) | 도로·차선·횡단보도, 보도·연석, 벽돌 벽면, 방범창 창문(불 켜진 창과 사람 그림자 포함), 현관문, 셔터, 편의점 정면, 간판 자리(글자 없음), 전봇대·전선, 승용차, 버스 정류장, 맨홀, 쓰레기봉투, 자판기, 담장, 스티로폼 화분, 횡스크롤용 도로·보도 | [x4](previews/tiles_town_td_x4.png) |
+| [`tiles/tiles_office_td.png`](tiles/tiles_office_td.png) | 카펫·사무실 바닥·대리석, 사무실 벽면, 블라인드 창, 엘리베이터, 유리문, 화이트보드, 444 번호 표시기, 비상구 표시, PC 책상(켜짐·꺼짐), 사무용 의자, 칸막이, 서류함, 프린터, 정수기, 소파, 화분, 민원 창구, 번호표 발급기, 대기 의자, 책장, 줄 서기 기둥 | [x4](previews/tiles_office_td_x4.png) |
+
 쓰는 법:
 
 - **벽**: 벽 윗면(`walltop`) 아래에 벽면 두 줄(`face_upper`, `face_lower`)을 둡니다. 3/4 시점의 벽면은 정면에서 보이므로, 횡스크롤용 소품을 그대로 벽면에 붙일 수 있습니다. 창문(2x2), 사물함(1x2), 칠판(4x2), TV(2x2), 거울(1x2), 게시판, 시계, 명패, 부적, 금줄이 모두 두 줄짜리 벽면에 맞습니다.
@@ -166,6 +204,21 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 - **남쪽 벽**: 바깥(아래)을 향한 벽은 면이 보이지 않으므로 윗면만 둡니다.
 - **도깨비불**은 방향이 없으므로 기존 `enemy_dokkaebi_bul.png`을 그대로 씁니다.
 - 목업 맵은 ASCII로 그린 배치를 저작용 스크립트로 `.scene`으로 바꾼 것입니다(벽 윗면 16종 자동 선택, 바닥 무늬 섞기, 벽 그림자). 실제 레벨은 AGM G의 TileMap 편집기에서 이 타일셋으로 만듭니다.
+
+## 상황 컨셉 이미지
+
+게임 속 장면을 실제 게임 화면 크기(320x180)로 합성한 컨셉입니다. 레벨 설계안이 아니라 분위기와 연출 방향을 맞추기 위한 그림입니다. 모두 [`concepts/`](concepts/)에 있습니다.
+
+| | | |
+|---|---|---|
+| ![](previews/concept_hide_x3.png) | ![](previews/concept_chase_x3.png) | ![](previews/concept_town_zombies_x3.png) |
+| **숨기**: 사물함 환기구 틈으로 본 복도. 그림자 손님이 손 닿을 거리로 지나가고, 틈 사이로 붉은 눈이 보임 (`fx/locker_vents.png` 덧씌우기) | **추격**: 손전등을 앞으로 비추며 달아나는 주인공, 팔을 뻗고 미끄러지듯 쫓는 그림자 손님, 머리 위 경고 표시 | **마을 습격**: 횡스크롤 거리. 불 켜진 편의점 앞을 지나 좀비 떼에게서 달아남. 창가의 사람 그림자 |
+| ![](previews/concept_waiting_room_x3.png) | ![](previews/concept_office_blackout_x3.png) | ![](previews/concept_candle_boundary_x3.png) |
+| **대기실**: 444번을 부르는 주민센터. 의자마다 일어나지 않을 사람이 앉아 있음 | **정전**: 몇 대 남은 모니터 불빛 사이를 떠도는 회사원 좀비, 칸막이 뒤에 숨은 주인공 | **촛불의 경계**: 체크포인트 촛불 안에 무릎 꿇은 주인공과 빛이 끝나는 곳에 멈춘 저승사자 |
+| ![](previews/concept_otherworld_classroom_x3.png) | ![](previews/concept_game_over_x3.png) | ![](previews/concept_dawn_escape_x3.png) |
+| **이계의 교실**: 이계 팔레트, 머리카락을 걷어 올리는 소복 귀신, 안개 소용돌이, 웅크린 주인공 | **게임 오버**: 떨어진 손전등, 내려다보는 그림자 손님, 가장자리부터 번지는 노이즈 | **새벽 탈출**: 운동장을 [`palette/dawn.pal`](palette/dawn.pal)로 바꿔 그린 새벽. 실루엣만 남은 학교, 열린 교문 |
+
+`dawn.pal`은 이계 팔레트와 같은 방식(같은 키, 다른 색)이라, 엔딩이나 탈출 구간에 팔레트 교체 셰이더로 바로 쓸 수 있습니다.
 
 ## 이계: 팔레트 교체
 

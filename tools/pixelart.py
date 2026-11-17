@@ -413,6 +413,9 @@ class Scene:
                     if px[3] and 0 <= cx < self.width:
                         canvas[cy][cx] = px if px[3] == 255 else blend(px, canvas[cy][cx])
 
+        def swap_for(art):  # only art drawn with the scene's palette is swapped
+            return swap if swap and art.palette_path == self.palette_path else None
+
         def draw(step):
             if step[0] == 'layer':
                 for ty, row in enumerate(step[1]):
@@ -421,10 +424,10 @@ class Scene:
                             continue
                         alias, frame = self.legend[ch]
                         tiles = self.tiles[alias]
-                        blit(tiles.frame_pixels(frame, colours=swap), tx * tiles.width, ty * tiles.height)
+                        blit(tiles.frame_pixels(frame, colours=swap_for(tiles)), tx * tiles.width, ty * tiles.height)
             else:
                 _, sprite, frame, x, y, flip, keep, _ = step
-                blit(sprite.frame_pixels(frame, flip, colours=None if keep else swap), x, y)
+                blit(sprite.frame_pixels(frame, flip, colours=None if keep else swap_for(sprite)), x, y)
 
         over = [step for step in self.steps if step[-1]]
         for step in self.steps:
