@@ -1,4 +1,5 @@
-## Prototype dialogue window, captions, bark bubble, HUD and hub overlay.
+## Prototype dialogue window, captions, bark bubble, HUD and hub overlay, plus optional
+## screen art: the camera viewfinder, a hub backdrop and the track badge.
 ##
 ## Shows whatever StoryRunner sends; it contains no dialogue text. Labels the prototype itself
 ## needs (REC, track names, key hints) are short English placeholders, not game text.
@@ -17,6 +18,12 @@ var _toast: Label
 var _hub: Label
 var _flash: ColorRect
 var _dark: ColorRect
+var _backdrop: TextureRect
+var _viewfinder: TextureRect
+var _badge: TextureRect
+var _timecode: Label
+var _vf_rec: Texture2D
+var _vf_standby: Texture2D
 var _captions: Array = []
 var _caption_clock := 0.0
 var _bubble_left := 0.0
@@ -26,6 +33,21 @@ var _toast_left := 0.0
 func _ready() -> void:
 	layer = 10
 	_dark = _full_rect(Color(0, 0, 0, 0))
+	_backdrop = _full_texture()
+	_backdrop.visible = false
+	_viewfinder = _full_texture()
+	_badge = TextureRect.new()
+	_badge.position = Vector2(64, 92)
+	_badge.scale = Vector2(2, 2)
+	_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_badge)
+	# Below the dialogue window, so the window covers it like the rest of the viewfinder.
+	_timecode = _anchored_label(0.835, 0.955, 0.875, 0.935, 22)
+	_timecode.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	var tc_box := StyleBoxFlat.new()
+	tc_box.bg_color = Color(0.05, 0.04, 0.07, 1.0)
+	_timecode.add_theme_stylebox_override("normal", tc_box)
+	_timecode.visible = false
 	_flash = _full_rect(Color(1, 1, 1, 0))
 	_window = PanelContainer.new()
 	_window.anchor_left = 0.08
@@ -52,6 +74,37 @@ func _ready() -> void:
 	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hub = _anchored_label(0.1, 0.9, 0.35, 0.6, 22)
 	_hub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+
+## Draws the camera viewfinder over the world (REC and standby frames, 320x180 art).
+func set_viewfinder(rec: Texture2D, standby: Texture2D) -> void:
+	_vf_rec = rec
+	_vf_standby = standby
+	_viewfinder.texture = standby
+	# The art has a placeholder timecode; the live one is drawn over it (see _process).
+	_hud.anchor_top = 0.15 if rec != null else 0.01
+	_hud.anchor_bottom = 0.22 if rec != null else 0.08
+
+
+func set_recording(on: bool) -> void:
+	if _vf_rec != null:
+		_viewfinder.texture = _vf_rec if on else _vf_standby
+
+
+func set_timecode(text: String) -> void:
+	_timecode.text = text
+
+
+func set_badge(tex: Texture2D) -> void:
+	_badge.texture = tex
+
+
+## Full-screen picture behind the hub text (for example the workroom); null hides it.
+func set_backdrop(tex: Texture2D) -> void:
+	_backdrop.texture = tex
+	_backdrop.visible = tex != null
+	_viewfinder.visible = tex == null
+	_badge.visible = tex == null
 
 
 func show_line(speaker: String, text: String) -> void:
@@ -110,6 +163,7 @@ func flash(alpha: float) -> void:
 func _process(delta: float) -> void:
 	_flash.color.a = maxf(0.0, _flash.color.a - delta * 8.0)
 	_caption_clock += delta
+	_timecode.visible = _vf_rec != null and not _backdrop.visible
 	var shown: PackedStringArray = []
 	for line in _captions:
 		var at: float = float(line["attrs"].get("at", 0.0))
@@ -127,6 +181,18 @@ func _process(delta: float) -> void:
 	_toast_left -= delta
 	if _toast_left <= 0.0:
 		_toast.text = ""
+
+
+func _full_texture() -> TextureRect:
+	var r := TextureRect.new()
+	r.anchor_right = 1.0
+	r.anchor_bottom = 1.0
+	r.stretch_mode = TextureRect.STRETCH_SCALE
+	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	r.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(r)
+	return r
 
 
 func _full_rect(color: Color) -> ColorRect:

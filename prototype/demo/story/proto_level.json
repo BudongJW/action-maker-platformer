@@ -77,7 +77,8 @@
     {
       "x": 1500,
       "y": 800,
-      "label": "keeper"
+      "label": "keeper",
+      "sprite": "keeper"
     }
   ],
   "labels": [
@@ -247,5 +248,115 @@
       "to": 6600,
       "x": 1550
     }
-  ]
+  ],
+  "art": {
+    "zoom": 3,
+    "camera_offset_y": -30,
+    "base_palette": "assets/original/art/palette/night-school.pal",
+    "palettes": {
+      "linear": "assets/original/art/palette/otherworld.pal",
+      "hifi": "assets/original/art/palette/dawn.pal"
+    },
+    "backdrop": {
+      "texture": "assets/original/art/backgrounds/bg_far.png",
+      "parallax": 0.15
+    },
+    "tiles": {
+      "sheet": "assets/original/art/tiles/tiles_exterior.png",
+      "solid": [
+        "ground_top",
+        "ground_fill"
+      ],
+      "hifi_only": [
+        "ground_top",
+        "ground_fill"
+      ],
+      "linear_only": [
+        "ground_top",
+        "ground_fill"
+      ]
+    },
+    "props": [
+      {
+        "block": "streetlamp",
+        "w": 1,
+        "h": 3,
+        "at": [
+          400,
+          800
+        ]
+      },
+      {
+        "block": "fence",
+        "w": 1,
+        "h": 2,
+        "at": [
+          960,
+          800
+        ]
+      }
+    ],
+    "player": {
+      "sheet": "assets/original/art/characters/protagonist_side.png",
+      "fps": 8,
+      "anims": {
+        "idle": [
+          "idle_0",
+          "idle_1"
+        ],
+        "walk": [
+          "walk_0",
+          "walk_1",
+          "walk_2",
+          "walk_3"
+        ],
+        "jump": [
+          "jump"
+        ],
+        "caught": [
+          "hurt"
+        ]
+      }
+    },
+    "npcs": {
+      "keeper": {
+        "sheet": "assets/original/art/characters/npc_onlookers.png",
+        "anims": {
+          "idle": [
+            "a_standing"
+          ]
+        }
+      }
+    },
+    "chaser": {
+      "sheet": "assets/original/art/characters/enemy_shadow_visitor.png",
+      "fps": 6,
+      "anims": {
+        "idle": [
+          "chase_0",
+          "chase_1"
+        ],
+        "lunge": [
+          "grab"
+        ]
+      }
+    },
+    "scares": {
+      "demo_jump": {
+        "sheet": "assets/original/art/fx/fx_static.png",
+        "frame": "static_0",
+        "anchor": "center"
+      },
+      "demo_dark": {
+        "sheet": "assets/original/art/characters/enemy_sobok_gwisin.png",
+        "frame": "reveal",
+        "anchor": "right"
+      },
+      "demo_caught": {
+        "sheet": "assets/original/art/fx/fx_static.png",
+        "frame": "static_1",
+        "anchor": "center"
+      }
+    }
+  }
 }

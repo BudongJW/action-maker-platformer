@@ -1,6 +1,7 @@
 ## Graybox platformer body for the prototype: run, jump, ladders, and a REC toggle.
 ##
 ## Input comes from the keyboard, or from `bot_axis` / `bot_jump` when a bot drives it.
+## Drawn as a box, or as an animated sprite (idle, walk, jump, climb, caught) given by set_art().
 ## ACTION GAME MAKER G will replace this with its own player object; only the hooks the
 ## prototype needs (position, `recording`, `frozen`) matter.
 class_name ProtoPlayer
@@ -21,9 +22,13 @@ var frozen := false
 var bot := false
 var bot_axis := 0.0
 var bot_jump := false
+## Forces an animation (for example "caught") while not empty.
+var pose_override := ""
 
 var _climbing := false
 var _camera: Camera2D
+var _body: ColorRect
+var _sprite: AnimatedSprite2D
 
 
 func _ready() -> void:
@@ -33,15 +38,29 @@ func _ready() -> void:
 	shape.shape = box
 	shape.position = Vector2(0, -20)
 	add_child(shape)
-	var body := ColorRect.new()
-	body.color = Color(0.55, 0.85, 1.0)
-	body.position = Vector2(-10, -40)
-	body.size = Vector2(20, 40)
-	add_child(body)
+	_body = ColorRect.new()
+	_body.color = Color(0.55, 0.85, 1.0)
+	_body.position = Vector2(-10, -40)
+	_body.size = Vector2(20, 40)
+	add_child(_body)
 	_camera = Camera2D.new()
 	_camera.position = Vector2(0, -60)
 	add_child(_camera)
 	_camera.make_current()
+
+
+## Replaces the box with an animated sprite whose feet are at the origin.
+func set_art(sprite: AnimatedSprite2D) -> void:
+	if sprite == null:
+		return
+	_sprite = sprite
+	_body.visible = false
+	add_child(_sprite)
+
+
+func set_camera_zoom(zoom: float, offset_y: float) -> void:
+	_camera.zoom = Vector2.ONE * zoom
+	_camera.position = Vector2(0, offset_y)
 
 
 func set_camera_limits(size: Vector2) -> void:
@@ -58,6 +77,7 @@ func camera() -> Camera2D:
 func _physics_process(delta: float) -> void:
 	if frozen:
 		velocity = Vector2.ZERO
+		_animate(0.0, 0.0)
 		return
 	var axis := bot_axis if bot else _axis(KEY_A, KEY_D, KEY_LEFT, KEY_RIGHT)
 	var vertical := 0.0 if bot else _axis(KEY_W, KEY_S, KEY_UP, KEY_DOWN)
@@ -78,6 +98,31 @@ func _physics_process(delta: float) -> void:
 		if jump and is_on_floor():
 			velocity.y = JUMP_VELOCITY
 	move_and_slide()
+	_animate(axis, vertical)
+
+
+func _animate(axis: float, vertical: float) -> void:
+	if _sprite == null:
+		return
+	var anim := "idle"
+	if pose_override != "":
+		anim = pose_override
+	elif _climbing:
+		anim = "climb"
+	elif not is_on_floor():
+		anim = "jump"
+	elif absf(velocity.x) > 1.0:
+		anim = "walk"
+	if not _sprite.sprite_frames.has_animation(anim):
+		anim = "idle"
+	if _sprite.animation != anim:
+		_sprite.play(anim)
+	if anim == "climb":
+		_sprite.speed_scale = 1.0 if (vertical != 0.0 or bot) else 0.0
+	else:
+		_sprite.speed_scale = 1.0
+	if axis != 0.0:
+		_sprite.flip_h = axis < 0.0
 
 
 func _axis(neg_a: Key, pos_a: Key, neg_b: Key, pos_b: Key) -> float:

@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import io
+import json
 import os
 import re
 import shutil
@@ -31,9 +32,13 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
+import pixelart  # noqa: E402
 import storyc  # noqa: E402
 
 SCRIPT_DIRS = ("story", "scare", "tracks", "proto")
+# Pixel-art sources whose @output PNGs a level's "art" block may use (frame layouts for the atlas).
+ART_SOURCE_ROOTS = ("assets/original/art/src", "assets/original/mibangsong/art/src")
+ART_SUFFIXES = (".png", ".pal")
 PRIVATE_STORY = REPO / "private/assets/original/story"
 PRIVATE_CHARS = REPO / "private/assets/original/characters"
 DEMO = REPO / "prototype/demo"
@@ -55,6 +60,7 @@ window/stretch/mode="canvas_items"
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+textures/canvas_textures/default_texture_filter=0
 """
 
 MAIN_TSCN = """[gd_scene load_steps=2 format=3]
@@ -96,8 +102,56 @@ def build(out: Path, mode: str) -> str:
     if code != 0:
         print(log.getvalue(), file=sys.stderr)
         raise SystemExit("build_prototype: story failed to compile")
-    print(f"build_prototype: built {out} from the {source} story")
+    art = copy_art(out)
+    print(f"build_prototype: built {out} from the {source} story" + (f" with {art} art file(s)" if art else ""))
     return source
+
+
+def _art_paths(value: object) -> list[str]:
+    if isinstance(value, str):
+        return [value] if value.endswith(ART_SUFFIXES) else []
+    if isinstance(value, dict):
+        return [p for v in value.values() for p in _art_paths(v)]
+    if isinstance(value, list):
+        return [p for v in value for p in _art_paths(v)]
+    return []
+
+
+def _sources_by_output() -> dict[str, Path]:
+    found: dict[str, Path] = {}
+    for root in ART_SOURCE_ROOTS:
+        for src in sorted((REPO / root).glob("*.pix")):
+            for line in src.read_text(encoding="utf-8").splitlines():
+                if line.startswith("@output "):
+                    out = (src.parent / line.split(None, 1)[1].strip()).resolve()
+                    found[out.relative_to(REPO).as_posix()] = src
+                    break
+    return found
+
+
+def copy_art(out: Path) -> int:
+    """Copies the files named in the level's "art" block, the palette-swap shader, and writes
+    assets/art_atlas.json with each sprite sheet's frame size, columns and frame names."""
+    level = json.loads((out / "assets/original/story/proto_level.json").read_text(encoding="utf-8"))
+    paths = sorted(set(_art_paths(level.get("art", {}))))
+    if not paths:
+        return 0
+    missing = [p for p in paths if not (REPO / p).is_file()]
+    if missing:
+        raise SystemExit("build_prototype: art file(s) not found: " + ", ".join(missing))
+    shutil.copytree(REPO / "shaders", out / "shaders")
+    sources = _sources_by_output()
+    atlas: dict[str, dict] = {}
+    for rel in paths:
+        (out / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO / rel, out / rel)
+        if rel in sources:
+            sprite = pixelart.Sprite(str(sources[rel]))
+            frames = sprite.sheet_frames()
+            atlas[rel] = {"size": [sprite.width, sprite.height],
+                          "columns": sprite.columns or len(frames), "frames": frames}
+    (out / "assets/art_atlas.json").write_text(json.dumps(atlas, indent=1), encoding="utf-8")
+    return len(paths)
 
 
 def find_godot(explicit: str | None) -> str | None:
@@ -114,7 +168,8 @@ def smoke(godot: str, out: Path) -> int:
     output = proc.stdout + proc.stderr
     summary = SUMMARY_RE.search(output)
     errors = [line for line in output.splitlines()
-              if "SCRIPT ERROR" in line or "Parse Error" in line or line.startswith("ERROR:")]
+              if "SCRIPT ERROR" in line or "Parse Error" in line or line.startswith("ERROR:")
+              or "ProtoArt:" in line]
     if proc.returncode != 0 or summary is None or errors or int(summary.group(3)) == 0:
         print(output)
         print(f"build_prototype: smoke FAILED (exit {proc.returncode}, {len(errors)} error line(s)"

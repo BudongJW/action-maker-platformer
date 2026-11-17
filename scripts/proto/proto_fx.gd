@@ -1,6 +1,7 @@
 ## Placeholder scare effects for the prototype: generated stinger noise, an ambience bed on its
-## own bus (so ScareDirector can duck it), screen glitch blocks, flash and camera shake.
-## Real art and sound replace these; the timing comes from ScareDirector either way.
+## own bus (so ScareDirector can duck it), flash, camera shake, and either a frame from the
+## level's art block ("scares": {id: {"sheet", "frame", "anchor"}}) or graybox glitch blocks.
+## Real sound replaces the noise; the timing comes from ScareDirector either way.
 class_name ProtoFX
 extends Node
 
@@ -10,6 +11,7 @@ const SFX_BUS := "Stinger"
 
 var ui: ProtoUI
 var camera: Camera2D
+var art: ProtoArt
 var _stinger: AudioStreamPlayer
 var _bed: AudioStreamPlayer
 var _glitch: Control
@@ -53,8 +55,8 @@ func start_bed() -> void:
 		_bed.play()
 
 
-## Draws and plays one onset from ScareDirector.scare_onset's `info`.
-func onset(info: Dictionary) -> void:
+## Draws and plays one onset from ScareDirector.scare_onset's `id` and `info`.
+func onset(id: String, info: Dictionary) -> void:
 	var rise: float = float(info.get("rise_ms", 2.0))
 	var body: float = float(info.get("body_ms", 500.0))
 	var key := "%d_%d" % [int(rise), int(body)]
@@ -68,7 +70,10 @@ func onset(info: Dictionary) -> void:
 		ui.flash(0.6)
 	_shake_amount = float(info.get("shake", 0.0)) * 18.0
 	_shake_left = 0.4 if _shake_amount > 0.0 else 0.0
-	_spawn_glitch(float(info.get("area", 0.2)), body / 1000.0)
+	if art != null and art.enabled():
+		_spawn_art(art.cfg.get("scares", {}).get(id, {}), body / 1000.0)
+	else:
+		_spawn_glitch(float(info.get("area", 0.2)), body / 1000.0)
 
 
 func _process(delta: float) -> void:
@@ -83,6 +88,39 @@ func _process(delta: float) -> void:
 		if _glitch_left <= 0.0:
 			for c in _glitch.get_children():
 				c.queue_free()
+
+
+## anchor: "left", "right", "center" or "full" (stretched to the screen).
+func _spawn_art(spec: Dictionary, seconds: float) -> void:
+	for c in _glitch.get_children():
+		c.queue_free()
+	if spec.is_empty():
+		return
+	var tex := art.frame(String(spec.get("sheet", "")), String(spec.get("frame", "")))
+	if tex == null:
+		return
+	var vp := Vector2(1280, 720)
+	var k := art.ui_scale(vp)
+	var r := TextureRect.new()
+	r.texture = tex
+	r.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	r.stretch_mode = TextureRect.STRETCH_SCALE
+	var size := tex.get_size() * k
+	match String(spec.get("anchor", "center")):
+		"full":
+			size = vp
+			r.position = Vector2.ZERO
+		"left":
+			r.position = Vector2(0, (vp.y - size.y) / 2.0)
+		"right":
+			r.position = Vector2(vp.x - size.x, (vp.y - size.y) / 2.0)
+		_:
+			r.position = (vp - size) / 2.0
+	r.size = size
+	_glitch.add_child(r)
+	_glitch_left = maxf(float(spec.get("min_seconds", 0.15)), seconds)
 
 
 func _spawn_glitch(area: float, seconds: float) -> void:

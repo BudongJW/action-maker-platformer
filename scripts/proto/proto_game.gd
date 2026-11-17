@@ -3,7 +3,8 @@
 ## ACTION GAME MAKER G version exists.
 ##
 ## Content comes from res://assets/original/story/ (compiled story, scares.json, proto_level.json):
-## the private story pack when present, otherwise the generic demo in prototype/demo/.
+## the private story pack when present, otherwise the generic demo in prototype/demo/. The level's
+## optional "art" block swaps the graybox for pixel art (ProtoArt).
 ## Build and run with tools/build_prototype.py. Pass `-- --bot` to let it play itself (CI).
 ##
 ## Keys: A/D or arrows move, Space jump, W/S climb, Enter/E advance or play, 1-4 choose,
@@ -27,6 +28,7 @@ var level: ProtoLevel
 var player: ProtoPlayer
 var ui: ProtoUI
 var fx: ProtoFX
+var art: ProtoArt
 var font: Font
 var data: Dictionary = {}
 var phase: Phase = Phase.HUB
@@ -38,7 +40,8 @@ var _play_after := false
 var _done: Dictionary = {}
 var _events: Dictionary = {}
 var _choices: Array = []
-var _chaser: ColorRect
+var _chaser: Node2D
+var _chaser_sprite: AnimatedSprite2D
 var _chaser_on := false
 var _catching := false
 var _bot_timer := 0.0
@@ -83,32 +86,42 @@ func _ready() -> void:
 	mixer.bind_story(runner)
 
 	RenderingServer.set_default_clear_color(Color(0.06, 0.07, 0.09))
+	art = ProtoArt.new()
+	art.setup(data.get("art", {}))
 	_tint = CanvasModulate.new()
 	add_child(_tint)
 	level = ProtoLevel.new()
-	level.build(data, font)
+	level.build(data, font, art)
 	add_child(level)
-	_chaser = ColorRect.new()
-	_chaser.color = Color(0.9, 0.45, 0.8, 0.85)
-	_chaser.size = Vector2(36, 56)
-	_chaser.visible = false
-	level.add_child(_chaser)
+	_build_chaser()
 
 	player = ProtoPlayer.new()
 	player.level = level
 	player.bot = bot
 	add_child(player)
 	player.set_camera_limits(level.size)
+	if art.enabled():
+		var spec: Dictionary = art.cfg.get("player", {})
+		if not spec.is_empty():
+			player.set_art(art.make_sprite(spec))
+		player.set_camera_zoom(art.zoom(), float(art.cfg.get("camera_offset_y", -60.0)))
 
 	ui = ProtoUI.new()
 	ui.font = font
 	add_child(ui)
 	fx = ProtoFX.new()
 	fx.ui = ui
+	fx.art = art
 	fx.camera = player.camera()
 	add_child(fx)
 	fx.attach(ui)
 	fx.start_bed()
+	if art.enabled():
+		var vf: Dictionary = art.cfg.get("viewfinder", {})
+		if not vf.is_empty():
+			var sheet: String = String(vf.get("sheet", ""))
+			ui.set_viewfinder(art.frame(sheet, String(vf.get("rec", "rec"))),
+				art.frame(sheet, String(vf.get("standby", "standby"))))
 
 	runner.dialogue_started.connect(func(_id): _stats["dialogues"] += 1)
 	runner.line_started.connect(_on_line)
@@ -131,6 +144,7 @@ func _enter_hub(first: bool) -> void:
 	phase = Phase.HUB
 	player.frozen = true
 	ui.set_darkness(0.0)
+	_show_hub_art(true)
 	var hub: Dictionary = data.get("hub", {})
 	_hub_queue = (hub.get("start", []) if first else []) + hub.get("between", [])
 	_run_hub_queue()
@@ -169,11 +183,13 @@ func _on_play() -> void:
 func _start_loop() -> void:
 	phase = Phase.TAPE
 	ui.set_hub("")
+	_show_hub_art(false)
 	mixer.rewind()
 	_done.clear()
 	_events.clear()
 	_chaser_on = false
 	_catching = false
+	player.pose_override = ""
 	_chaser.visible = false
 	ui.set_darkness(0.0)
 	var start: Array = data.get("player_start", [100, 600])
@@ -223,6 +239,7 @@ func _process(delta: float) -> void:
 		_keep_in_level()
 		_check_triggers()
 		_update_chaser(delta)
+		level.update_backdrop(player.camera().get_screen_center_position().x, player.camera().zoom.x)
 		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)):
 			_end_loop()
 	_update_hud()
@@ -293,9 +310,9 @@ func _on_dialogue_finished(_id: String) -> void:
 			_run_hub_queue()
 
 
-func _on_scare_onset(_id: String, info: Dictionary) -> void:
+func _on_scare_onset(id: String, info: Dictionary) -> void:
 	_stats["scares"] += 1
-	fx.onset(info)
+	fx.onset(id, info)
 	var cue: String = String(info.get("cue", ""))
 	if cue != "":
 		ui.play_cue(runner.play_cue(cue))
@@ -305,6 +322,7 @@ func _on_scare_finished(id: String) -> void:
 	var chaser: Dictionary = data.get("chaser", {})
 	if id == String(chaser.get("catch_scare", "")):
 		_catching = false
+		player.pose_override = ""
 		if phase == Phase.TAPE:
 			_end_loop()
 		return
@@ -312,6 +330,8 @@ func _on_scare_finished(id: String) -> void:
 		_chaser_on = true
 		_chaser.visible = true
 		_chaser.position = player.global_position + Vector2(float(chaser.get("offset", -360)), -56)
+		if _chaser_sprite != null:
+			_chaser_sprite.play("idle")
 
 
 func _on_timeline_event(event_name: String) -> void:
@@ -400,16 +420,51 @@ func _update_chaser(delta: float) -> void:
 		return
 	var target := player.global_position + Vector2(-18, -56)
 	var speed: float = float(data.get("chaser", {}).get("speed", 150.0))
+	if _chaser_sprite != null:
+		_chaser_sprite.flip_h = target.x < _chaser.position.x
 	_chaser.position.x = move_toward(_chaser.position.x, target.x, speed * delta)
 	if absf(target.y - _chaser.position.y) < 120.0:
 		_chaser.position.y = move_toward(_chaser.position.y, target.y, speed * delta)
 	if _chaser.position.distance_to(target) < 30.0:
 		_catching = true
 		_chaser_on = false
+		player.pose_override = "caught"
+		if _chaser_sprite != null and _chaser_sprite.sprite_frames.has_animation("lunge"):
+			_chaser_sprite.play("lunge")
 		var catch_id: String = String(data.get("chaser", {}).get("catch_scare", ""))
 		if catch_id == "" or not director.trigger(catch_id):
 			_catching = false
 			_end_loop()
+
+
+# --- Art ----------------------------------------------------------------------------------
+
+
+func _build_chaser() -> void:
+	_chaser = Node2D.new()
+	_chaser.visible = false
+	level.add_child(_chaser)
+	var spec: Dictionary = art.cfg.get("chaser", {}) if art.enabled() else {}
+	if not spec.is_empty():
+		# The chaser keeps its own colours (it only exists on the dubbed track).
+		_chaser_sprite = art.make_sprite(spec, false)
+		_chaser_sprite.position = Vector2(18, 56)
+		_chaser.add_child(_chaser_sprite)
+		return
+	var box := ColorRect.new()
+	box.color = Color(0.9, 0.45, 0.8, 0.85)
+	box.size = Vector2(36, 56)
+	_chaser.add_child(box)
+
+
+## The hub (2026 workroom) is a full-screen picture when the art block has "hub_backdrop".
+func _show_hub_art(on: bool) -> void:
+	if not art.enabled():
+		return
+	var spec: Dictionary = art.cfg.get("hub_backdrop", {})
+	if spec.is_empty():
+		return
+	ui.set_backdrop(art.frame(String(spec.get("texture", "")), String(spec.get("frame", ""))) if on else null)
 
 
 # --- Tracks and HUD ------------------------------------------------------------------------
@@ -434,7 +489,16 @@ func _set_track(track: TrackMixer.Track) -> void:
 
 
 ## LINEAR reads as the staged broadcast night, HI-FI as the real one by the water.
+## With art the palettes do this (art block "palettes": linear, hifi, mix) and the badge follows.
 func _apply_tint() -> void:
+	if art.enabled():
+		_tint.color = Color.WHITE
+		var key: String = ["hifi", "linear", "mix"][mixer.get_track()]
+		var mix_amount := 0.5 if key == "mix" and not art.cfg.get("palettes", {}).has("mix") else 1.0
+		art.set_palette("hifi" if mix_amount < 1.0 else key, mix_amount)
+		var badges: Dictionary = art.cfg.get("badges", {})
+		ui.set_badge(art.frame(String(badges.get("sheet", "")), String(badges.get(key, ""))) if badges.has(key) else null)
+		return
 	match mixer.get_track():
 		TrackMixer.Track.LINEAR:
 			_tint.color = Color(1.0, 0.86, 0.96)
@@ -458,6 +522,8 @@ func _track_is(track_name: String) -> bool:
 func _update_hud() -> void:
 	var t := int(mixer.tape_time())
 	var tc := "%02d:%02d:%02d" % [t / 3600, (t / 60) % 60, t % 60]
+	ui.set_timecode(tc)
+	ui.set_recording(player.recording)
 	var names := ["HI-FI", "LINEAR", "MIX"]
 	ui.set_hud("%s %s  TC %s  PLAY %d%s\n[Z]LIN [X]HIFI [C]MIX [R]REC [F]FF" % [
 		"REC" if player.recording else "   ", names[mixer.get_track()], tc,
