@@ -1,0 +1,70 @@
+# Top-down mock-up: the schoolyard in front of the building at night. The
+# main door is open; a path leads to the gate in the fence.
+@palette ../palette/night-school.pal
+@size 384 224
+@output ../mockups/map_schoolyard_td.png
+@preview ../previews/map_schoolyard_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@legend A tw:walltop_15
+@legend B td:face_upper
+@legend C td:face_lower
+@legend D td:ground_grass
+@legend E td:ground_dirt
+@legend F ns:window_0_0
+@legend G ns:window_1_0
+@legend H ns:window_0_1
+@legend I ns:window_1_1
+@legend J td:door_open_0_0
+@legend K td:door_open_0_1
+@legend L td:streetlamp
+@legend M td:tree_0_0
+@legend N td:tree_1_0
+@legend O td:tree_0_1
+@legend P td:tree_1_1
+@legend Q td:fence_h
+
+@layer
+AAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCCCCCC
+DDDDDDDDDDEEEEEDDDDDDDDD
+DDDDDDDDDDEEEEEDDDDDDDDD
+DDDDDDDDDDEEEEEDDDDDDDDD
+DDDDDDDDDDEEEEEDDDDDDDDD
+DDDDDDDDDEEEEEEDDDDDDDDD
+DDDDDDDDEEEEEEEEEDDDDDDD
+DDDDDDDEEEEEEEEEEEDDDDDD
+DDDDDDDDDDDEEEDDDDDDDDDD
+DDDDDDDDDDDDEEEDDDDDDDDD
+DDDDDDDDDDDDEEDDDDDDDDDD
+@layer
+........................
+........................
+..FG..FG..JJ....FG..FG..
+..HI..HI..KK....HI..HI..
+.L..................L...
+........................
+MN...................MN.
+OP...................OP.
+........................
+..MN................MN..
+..OP................OP..
+........................
+........................
+QQQQQQQQQQQQ..QQQQQQQQQQ
+
+@sprite protagonist_topdown.pix up_1 188 144
+@sprite enemy_dokkaebi_bul.pix flicker_1 80 112 over
+@darkness K 0.6
+@cone 200 152 270 40 120
+@light 24 72 40
+@light 344 72 40
+@light 88 120 18

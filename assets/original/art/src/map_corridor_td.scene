@@ -1,0 +1,86 @@
+# Top-down mock-up: a corridor of the school at night (3/4 view, 16x16
+# tiles). Generated from an ASCII map; doors, windows and lockers sit on
+# the wall face. The sealed door has a talisman and a geumjul.
+@palette ../palette/night-school.pal
+@size 480 160
+@output ../mockups/map_corridor_td.png
+@preview ../previews/map_corridor_td_x2.png 2
+@fill D
+
+@tiles td tiles_topdown.pix
+@tiles tw tiles_topdown_walltop.pix
+@tiles ns tiles_night_school.pix
+@tiles cl tiles_classroom.pix
+@tiles rr tiles_restroom.pix
+@tiles pr tiles_props.pix
+@legend A tw:walltop_15
+@legend B td:face_upper
+@legend C td:face_lower
+@legend D td:floor_wood_shadow
+@legend E td:floor_wood_b
+@legend F td:floor_wood
+@legend G tw:walltop_14
+@legend H td:door_0_0
+@legend I td:door_0_1
+@legend J ns:sign_plate
+@legend K ns:window_0_0
+@legend L ns:window_1_0
+@legend M ns:window_0_1
+@legend N ns:window_1_1
+@legend O ns:locker_0_0
+@legend P ns:locker_0_1
+@legend Q ns:candle_lit_0
+@legend R pr:trash_can
+@legend S pr:water_fountain
+@legend T cl:plant_dead
+@legend U td:note
+@legend V ns:geumjul
+@legend W ns:talisman
+
+@layer
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+EFFFFFFFEFFEFEFFFFFFEFFFFEFFEF
+FEEFFEEFFEEFFFFEFFFFFFEFEFFFEF
+FEFEFFFFFFFFFFFFFFEEFFFFFFFEFF
+FFFFEFEEFFFEEFFFEFEFEFFFEFFEEE
+GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
+@layer
+..............................
+..............................
+...HJ..KL.OO.H.J.KL.OO..H..KL.
+...I...MN.PP.I...MN.PP..I..MN.
+Q....R.........S............T.
+..............................
+................U.............
+..............................
+..............................
+..............................
+@layer
+..............................
+..............................
+.......................VVV....
+........................W.....
+..............................
+..............................
+..............................
+..............................
+..............................
+..............................
+
+@sprite protagonist_topdown.pix right_1 76 64
+@sprite enemy_shadow_visitor_topdown.pix left_1 392 56
+@sprite enemy_dokkaebi_bul.pix flicker_0 352 64 over
+@sprite enemy_dokkaebi_bul.pix flicker_2 416 48 over
+@sprite enemy_shadow_visitor.pix _eye_glow 392 56 flip over
+@darkness K 0.8
+@cone 98 88 0 36 150
+@light 128 84 26
+@light 288 84 26
+@light 448 84 26
+@light 8 76 20
+@light 360 72 18
+@light 424 56 16

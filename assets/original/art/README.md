@@ -60,7 +60,7 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 | 파일 | 크기·배치 | 내용 | 미리보기 |
 |---|---|---|---|
 | [`characters/protagonist_side.png`](characters/protagonist_side.png) | 24x32 셀, 7열x3행 | 주인공 횡스크롤(오른쪽을 봄, 왼쪽은 엔진에서 반전). `idle_0 idle_1 walk_0 walk_1 walk_2 walk_3 jump / fall crouch hurt interact turn_back(사물함·문 진입, 뒷모습) death_0 death_1 / death_2 run_0 run_1 run_2 run_3 climb_0 climb_1(사다리)`. 사망은 고어 없이 쓰러짐(D9), 손전등이 떨어짐 | [x6](previews/protagonist_side_x6.png) |
-| [`characters/$protagonist_topdown.png`](characters/$protagonist_topdown.png) | 24x32 셀, 3열x4행 | 쯔꾸르 MV/MZ 단일 캐릭터(`$`) 배치. 행: 아래·왼쪽·오른쪽·위, 열: 걸음·정지·걸음. 좌우는 횡스크롤 프레임을 재사용 | [x6](previews/protagonist_topdown_x6.png) |
+| [`characters/$protagonist_topdown.png`](characters/$protagonist_topdown.png) | 24x32 셀, 3열x4행 | 쯔꾸르 MV/MZ 단일 캐릭터(`$`) 배치. 행: 아래·왼쪽·오른쪽·위, 열: 걸음·정지·걸음. 좌우는 횡스크롤 프레임을 재사용. 탑다운 타일·맵은 아래 "탑다운" 절 | [x6](previews/protagonist_topdown_x6.png) |
 | [`characters/enemy_shadow_visitor.png`](characters/enemy_shadow_visitor.png) | 32x56 셀, 5열x3행 | **그림자 손님**: 긴 외투의 구부정한 실루엣, 붉은 외눈. `idle_0 idle_1(눈 깜박임) walk_0 walk_1 look(뒤돌아봄) / grab chase_0 chase_1 vanish_0 vanish_1 / vanish_2`. 상태와 모션의 대응은 [`docs/decisions.md`](../../../docs/decisions.md) | [x4](previews/enemy_shadow_visitor_x4.png) |
 | [`characters/enemy_sobok_gwisin.png`](characters/enemy_sobok_gwisin.png) | 24x40 셀, 3열x2행 | **소복 귀신**: 흰 저고리·치마, 얼굴을 가린 장발, 발 대신 흐려지는 치맛단. `float_0 float_1 reveal(한쪽 눈) / vanish_0 vanish_1 vanish_2` | [x4](previews/enemy_sobok_gwisin_x4.png) |
 | [`characters/enemy_dokkaebi_bul.png`](characters/enemy_dokkaebi_bul.png) | 16x16 셀, 4프레임 | **도깨비불**: 외곽선 없는 청록 불꽃 + 불티. 어둠 위에 그려 발광처럼 보이게 | [x8](previews/enemy_dokkaebi_bul_x8.png) |
@@ -117,6 +117,33 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 | [`mockups/title_mock.png`](mockups/title_mock.png) | 타이틀 화면: 배경 + 로고 자리(제목 미정) + 메뉴 |
 | [`mockups/document_mock.png`](mockups/document_mock.png) | 쪽지 열람: 디더로 어둡게 한 화면 위 종이 |
 | [`mockups/menu_mock.png`](mockups/menu_mock.png) | 일시정지 메뉴와 세이브 슬롯 3개(촛불 = 체크포인트) |
+
+## 탑다운 (쯔꾸르식 3/4 시점)
+
+횡스크롤 본편과 별도로, 쯔꾸르처럼 위에서 내려다보는 구간에 쓸 타일과 캐릭터입니다(D7: 첫 플레이어블에는 넣지 않지만 미리 준비). 타일은 **16x16**, 캐릭터 셀은 **24x32**로, 쯔꾸르 2000과 같은 비율입니다.
+
+![top-down corridor](previews/map_corridor_td_x2.png)
+
+| ![classroom top-down](previews/map_classroom_td_x2.png) | ![schoolyard top-down](previews/map_schoolyard_td_x2.png) |
+|---|---|
+| 교실 | 운동장 |
+
+| 파일 | 내용 | 미리보기 |
+|---|---|---|
+| [`tiles/tiles_topdown.png`](tiles/tiles_topdown.png) | 바닥(마루 2종·벽 그림자, 화장실 타일·그림자, 콘크리트, 흙, 풀), 벽면(`face_upper` 회벽+걸레받이 레일, `face_lower` 판벽), 미닫이문 1x2(닫힘·열림), 화장실 칸 문 1x2, 책상·의자·교탁(위에서 본 모습), 계단 2x2, 나무 2x2, 울타리(가로·세로), 가로등, 바닥의 쪽지 | [x4](previews/tiles_topdown_x4.png) |
+| [`tiles/tiles_topdown_walltop.png`](tiles/tiles_topdown_walltop.png) | 위에서 본 벽 윗면 16종. Godot 지형 **Match Sides** 모드용, `walltop_NN`의 NN은 이어진 면의 합(N=1, E=2, S=4, W=8) | [x4](previews/tiles_topdown_walltop_x4.png) |
+| [`characters/$protagonist_topdown.png`](characters/$protagonist_topdown.png) | 주인공 (위 표 참고) | [x6](previews/protagonist_topdown_x6.png) |
+| [`characters/$enemy_shadow_visitor_topdown.png`](characters/$enemy_shadow_visitor_topdown.png) | 그림자 손님, 32x56 셀, MV/MZ `$` 배치. 정면·뒷모습은 새로 그리고 좌우는 횡스크롤 프레임 재사용 | [x4](previews/enemy_shadow_visitor_topdown_x4.png) |
+| [`characters/$enemy_sobok_gwisin_topdown.png`](characters/$enemy_sobok_gwisin_topdown.png) | 소복 귀신, 24x40 셀, MV/MZ `$` 배치. 떠 있으므로 걸음 프레임 대신 1px 위아래로 흔들림 | [x4](previews/enemy_sobok_gwisin_topdown_x4.png) |
+| [`mockups/map_corridor_td.png`](mockups/map_corridor_td.png), [`map_classroom_td.png`](mockups/map_classroom_td.png), [`map_schoolyard_td.png`](mockups/map_schoolyard_td.png) | 복도(480x160), 교실(320x224), 운동장(384x224) 맵 목업 | [복도](previews/map_corridor_td_x2.png), [교실](previews/map_classroom_td_x2.png), [운동장](previews/map_schoolyard_td_x2.png) |
+
+쓰는 법:
+
+- **벽**: 벽 윗면(`walltop`) 아래에 벽면 두 줄(`face_upper`, `face_lower`)을 둡니다. 3/4 시점의 벽면은 정면에서 보이므로, 횡스크롤용 소품을 그대로 벽면에 붙일 수 있습니다. 창문(2x2), 사물함(1x2), 칠판(4x2), TV(2x2), 거울(1x2), 게시판, 시계, 명패, 부적, 금줄이 모두 두 줄짜리 벽면에 맞습니다.
+- **그림자**: 벽면 바로 아래 바닥에는 `floor_wood_shadow`·`floor_tile_shadow`를 깝니다.
+- **남쪽 벽**: 바깥(아래)을 향한 벽은 면이 보이지 않으므로 윗면만 둡니다.
+- **도깨비불**은 방향이 없으므로 기존 `enemy_dokkaebi_bul.png`을 그대로 씁니다.
+- 목업 맵은 ASCII로 그린 배치를 저작용 스크립트로 `.scene`으로 바꾼 것입니다(벽 윗면 16종 자동 선택, 바닥 무늬 섞기, 벽 그림자). 실제 레벨은 AGM G의 TileMap 편집기에서 이 타일셋으로 만듭니다.
 
 ## 이계: 팔레트 교체
 
