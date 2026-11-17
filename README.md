@@ -42,9 +42,12 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 │   └── third_party/         # Redistributable third-party assets (one folder per source + LICENSE)
 ├── assets_private/          # Non-redistributable assets (git-ignored; only its README is tracked)
 ├── docs/
-│   └── script-format.md     # Character script format spec (.dlg), Korean
+│   ├── script-format.md     # Character script format spec (.dlg), Korean
+│   └── scare-director.md    # Scare director, track mixer and scare lint (Korean)
 ├── scripts/
-│   └── story/               # GDScript story runtime (GPL-3.0)
+│   ├── story/               # GDScript story runtime (GPL-3.0)
+│   ├── scare/               # Jump-scare scheduling (GPL-3.0)
+│   └── tracks/              # HI-FI / LINEAR track mixer and tape clock (GPL-3.0)
 ├── tests/
 │   └── godot/               # GDScript runtime tests and fixtures
 ├── tools/                   # Compiler, repository checks and test runners (GPL-3.0)
@@ -100,7 +103,11 @@ python3 tools/storyc.py --fix      # first add missing #line: IDs to the .dlg fi
 python3 tools/storyc.py --check    # lint and verify outputs are up to date (what CI runs)
 ```
 
-Commit the `.dlg` changes together with the updated `compiled/` and `strings.csv`; CI fails if they are out of sync. Until `assets/original/story/project.json` exists, the compiler has nothing to do and exits successfully.
+Until `assets/original/story/project.json` exists, the compiler has nothing to do and exits successfully.
+
+### Story content stays out of this repository
+
+The game's story (plot, dialogue, characters, endings) is kept **out of this public repository**. `assets/original/story/` and `assets/original/characters/` are git-ignored: keep the private story pack there on your machine and back it up separately (or move it into a private repository later and add it as a submodule). The compiler, runtime and tools in this repository work the same either way. CI fails if any file under those two folders is tracked, so a story file cannot be committed by accident. Run `storyc --check` locally before a build.
 
 ## Story runtime
 
@@ -112,7 +119,15 @@ The runtime is tested in headless Godot 4.7 (the engine version ACTION GAME MAKE
 GODOT_BIN=/path/to/Godot_v4.7-stable_linux.x86_64 python3 tools/run_godot_tests.py
 ```
 
-The runner builds a temporary Godot project from `scripts/story/`, `tests/godot/` and the examples in the spec, compiles it with `storyc`, and runs `tests/godot/test_story_runtime.gd`. Without Godot it skips; CI downloads Godot, verifies its checksum and runs it.
+The runner builds a temporary Godot project from `scripts/`, `tests/godot/` and the examples in the spec, compiles it with `storyc`, and runs the story runtime, scare director and track mixer tests. Without Godot it skips; CI downloads Godot, verifies its checksum and runs it.
+
+## Scare director and track mixer
+
+- [`scripts/scare/scare_director.gd`](scripts/scare/scare_director.gd) (`ScareDirector`) schedules jump scares with timing rules taken from startle research: delays drawn from a truncated exponential distribution (so waiting does not make a scare predictable), a 0.5 s quiet window before each onset (a sound 30-500 ms before a startle stimulus weakens it), ambience ducking, repeat attenuation, a relax period, and Soft / Off / photosafe settings. The story script triggers a scare with `do emit scare_<id>`.
+- [`scripts/tracks/track_mixer.gd`](scripts/tracks/track_mixer.gd) (`TrackMixer`) switches between the HI-FI and LINEAR recordings of the same night (and MIX), crossfades their audio buses, shows or hides track-only nodes, runs the tape clock, and reports dubbed segments and timeline events.
+- [`tools/scare_lint.py`](tools/scare_lint.py) checks a scare config against those rules (loudness headroom, rise time, flash area, spacing) and estimates each scare's relative strength.
+
+Rules, numbers and sources are in [`docs/scare-director.md`](docs/scare-director.md) (Korean). `tools/run_godot_tests.py` runs their headless tests together with the story runtime tests.
 
 ## Contributing
 
