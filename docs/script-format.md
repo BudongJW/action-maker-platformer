@@ -2,7 +2,7 @@
 
 이 문서는 게임의 대사·바크·문서·자막을 작성하는 텍스트 포맷(`.dlg`)과, 그것을 컴파일한 데이터, 그리고 런타임이 지켜야 할 계약을 정의합니다. 설계 근거는 [`reports/오픈소스 게임 스토리 스크립트 분석.md`](../reports/오픈소스%20게임%20스토리%20스크립트%20분석.md)의 "캐릭터 스크립트는 레지스트리·줄 ID·3층 플래그로 설계하라" 절입니다.
 
-상태: **초안**. 컴파일러(`tools/`)와 런타임(GDScript)은 아직 구현되지 않았습니다.
+상태: **초안**. 컴파일러·린터는 [`tools/storyc.py`](../tools/storyc.py)로 구현되어 있습니다(12절). 런타임(GDScript)은 아직 구현되지 않았습니다.
 
 ---
 
@@ -37,7 +37,7 @@ assets/original/                      # All Rights Reserved
         ├── story.json
         └── strings.<locale>.json
 
-tools/storyc.py                       # 컴파일러·린터 (GPL, 미구현)
+tools/storyc.py                       # 컴파일러·린터 (GPL)
 ```
 
 - `compiled/`는 컴파일러가 만드는 파일이지만 **커밋합니다.** AGM G 에디터와 내보내기 빌드가 Python 없이도 바로 읽을 수 있어야 하기 때문입니다. CI는 `compiled/`가 `src/`와 일치하는지 검사합니다.
@@ -88,7 +88,9 @@ tools/storyc.py                       # 컴파일러·린터 (GPL, 미구현)
 **예약 화자.** 다음 두 화자는 레지스트리 없이 쓸 수 있습니다. 레지스트리 파일을 두면 스타일을 덮어쓸 수 있습니다.
 
 - `narrator`: 이름표 없는 서술. 기본 `style`은 `caption`입니다.
-- `system`: 게임·OS의 시스템 메시지처럼 보이는 메타 연출용 화자입니다. 기본 출력 대상은 `os_dialog`입니다(6.3절).
+- `system`: 게임·OS의 시스템 메시지처럼 보이는 메타 연출용 화자입니다. 기본 `style`은 출력 대상 `os_dialog`입니다(6.3절).
+
+예약 화자의 레지스트리 파일에서는 `name`과 `expressions`를 생략할 수 있고, `style`에 6.3절의 출력 대상 이름도 쓸 수 있습니다. 컴파일 결과에는 레지스트리 파일이 없어도 두 예약 화자의 항목이 항상 들어갑니다.
 
 `title`과 `p`는 문서 블록 전용 표기(7.2절)라서 캐릭터 ID로 쓸 수 없습니다.
 
@@ -351,7 +353,7 @@ narrator [at=3.5] [dur=4.0]: 그날 밤, 새 사또가 부임했다.  #line:ch01
   "locales": ["ko", "en", "ja"],
   "emotes": ["exclaim", "question", "sweat", "heart", "anger", "silence"],
   "max_chars": { "bubble": 40, "caption": 60, "window": 120 },
-  "external_flags": ["loop.night", "save.has_seal"]
+  "external_flags": ["loop.night", "loop.pond_sealed", "save.has_seal"]
 }
 ```
 
@@ -365,11 +367,12 @@ narrator [at=3.5] [dur=4.0]: 그날 밤, 새 사또가 부임했다.  #line:ch01
 
 ```csv
 id,kind,speaker,expression,context,source_hash,ko,en,en_src_hash,ja,ja_src_hash
-ch01_pg_002,line,hongryeon,sad,"정체를 숨긴 화자, 체념한 존댓말",3f9a1c2e,"또 오셨네요. 이번이 몇 번째 밤인지 기억하세요?","You came again. Do you remember which night this is?",3f9a1c2e,,
-name.hongryeon,name,,,,a81b07d4,홍련,Hongryeon,a81b07d4,,
+name.hongryeon,name,hongryeon,,,1289bd3a,홍련,Hongryeon,1289bd3a,,
+ch01_pg_002,line,hongryeon,sad,"정체를 숨긴 화자, 체념한 존댓말",6797deb8,또 오셨네요. 이번이 몇 번째 밤인지 기억하세요?,You came again. Do you remember which night this is?,6797deb8,,
 ```
 
-- **컴파일러가 만들고 갱신하는** 열: `id`, `kind`(`line`/`choice`/`doc`/`cue`/`name`), `speaker`, `expression`, `context`, `source_hash`, 원문 언어 열(`ko`). 이 열들은 손으로 고치지 않습니다. 원문은 `.dlg`와 `character.json`에서 고칩니다.
+- **컴파일러가 만들고 갱신하는** 열: `id`, `kind`(`line`/`choice`/`bark`/`doc`/`cue`/`name`), `speaker`, `expression`, `context`, `source_hash`, 원문 언어 열(`ko`). 이 열들은 손으로 고치지 않습니다. 원문은 `.dlg`와 `character.json`에서 고칩니다.
+- 행 순서는 캐릭터 이름(`name.*`, 캐릭터 ID 순) 다음에 `.dlg` 파일 순서·작성 순서입니다. 원문에서 지운 줄의 행은 다음 컴파일 때 빠집니다.
 - **번역가가 채우는** 열: 언어별 텍스트(`en`, `ja`)와, 번역할 때의 원문 해시(`en_src_hash` 등).
 - `source_hash`는 원문 텍스트의 SHA-1 앞 8자리입니다. 원문이 바뀌면 `<locale>_src_hash`와 달라지므로 컴파일러가 해당 번역을 "원문 변경됨"으로 보고합니다(Ryzom 방식).
 - 번역이 비어 있거나 원문이 바뀐 줄은 런타임에서 원문 언어로 대체 표시합니다.
@@ -387,13 +390,18 @@ name.hongryeon,name,,,,a81b07d4,홍련,Hongryeon,a81b07d4,,
 {
   "format": 1,
   "source_locale": "ko",
+  "locales": ["ko", "en", "ja"],
   "characters": {
     "hongryeon": {
       "color": "#9fc5e8", "style": "bubble",
       "expressions": ["neutral", "sad", "surprised", "angry"],
       "default_expression": "neutral",
-      "portraits": { "neutral": "res://assets/original/characters/hongryeon/portraits/neutral.png" },
-      "aliases": ["unknown", "girl"]
+      "portraits": {
+        "neutral": "res://assets/original/characters/hongryeon/portraits/neutral.png",
+        "sad": "res://assets/original/characters/hongryeon/portraits/sad.png"
+      },
+      "aliases": ["unknown", "girl"],
+      "blip": "sfx/blip_soft"
     }
   },
   "dialogues": {
@@ -406,7 +414,7 @@ name.hongryeon,name,,,,a81b07d4,홍련,Hongryeon,a81b07d4,,
         { "op": "choice", "options": [
             { "id": "ch01_pg_003", "pc": 3 },
             { "id": "ch01_pg_005", "if": { "cmp": ">=", "a": { "var": "sys.loop_count" }, "b": 2 }, "pc": 5 }
-        ] },
+        ], "skip_pc": 8 },
         { "op": "line", "id": "ch01_pg_004", "speaker": "hongryeon", "name": "unknown" },
         { "op": "goto", "pc": 8 },
         { "op": "set", "var": "save.told_ghost_loop", "mode": "=", "value": true },
@@ -428,7 +436,10 @@ name.hongryeon,name,,,,a81b07d4,홍련,Hongryeon,a81b07d4,,
 ```
 
 - 대화 본문은 **평평한 명령 배열**(`code`)과 배열 인덱스 점프(`pc`)로 컴파일됩니다. 런타임은 프로그램 카운터 하나로 진행하므로 구현이 단순합니다.
-- `op` 종류: `line`, `choice`, `branch`(`if`, `else_pc`), `goto`, `set`, `do`, `switch`(다른 대화로 전환), `end`.
+- `op` 종류: `line`, `choice`(`options`, 보이는 선택지가 없을 때 이동할 `skip_pc`), `branch`(`if`, `else_pc`), `goto`, `set`, `do`(`cmd`, `args`), `switch`(`dialogue`, 다른 대화로 전환), `end`.
+- 선택지 항목: `id`, 선택 사항 `if`·`enable_if`·`once`, 고른 뒤 이동할 `pc`.
+- 바크는 `{"requires", "cooldown", "lines": [...]}`, 문서는 `{"category", "title", "paragraphs": [...]}`, 자막 큐는 `{"lines": [...]}`로 컴파일됩니다. 바크 줄에는 `w`, 자막 줄에는 `at`·`dur`가 붙습니다.
+- `characters`에는 레지스트리의 모든 캐릭터와 예약 화자 `narrator`, `system`이 들어갑니다. `bio`, `notes`, `name`은 빠집니다(이름은 문자열 표의 `name.<id>`).
 - `@requires`와 `@forbids`는 하나의 `requires` 식으로 합쳐집니다(`@forbids X`는 `not X`).
 - 표정을 생략한 줄은 `expression` 필드가 없고, 런타임이 직전 표정을 유지합니다.
 - 조건식은 문자열이 아니라 **미리 파싱한 트리**로 저장합니다. `{"var": ...}`, `{"cmp": op, "a": ..., "b": ...}`, `{"and": [...]}`, `{"or": [...]}`, `{"not": ...}`. 런타임에는 식 파서가 필요 없습니다.
@@ -445,6 +456,7 @@ name.hongryeon,name,,,,a81b07d4,홍련,Hongryeon,a81b07d4,,
 ```
 
 - 원문 언어 파일은 `.dlg`와 레지스트리에서 만들고, 번역 언어 파일은 `strings.csv`에서 만듭니다. 원문이 바뀐 번역은 넣지 않습니다(런타임이 원문으로 대체).
+- 컴파일된 문자열에서 `\n`은 실제 줄바꿈으로, `\#`과 `\=>`는 `#`과 `=>`로 바뀝니다. `\{`와 `\\`는 런타임의 자리표시자 처리를 위해 그대로 남깁니다.
 
 ---
 
@@ -477,7 +489,18 @@ name.hongryeon,name,,,,a81b07d4,홍련,Hongryeon,a81b07d4,,
 
 ---
 
-## 12. 컴파일러 검사 규칙 (`tools/storyc.py`, 미구현)
+## 12. 컴파일러와 검사 규칙 (`tools/storyc.py`)
+
+```bash
+python3 tools/storyc.py            # 검사 후 오류가 없으면 compiled/와 l10n/strings.csv 갱신
+python3 tools/storyc.py --fix      # 빠진 #line: ID를 .dlg에 먼저 써 넣고 컴파일
+python3 tools/storyc.py --check    # 검사하고 compiled/·strings.csv가 최신인지 확인만 함 (CI용)
+python3 tools/storyc.py --strict   # 경고도 실패로 처리
+```
+
+- 오류가 하나라도 있으면 아무 파일도 쓰지 않고 종료 코드 1로 끝납니다.
+- `assets/original/story/project.json`이 없으면 할 일이 없다고 알리고 종료 코드 0으로 끝납니다.
+- `.dlg`는 `story/src/` 아래를 하위 폴더까지 읽습니다.
 
 | 코드 | 수준 | 내용 |
 |---|---|---|
@@ -488,12 +511,15 @@ name.hongryeon,name,,,,a81b07d4,홍련,Hongryeon,a81b07d4,,
 | E005 | 오류 | 없는 라벨·대화로 점프 |
 | E006 | 오류 | 알 수 없는 층의 플래그, `sys.*`·`seen.*`에 `set` |
 | E007 | 오류 | 허용 목록에 없는 `do` 명령이나 잘못된 인자 |
-| E008 | 오류 | 블록 종류에 맞지 않는 문장(바크의 선택지, 문서의 일반 화자 등), 자막 큐의 `at`/`dur` 누락 |
+| E008 | 오류 | 블록 종류에 맞지 않는 문장(바크의 선택지, 문서의 일반 화자 등), 자막 큐의 `at`/`dur` 누락, 빈 블록 |
+| E009 | 오류 | `project.json` 또는 `character.json`이 잘못됨(필수 필드 누락, `default_expression`이 목록에 없음, 예약어 ID 등) |
+| E010 | 오류 | `--check`에서 `compiled/` 또는 `strings.csv`가 원문과 맞지 않음 |
 | W101 | 경고 | 읽기만 하고 `.dlg` 어디서도 `set`하지 않는 플래그(`sys.*`, `seen.*`, `project.json`의 `external_flags` 제외) |
 | W102 | 경고 | 도달할 수 없는 라벨이나 문장 |
 | W103 | 경고 | 스타일별 `max_chars` 초과 |
-| W104 | 경고 | 번역 누락, 원문 변경, 자리표시자·BBCode 불일치 |
+| W104 | 경고 | 원문이 바뀐 번역(stale), 원문과 다른 자리표시자·BBCode. 번역 누락 개수는 경고가 아니라 요약으로만 출력 |
 | W105 | 경고 | 예약되었지만 v1에서 쓰지 않는 `#키:` 태그 |
+| W106 | 경고 | 레지스트리의 `portraits`에 적힌 이미지 파일이 없음 |
 
 `--fix`로 자동 부여하는 줄 ID는 `<블록 ID>_<3자리 순번>`이며, 원문 파일에 다시 써 넣어 이후로 고정됩니다.
 

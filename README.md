@@ -73,7 +73,7 @@ Third-party code is accepted **only under licenses that are GPL-3.0-compatible a
 
 ## Dialogue text and code separation
 
-Dialogue text lives only in data files under `assets/original/` (all rights reserved). GDScript code (GPL) refers to it only by line ID or translation key, because text written into code is distributed under the code's license. The script format is specified in [`docs/script-format.md`](docs/script-format.md) (Korean).
+Dialogue text lives only in data files under `assets/original/` (all rights reserved). GDScript code (GPL) refers to it only by line ID or translation key, because text written into code is distributed under the code's license.
 
 CI ([`.github/workflows/content-license-checks.yml`](.github/workflows/content-license-checks.yml)) enforces this on every pull request and push to `main`: it fails if a string literal in a `.gd` file contains Korean text. To run it locally:
 
@@ -85,6 +85,18 @@ python3 tools/check_dialogue_in_code.py
 - A string that is not content passes if the same line has a `# dialogue-lint: allow` comment.
 - `addons/`, `test/`, `tests/`, `.godot/` and `assets_private/` are not scanned.
 - **Known limitations:** scene and resource files (`.tscn`, `.tres`) are not scanned yet. Whether to add them depends on whether ACTION GAME MAKER G's visual scripts store text-display strings in scene files. Non-Korean dialogue (English, etc.) is not detected either, so reviewers should check for it.
+
+## Writing dialogue
+
+Dialogue, barks, documents and subtitles are written in `.dlg` files under `assets/original/story/src/`. The format is specified in [`docs/script-format.md`](docs/script-format.md) (Korean). [`tools/storyc.py`](tools/storyc.py) lints the scripts and compiles them into the JSON the game loads (`assets/original/story/compiled/`), and keeps the translation table (`assets/original/story/l10n/strings.csv`) in sync.
+
+```bash
+python3 tools/storyc.py            # lint, then update compiled/ and strings.csv
+python3 tools/storyc.py --fix      # first add missing #line: IDs to the .dlg files
+python3 tools/storyc.py --check    # lint and verify outputs are up to date (what CI runs)
+```
+
+Commit the `.dlg` changes together with the updated `compiled/` and `strings.csv`; CI fails if they are out of sync. Until `assets/original/story/project.json` exists, the compiler has nothing to do and exits successfully.
 
 ## Contributing
 

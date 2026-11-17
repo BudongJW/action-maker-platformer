@@ -9,14 +9,29 @@ permissions:
   contents: read
 
 jobs:
+  tool-tests:
+    name: Tool tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run unit tests for tools/
+        run: python3 -m unittest discover -s tools/tests -v
+
   dialogue-in-code:
     name: No dialogue text in GDScript
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
 
-      - name: Test the checker
-        run: python3 -m unittest discover -s tools/tests -v
-
       - name: Check GDScript files for Korean string literals
         run: python3 tools/check_dialogue_in_code.py
+
+  story-scripts:
+    name: Story scripts compile and are up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Lint .dlg scripts and verify compiled output
+        run: python3 tools/storyc.py --check
