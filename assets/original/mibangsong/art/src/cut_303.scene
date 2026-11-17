@@ -1,0 +1,8 @@
+# PRIVATE (미방송분). Cut 3-03 CU level (1979): the baby grabs the microphone cord and babbles: Eunyoung's oldest voice is on this tape (a memory: soft, sepia)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/303.png
+@preview ../previews/303_x2.png 2
+@swap ../palette/1979.pal
+@sprite cu_303.pix a 0 0
+@sprite mbs_ui_badges.pix y1979 14 14 over

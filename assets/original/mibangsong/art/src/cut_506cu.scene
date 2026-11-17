@@ -1,0 +1,9 @@
+# PRIVATE (미방송분). Cut 5-06 CU (hand) -> transition: Gyeongho's hand holds the end of the cloth road; Eunyoung's voice; when he switches the camera off, REC and the VHS texture go (plate = after)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/506cu.png
+@preview ../previews/506cu_x2.png 2
+@swap ../palette/hifi.pal
+@sprite cu_506cu.pix a 0 0
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

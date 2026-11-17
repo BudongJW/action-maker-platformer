@@ -1,0 +1,52 @@
+# PRIVATE (미방송분). Cut 4-03: the cassette deck arrives: the "700 manuscript 13" voice lies exactly on the LINEAR 01:19 waveform
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/403.png
+@preview ../previews/403_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend B w:wall_block
+@legend F w:floor
+@legend L w:lamp_on
+@layer
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+FFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFF
+@layer
+.........L..........
+@sprite mbs_tiles_workroom.pix shelf_0_0 8 112
+@sprite mbs_tiles_workroom.pix shelf_1_0 24 112
+@sprite mbs_tiles_workroom.pix shelf_0_1 8 128
+@sprite mbs_tiles_workroom.pix shelf_1_1 24 128
+@sprite mbs_tiles_workroom.pix shelf_0_2 8 144
+@sprite mbs_tiles_workroom.pix shelf_1_2 24 144
+@sprite mbs_tiles_workroom.pix desk_0_0 128 128
+@sprite mbs_tiles_workroom.pix desk_1_0 144 128
+@sprite mbs_tiles_workroom.pix desk_2_0 160 128
+@sprite mbs_tiles_workroom.pix desk_0_1 128 144
+@sprite mbs_tiles_workroom.pix desk_1_1 144 144
+@sprite mbs_tiles_workroom.pix desk_2_1 160 144
+@sprite mbs_tiles_workroom.pix box 200 144
+@sprite mbs_tiles_workroom.pix box 216 144
+@sprite mbs_tiles_workroom.pix cassette_deck_0_0 200 128
+@sprite mbs_tiles_workroom.pix cassette_deck_1_0 216 128
+@sprite mbs_seojin.pix headphones 230 121 flip
+@darkness K 0.55
+@light 152 8 80
+@light 150 130 36
+@sprite mbs_ui_popups.pix wave_overlap 150 12 over

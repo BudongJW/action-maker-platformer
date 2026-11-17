@@ -1,0 +1,52 @@
+# PRIVATE (미방송분). Cut E4-02: reporters at the door of Jonggil (72); he sits down on the steps
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/e402.png
+@preview ../previews/e402_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend C s:concrete
+@legend I h:eave
+@legend Y h:wall_footing
+@legend Z h:wall
+@sprite mbs_bg_reservoir_day.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+IIIIIIIIIIIIIIIIIIII
+ZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZ
+YYYYYYYYYYYYYYYYYYYY
+CCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCC
+@sprite mbs_tiles_house.pix front_door_0_0 144 96
+@sprite mbs_tiles_house.pix front_door_1_0 160 96
+@sprite mbs_tiles_house.pix front_door_2_0 176 96
+@sprite mbs_tiles_house.pix front_door_0_1 144 112
+@sprite mbs_tiles_house.pix front_door_1_1 160 112
+@sprite mbs_tiles_house.pix front_door_2_1 176 112
+@sprite mbs_tiles_house.pix front_door_0_2 144 128
+@sprite mbs_tiles_house.pix front_door_1_2 160 128
+@sprite mbs_tiles_house.pix front_door_2_2 176 128
+@sprite mbs_tiles_house.pix front_door_0_3 144 144
+@sprite mbs_tiles_house.pix front_door_1_3 160 144
+@sprite mbs_tiles_house.pix front_door_2_3 176 144
+@sprite mbs_tiles_house.pix window_grille_0_0 40 104
+@sprite mbs_tiles_house.pix window_grille_1_0 56 104
+@sprite mbs_tiles_house.pix window_grille_0_1 40 120
+@sprite mbs_tiles_house.pix window_grille_1_1 56 120
+@sprite mbs_jonggil_old.pix sit_head_down 152 113
+@sprite mbs_reporter_a.pix idle_0 70 121
+@sprite mbs_reporter_b.pix idle_0 98 121
+@sprite mbs_reporter_a.pix idle_0 226 121 flip
+@sprite mbs_reporter_b.pix walk_0 252 121 flip

@@ -1,0 +1,9 @@
+# PRIVATE (미방송분). Cut 4-10 CU front: Mijeong's first and last outburst in plain speech; as she lets go of the pole, Sunrye's hand takes hers
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/410.png
+@preview ../previews/410_x2.png 2
+@swap ../palette/hifi.pal
+@sprite cu_410.pix a 0 0
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

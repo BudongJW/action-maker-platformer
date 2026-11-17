@@ -1,0 +1,54 @@
+# PRIVATE (미방송분). Cut E1-03: the memorial day for the drowned village; in the crowd the old name goes round again, one word heard
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/e103.png
+@preview ../previews/e103_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend S s:shore_top
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir_day.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSS.....
+sssssssssssssss.....
+@sprite mbs_tiles_house.pix memorial_stone_0_0 24 112
+@sprite mbs_tiles_house.pix memorial_stone_1_0 40 112
+@sprite mbs_tiles_house.pix memorial_stone_0_1 24 128
+@sprite mbs_tiles_house.pix memorial_stone_1_1 40 128
+@sprite mbs_tiles_house.pix memorial_stone_0_2 24 144
+@sprite mbs_tiles_house.pix memorial_stone_1_2 40 144
+@sprite mbs_tiles_house.pix banner_pole_0_0 88 96
+@sprite mbs_tiles_house.pix banner_pole_0_1 88 112
+@sprite mbs_tiles_house.pix banner_pole_0_2 88 128
+@sprite mbs_tiles_house.pix banner_pole_0_3 88 144
+@sprite mbs_tiles_house.pix banner_pole_0_0 226 96
+@sprite mbs_tiles_house.pix banner_pole_0_1 226 112
+@sprite mbs_tiles_house.pix banner_pole_0_2 226 128
+@sprite mbs_tiles_house.pix banner_pole_0_3 226 144
+@sprite mbs_tiles_house.pix offering_table_0_0 104 128
+@sprite mbs_tiles_house.pix offering_table_1_0 120 128
+@sprite mbs_tiles_house.pix offering_table_2_0 136 128
+@sprite mbs_tiles_house.pix offering_table_0_1 104 144
+@sprite mbs_tiles_house.pix offering_table_1_1 120 144
+@sprite mbs_tiles_house.pix offering_table_2_1 136 144
+@sprite mbs_villager_m.pix idle_0 158 121 flip
+@sprite mbs_villager_f.pix idle_1 178 121 flip
+@sprite mbs_niece.pix idle_0 196 121 flip
+@sprite mbs_villager_m.pix idle_1 252 121
+@sprite mbs_villager_f.pix idle_0 70 121
