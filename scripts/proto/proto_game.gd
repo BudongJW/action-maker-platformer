@@ -9,7 +9,7 @@
 ##
 ## Keys: A/D or arrows move, Space jump, W/S climb, Enter/E advance or play, 1-4 choose,
 ## Z LINEAR, X HI-FI, C MIX, R camera REC, F fast-forward, M scare mode (default / soft / off),
-## P photosensitivity-safe scares.
+## P photosensitivity-safe scares, Up/Down move the choice cursor.
 class_name ProtoGame
 extends Node2D
 
@@ -49,7 +49,7 @@ var _catching := false
 var _bot_timer := 0.0
 var _bot_jump_timer := 0.0
 var _bot_dir := 1.0
-var _stats := {"frames": 0, "loops": 0, "dialogues": 0, "lines": 0, "scares": 0, "triggers": 0}
+var _stats := {"frames": 0, "loops": 0, "dialogues": 0, "lines": 0, "scares": 0, "triggers": 0, "docs": 0}
 var _max_frames := 40000
 var _bot_loops := 4
 var _last_safe := Vector2.ZERO
@@ -58,6 +58,8 @@ var _step_timer := 0.0
 var _last_rec := false
 var _voice_speakers: Array = []
 var _finished := false
+var _selected := 0
+var _after_doc: Callable = Callable()
 
 
 func _ready() -> void:
@@ -122,6 +124,7 @@ func _ready() -> void:
 	ui = ProtoUI.new()
 	ui.font = font
 	add_child(ui)
+	ui.apply_skin(art)
 	fx = ProtoFX.new()
 	fx.ui = ui
 	fx.art = art
@@ -152,7 +155,14 @@ func _ready() -> void:
 	mixer.apply_layers(level)
 	if bot:
 		ff = 20.0
-	_enter_hub(true)
+	# A start notice (content warning, settings) can be shown as a document before anything else.
+	var start_docs: Array = data.get("hub", {}).get("start_docs", [])
+	if not start_docs.is_empty() and not runner.get_doc(String(start_docs[0])).is_empty():
+		_show_hub_art(true)
+		audio.enter_hub()
+		_show_doc(String(start_docs[0]), func(): _enter_hub(true))
+	else:
+		_enter_hub(true)
 
 
 # --- Phases --------------------------------------------------------------------------
@@ -256,7 +266,7 @@ func _process(delta: float) -> void:
 	_stats["frames"] += 1
 	director.tick(delta)
 	if phase == Phase.TAPE:
-		var talking := runner.is_running()
+		var talking := runner.is_running() or ui.doc_open()
 		player.frozen = talking or _catching
 		# Fast-forward pauses while a scare is pending or relaxing: the director runs in real
 		# time, so a sped-up tape would push the next scare past its moment.
@@ -283,11 +293,17 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	var key: int = k.keycode
 	if key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
-		if runner.is_running():
+		if ui.doc_open():
+			_close_doc()
+		elif runner.is_running():
 			if _choices.is_empty():
 				runner.advance()
+			else:
+				_choose(_selected)
 		elif phase == Phase.HUB and not director.is_busy():
 			_on_play()
+	elif key in [KEY_UP, KEY_DOWN] and not _choices.is_empty():
+		_move_selection(-1 if key == KEY_UP else 1)
 	elif key >= KEY_1 and key <= KEY_4:
 		_choose(key - KEY_1)
 	elif key == KEY_Z:
@@ -321,7 +337,40 @@ func _on_line(_id: String, speaker: String, _expression: String, attrs: Dictiona
 
 func _on_choices(options: Array) -> void:
 	_choices = options
-	ui.show_choices(options)
+	_selected = 0
+	for i in options.size():
+		if options[i]["enabled"]:
+			_selected = i
+			break
+	ui.show_choices(options, _selected)
+
+
+func _move_selection(step: int) -> void:
+	for n in _choices.size():
+		_selected = (_selected + step + _choices.size()) % _choices.size()
+		if _choices[_selected]["enabled"]:
+			break
+	ui.show_choices(_choices, _selected)
+
+
+## Opens the document viewer; `then` runs when it is closed.
+func _show_doc(doc_id: String, then: Callable = Callable()) -> void:
+	var doc := runner.get_doc(doc_id)
+	if doc.is_empty():
+		if then.is_valid():
+			then.call()
+		return
+	_after_doc = then
+	_bot_timer = 0.0
+	ui.show_doc(doc)
+
+
+func _close_doc() -> void:
+	ui.hide_doc()
+	var then := _after_doc
+	_after_doc = Callable()
+	if then.is_valid():
+		then.call()
 
 
 func _choose(index: int) -> void:
@@ -378,7 +427,7 @@ func _on_timeline_event(event_name: String) -> void:
 
 
 func _check_triggers() -> void:
-	if runner.is_running() or _catching:
+	if runner.is_running() or _catching or ui.doc_open():
 		return
 	var t := mixer.tape_time()
 	var p := player.global_position + Vector2(0, -20)
@@ -416,7 +465,7 @@ func _fire(tr: Dictionary) -> bool:
 		return director.trigger(String(tr["scare"]))
 	if tr.has("doc"):
 		runner.collect_doc(String(tr["doc"]))
-		ui.toast("DOC  " + String(tr["doc"]))
+		_show_doc(String(tr["doc"]))
 		return true
 	if tr.has("bark"):
 		var line := runner.bark(String(tr["bark"]))
@@ -591,6 +640,12 @@ func _update_hud() -> void:
 func _bot_step(delta: float) -> void:
 	_bot_timer += delta
 	_bot_jump_timer += delta
+	if ui.doc_open():
+		if _bot_timer > 0.15:
+			_bot_timer = 0.0
+			_stats["docs"] += 1
+			_close_doc()
+		return
 	if runner.is_running():
 		if _bot_timer > 0.03:
 			_bot_timer = 0.0
@@ -639,9 +694,9 @@ func _finish_bot(reason: String) -> void:
 	var flags: PackedStringArray = []
 	for f in data.get("report_flags", []):
 		flags.append("%s=%s" % [f, str(runner.get_flag(String(f)))])
-	print("prototype: %d frames, %d loops, %d dialogues, %d lines, %d scares, %d triggers (%s) %s" % [
+	print("prototype: %d frames, %d loops, %d dialogues, %d lines, %d scares, %d triggers, %d docs (%s) %s" % [
 		_stats["frames"], _stats["loops"], _stats["dialogues"], _stats["lines"], _stats["scares"],
-		_stats["triggers"], reason, " ".join(flags)])
+		_stats["triggers"], _stats["docs"], reason, " ".join(flags)])
 	# Stop every sound and give the audio thread a moment to release its playbacks, so a
 	# headless run exits without leaked audio objects.
 	audio.stop_all()

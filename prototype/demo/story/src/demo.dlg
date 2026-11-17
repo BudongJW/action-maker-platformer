@@ -1,6 +1,14 @@
 // demo.dlg - generic placeholder story for the prototype. Not game content.
 // The private story pack replaces this whole folder when it is present.
 
+~doc demo_notice
+@category system
+
+title: Before you start  #line:demo_n_001
+p: This is a generic demo for the prototype. It has no game story.  #line:demo_n_002
+p: M changes the scare mode (default, soft, off). P removes flashes.  #line:demo_n_003
+
+
 ~ demo_intro
 @style window
 @once save

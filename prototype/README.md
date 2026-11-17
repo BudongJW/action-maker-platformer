@@ -22,8 +22,8 @@ The demo is placeholder English text with no game story. The prototype code cont
 | A / D or arrows | Move |
 | Space | Jump |
 | W / S | Climb a ladder |
-| Enter or E | Advance dialogue; in the workroom, play the tape |
-| 1-4 | Choose |
+| Enter or E | Advance dialogue, close a document; in the workroom, play the tape |
+| 1-4, or Up / Down then Enter | Choose |
 | Z / X / C | LINEAR / HI-FI / MIX (HI-FI and MIX unlock through the story) |
 | R | Camera REC (records evidence inside an evidence area) |
 | F | Fast-forward the tape (x4). It pauses while a scare is pending or relaxing, because the scare director runs in real time |
@@ -40,8 +40,8 @@ The demo is placeholder English text with no game story. The prototype code cont
 | `tape` | `length`, `time_scale`, dubbed `segments`, timeline `events` (`at`, `name`, `flag`) |
 | `darkness_event`, `darkness_alpha` | Event that darkens the screen |
 | `tracks` | Flags that unlock HI-FI and MIX |
-| `hub` | Workroom between loops: `start` and `between` dialogues, `scares` that precede a dialogue, `on_play` dialogue + scare before the tape starts |
-| `triggers` | `id` plus conditions (`rect`, `from`/`to` tape seconds, `track`, `loop`, `after_event`) and one action: `dialogue` (list, first available), `cue` (`hifi`/`linear`), `bark`, `doc`, `scare`, `rec_flag` (needs REC) |
+| `hub` | Workroom between loops: `start` and `between` dialogues, `scares` that precede a dialogue, `on_play` dialogue + scare before the tape starts, `start_docs` (a document shown before anything else, such as a content warning) |
+| `triggers` | `id` plus conditions (`rect`, `from`/`to` tape seconds, `track`, `loop`, `after_event`) and one action: `dialogue` (list, first available), `cue` (`hifi`/`linear`), `bark`, `doc` (collects it and opens the document viewer), `scare`, `rec_flag` (needs REC) |
 | `chaser` | Pursuer that starts after the listed scares in LINEAR and triggers `catch_scare` when it reaches the player |
 | `end_flag`, `report_flags` | Flag that ends the slice; flags printed by the bot |
 | `bot_route` | Optional `{from, to, x}` windows the bot walks to (smoke test) |
@@ -59,11 +59,12 @@ Paths are relative to the repository root. `build_prototype.py` copies every `.p
 | `backdrop` | `texture` (320x180) scrolled behind the level with `parallax` |
 | `hub_backdrop` | Full-screen picture for the workroom between loops |
 | `tiles` | `sheet` plus frames for `solid`, `hifi_only`, `linear_only`, `water` (`[top, fill]` or one frame) and `ladder` |
-| `props` | Decoration: `{"frame", "at": [x, ground_y]}` or a tile block `{"block", "w", "h", "at"}` (frames `<block>_<col>_<row>`); optional `sheet`, `track` (`hifi` / `linear`) |
+| `props` | Decoration: `{"frame", "at": [x, ground_y]}` or a tile block `{"block", "w", "h", "at"}` (frames `<block>_<col>_<row>`); optional `sheet`, `repeat` and `step` (copies side by side), `track` (`hifi` / `linear`) |
 | `player`, `npcs`, `chaser` | Animated sprites: `{"sheet", "fps", "anims": {"idle": [frames], ...}}`. The player uses `idle`, `walk`, `jump`, `climb` and `caught`; the chaser `idle` and `lunge` |
 | `viewfinder` | Camera overlay `sheet` with `rec` and `standby` frames; the live timecode is drawn over it |
 | `badges` | Track badge frames (`linear`, `hifi`, `mix`) |
 | `scares` | Per scare id: `{"sheet", "frame", "anchor": "left" / "right" / "center" / "full", "min_seconds"}`, shown at the onset for the scare's body duration. Without an entry the scare is sound only |
+| `ui` | Nine-slice panels `{"sheet", "scale", "window", "nametag", "choice", "paper": {"frame", "margin", "padding"}, "cursor": frame}` for the dialogue window, speaker tag, selected choice, choice cursor and document paper, enlarged `scale` times. Text is always drawn at runtime |
 | `voice_wave` | `{"speakers": [character ids], "color"}`: a soft waveform above the dialogue window while those speakers talk (for voices with no body on screen) |
 
 The demo uses the generic art in `assets/original/art/`.

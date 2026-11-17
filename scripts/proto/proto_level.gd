@@ -179,7 +179,8 @@ func _tiled(rect: Rect2, tex: Texture2D, parent: Node, alpha: float) -> void:
 
 
 ## Decoration: {"sheet": path, "frame": name, "at": [x, ground_y]} or a block of tiles named
-## "<block>_<col>_<row>" with "block", "w" and "h". Optional "track": "hifi" or "linear".
+## "<block>_<col>_<row>" with "block", "w" and "h". Optional "repeat" (copies side by side,
+## "step" pixels apart, default the piece's width) and "track": "hifi" or "linear".
 func _build_props() -> void:
 	for prop in art.cfg.get("props", []):
 		var sheet: String = String(prop.get("sheet", art.cfg.get("tiles", {}).get("sheet", "")))
@@ -187,17 +188,22 @@ func _build_props() -> void:
 		var holder := Node2D.new()
 		holder.position = Vector2(float(at[0]), float(at[1]))
 		holder.material = art.world_material if bool(prop.get("recolour", true)) else null
+		var repeat := maxi(1, int(prop.get("repeat", 1)))
 		if prop.has("block"):
 			var w := int(prop.get("w", 1))
 			var h := int(prop.get("h", 1))
-			for row in h:
-				for col in w:
-					_prop_sprite(holder, art.frame(sheet, "%s_%d_%d" % [prop["block"], col, row]),
-						Vector2(col * TILE, (row - h) * TILE))
+			var step := float(prop.get("step", w * TILE))
+			for i in repeat:
+				for row in h:
+					for col in w:
+						_prop_sprite(holder, art.frame(sheet, "%s_%d_%d" % [prop["block"], col, row]),
+							Vector2(i * step + col * TILE, (row - h) * TILE))
 		else:
 			var tex := art.frame(sheet, String(prop.get("frame", "")))
 			if tex != null:
-				_prop_sprite(holder, tex, Vector2(0, -tex.get_height()))
+				var step := float(prop.get("step", tex.get_width()))
+				for i in repeat:
+					_prop_sprite(holder, tex, Vector2(i * step, -tex.get_height()))
 		match String(prop.get("track", "")):
 			"hifi":
 				holder.add_to_group("track_hifi_only")

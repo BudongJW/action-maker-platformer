@@ -1,5 +1,6 @@
-## Prototype dialogue window, captions, bark bubble, HUD and hub overlay, plus optional
-## screen art: the camera viewfinder, a hub backdrop, the track badge and a voice waveform.
+## Prototype dialogue window with a choice list, document viewer, captions, bark bubble, HUD and
+## hub overlay, plus optional screen art: nine-slice panels (apply_skin), the camera viewfinder,
+## a hub backdrop, the track badge and a voice waveform.
 ##
 ## Shows whatever StoryRunner sends; it contains no dialogue text. Labels the prototype itself
 ## needs (REC, track names, key hints) are short English placeholders, not game text.
@@ -10,7 +11,13 @@ var font: Font
 var _window: PanelContainer
 var _name: Label
 var _text: Label
-var _choices: Label
+var _hint: Label
+var _choice_box: VBoxContainer
+var _choice_style: StyleBox
+var _cursor: Texture2D
+var _doc: PanelContainer
+var _doc_title: Label
+var _doc_body: Label
 var _caption: Label
 var _bubble: Label
 var _hud: Label
@@ -62,10 +69,13 @@ func _ready() -> void:
 	_name = _label(18, Color(0.95, 0.85, 0.55))
 	_text = _label(20, Color.WHITE)
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_choices = _label(18, Color(0.75, 0.92, 1.0))
+	_name.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_choice_box = VBoxContainer.new()
+	_hint = _label(16, Color(0.75, 0.92, 1.0))
 	box.add_child(_name)
 	box.add_child(_text)
-	box.add_child(_choices)
+	box.add_child(_choice_box)
+	box.add_child(_hint)
 	add_child(_window)
 	_window.visible = false
 	_wave = Control.new()
@@ -86,6 +96,8 @@ func _ready() -> void:
 	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hub = _anchored_label(0.1, 0.9, 0.35, 0.6, 22)
 	_hub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# Last, so a document covers the HUD and captions while it is open.
+	_build_doc()
 
 
 ## Draws the camera viewfinder over the world (REC and standby frames, 320x180 art).
@@ -128,20 +140,115 @@ func set_backdrop(tex: Texture2D) -> void:
 	_badge.visible = tex == null
 
 
+## Nine-slice panels from the art block's "ui" entry:
+## {"sheet", "scale", "window", "nametag", "choice", "paper": {"frame", "margin"}, "cursor": frame}.
+func apply_skin(art: ProtoArt) -> void:
+	if art == null or not art.enabled():
+		return
+	var cfg: Dictionary = art.cfg.get("ui", {})
+	if cfg.is_empty():
+		return
+	var sheet: String = String(cfg.get("sheet", ""))
+	var k := int(cfg.get("scale", 3))
+	var sb: StyleBoxTexture = art.stylebox(sheet, cfg.get("window", {}), k)
+	if sb != null:
+		_window.add_theme_stylebox_override("panel", sb)
+		_window.self_modulate.a = float(cfg.get("window_alpha", 0.92))
+	sb = art.stylebox(sheet, cfg.get("nametag", {}), k)
+	if sb != null:
+		_name.add_theme_stylebox_override("normal", sb)
+	_choice_style = art.stylebox(sheet, cfg.get("choice", {}), k)
+	if cfg.has("cursor"):
+		_cursor = art.scaled(sheet, String(cfg["cursor"]), 2)
+	sb = art.stylebox(sheet, cfg.get("paper", {}), k)
+	if sb != null:
+		_doc.add_theme_stylebox_override("panel", sb)
+
+
 func show_line(speaker: String, text: String) -> void:
 	_window.visible = true
 	_name.text = speaker
+	_name.visible = speaker != ""
 	_text.text = text
-	_choices.text = "[Enter]"
+	_clear_choices()
+	_hint.text = "[Enter]"
 
 
-func show_choices(options: Array) -> void:
+## Lists the options; `selected` is highlighted (arrow keys move it, Enter picks it).
+func show_choices(options: Array, selected: int = 0) -> void:
 	_window.visible = true
-	var lines: PackedStringArray = []
+	_hint.text = "[Up/Down] [Enter]  [1-4]"
+	_clear_choices()
 	for i in options.size():
 		var o: Dictionary = options[i]
-		lines.append("%d. %s%s" % [i + 1, o["text"], "" if o["enabled"] else " (x)"])
-	_choices.text = "\n".join(lines)
+		var row := PanelContainer.new()
+		var on := i == selected
+		row.add_theme_stylebox_override("panel", _choice_style if on and _choice_style != null else StyleBoxEmpty.new())
+		var line := HBoxContainer.new()
+		var mark := TextureRect.new()
+		mark.custom_minimum_size = Vector2(32, 0)
+		mark.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+		mark.texture = _cursor if on else null
+		line.add_child(mark)
+		var label := _label(18, Color(0.75, 0.92, 1.0) if o["enabled"] else Color(0.5, 0.55, 0.6))
+		label.text = "%d. %s%s" % [i + 1, o["text"], "" if o["enabled"] else " (x)"]
+		if on and _cursor == null:
+			label.text = "> " + label.text
+		line.add_child(label)
+		row.add_child(line)
+		_choice_box.add_child(row)
+
+
+## The document viewer: title and paragraphs drawn over the paper panel.
+func show_doc(doc: Dictionary) -> void:
+	_doc_title.text = String(doc.get("title", ""))
+	_doc_title.visible = _doc_title.text != ""
+	_doc_body.text = "\n\n".join(PackedStringArray(doc.get("paragraphs", [])))
+	_doc.visible = true
+
+
+func hide_doc() -> void:
+	_doc.visible = false
+
+
+func doc_open() -> bool:
+	return _doc.visible
+
+
+func _clear_choices() -> void:
+	for c in _choice_box.get_children():
+		_choice_box.remove_child(c)
+		c.queue_free()
+
+
+func _build_doc() -> void:
+	_doc = PanelContainer.new()
+	# Centred and as tall as its text (a short note should not sit on a full page).
+	_doc.anchor_left = 0.2
+	_doc.anchor_right = 0.8
+	_doc.anchor_top = 0.5
+	_doc.anchor_bottom = 0.5
+	_doc.grow_vertical = Control.GROW_DIRECTION_BOTH
+	var paper := StyleBoxFlat.new()
+	paper.bg_color = Color(0.85, 0.85, 0.82)
+	paper.set_content_margin_all(28)
+	_doc.add_theme_stylebox_override("panel", paper)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 14)
+	_doc.add_child(box)
+	var ink := Color(0.1, 0.1, 0.13)
+	_doc_title = _label(24, ink)
+	_doc_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_doc_body = _label(19, ink)
+	_doc_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var hint := _label(15, Color(0.35, 0.35, 0.4))
+	hint.text = "[Enter]"
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	box.add_child(_doc_title)
+	box.add_child(_doc_body)
+	box.add_child(hint)
+	_doc.visible = false
+	add_child(_doc)
 
 
 func hide_window() -> void:

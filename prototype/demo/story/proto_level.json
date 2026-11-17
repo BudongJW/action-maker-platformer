@@ -135,7 +135,10 @@
     "scares": {
       "demo_call": "demo_phone"
     },
-    "on_play": []
+    "on_play": [],
+    "start_docs": [
+      "demo_notice"
+    ]
   },
   "triggers": [
     {
@@ -356,6 +359,30 @@
         "sheet": "assets/original/art/fx/fx_static.png",
         "frame": "static_1",
         "anchor": "center"
+      }
+    },
+    "ui": {
+      "sheet": "assets/original/mibangsong/art/ui/mbs_ui_panels.png",
+      "scale": 3,
+      "window": {
+        "frame": "window",
+        "margin": 8
+      },
+      "nametag": {
+        "frame": "nametag",
+        "margin": 4,
+        "padding": 2
+      },
+      "choice": {
+        "frame": "choice_on",
+        "margin": 4,
+        "padding": 0
+      },
+      "cursor": "cursor",
+      "paper": {
+        "frame": "paper",
+        "margin": 8,
+        "padding": 12
       }
     }
   },

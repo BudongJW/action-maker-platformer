@@ -98,6 +98,50 @@ func tile(path: String, frame_name: String) -> Texture2D:
 	return ImageTexture.create_from_image(img.get_region(Rect2i(at.region)))
 
 
+## A frame enlarged `factor` times with nearest-neighbour scaling, for nine-slice UI panels drawn
+## in screen pixels (a StyleBoxTexture does not scale its borders).
+func scaled(path: String, frame_name: String, factor: int) -> Texture2D:
+	var tex := frame(path, frame_name)
+	if tex == null:
+		return null
+	var img: Image
+	if tex is AtlasTexture:
+		var at := tex as AtlasTexture
+		img = at.atlas.get_image()
+		if img != null:
+			if img.is_compressed():
+				img.decompress()
+			img = img.get_region(Rect2i(at.region))
+	else:
+		img = tex.get_image()
+		if img != null and img.is_compressed():
+			img.decompress()
+	if img == null:
+		return null
+	img.resize(img.get_width() * factor, img.get_height() * factor, Image.INTERPOLATE_NEAREST)
+	return ImageTexture.create_from_image(img)
+
+
+## A nine-slice style box from a frame: {"frame": name, "margin": art pixels}.
+func stylebox(path: String, spec: Dictionary, factor: int) -> StyleBoxTexture:
+	var tex := scaled(path, String(spec.get("frame", "")), factor)
+	if tex == null:
+		return null
+	var sb := StyleBoxTexture.new()
+	sb.texture = tex
+	var m := float(spec.get("margin", 4)) * factor
+	sb.texture_margin_left = m
+	sb.texture_margin_right = m
+	sb.texture_margin_top = m
+	sb.texture_margin_bottom = m
+	var pad := m + float(spec.get("padding", 4))
+	sb.content_margin_left = pad
+	sb.content_margin_right = pad
+	sb.content_margin_top = pad
+	sb.content_margin_bottom = pad
+	return sb
+
+
 ## {"sheet": path, "fps": 6, "anims": {"idle": ["idle_0", "idle_1"], ...}}
 func sprite_frames(spec: Dictionary) -> SpriteFrames:
 	var sf := SpriteFrames.new()
