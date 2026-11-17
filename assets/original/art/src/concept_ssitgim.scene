@@ -1,0 +1,75 @@
+# Concept: ssitgim-gut, the road-clearing. The protagonist and the mudang
+# hold the long white cloth taut; the paper soul boat slides along it with a
+# soul glowing inside, and the sobok ghost follows it, calm for once.
+@palette ../palette/night-school.pal
+@size 320 180
+@output ../concepts/concept_ssitgim.png
+@preview ../previews/concept_ssitgim_x3.png 3
+@fill D
+@tiles g tiles_gut.pix
+@tiles t tiles_night_school.pix
+@legend B g:beam
+@legend H g:hanji_wall
+@legend h g:hanji_wall_warm
+@legend | g:post
+@legend m g:mat
+@legend F t:floor_top
+@legend f t:floor_fill
+@layer
+BBBBBBBBBBBBBBBBBBBB
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+|HHHHH|hhhhhh|HHHHH|
+FFFFFFFFFFFFFFFFFFFF
+ffffffffffffffffffff
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+..mmmmmmmmmmmmmmmm..
+@sprite tiles_gut.pix go_0_0 56 16
+@sprite tiles_gut.pix go_0_1 56 32
+@sprite tiles_gut.pix go_0_0 120 16
+@sprite tiles_gut.pix go_0_1 120 32
+@sprite tiles_gut.pix go_0_0 184 16
+@sprite tiles_gut.pix go_0_1 184 32
+@sprite tiles_gut.pix jijeon_0_0 248 16
+@sprite tiles_gut.pix jijeon_0_1 248 32
+@sprite tiles_gut.pix musindo_0_0 264 40
+@sprite tiles_gut.pix musindo_1_0 280 40
+@sprite tiles_gut.pix musindo_0_1 264 56
+@sprite tiles_gut.pix musindo_1_1 280 56
+@sprite tiles_gut.pix musindo_0_2 264 72
+@sprite tiles_gut.pix musindo_1_2 280 72
+@sprite tiles_gut.pix candle_0 24 144
+@sprite tiles_gut.pix candle_1 288 144
+@sprite enemy_sobok_gwisin.pix float_0 146 64
+@sprite protagonist_side.pix interact 70 128
+@sprite npc_mudang_white.pix cloth 204 120
+@sprite tiles_gut.pix jilbe_l 88 136
+@sprite tiles_gut.pix jilbe_m 104 136
+@sprite tiles_gut.pix jilbe_m 120 136
+@sprite tiles_gut.pix jilbe_m 136 136
+@sprite tiles_gut.pix jilbe_m 152 136
+@sprite tiles_gut.pix jilbe_m 168 136
+@sprite tiles_gut.pix jilbe_m 184 136
+@sprite tiles_gut.pix jilbe_m 200 136
+@sprite tiles_gut.pix jilbe_r 208 136
+@sprite tiles_gut.pix neokdang_soul 142 128
+@darkness K 0.76
+@light 150 130 34
+@light 158 90 30
+@light 32 140 30
+@light 296 140 30

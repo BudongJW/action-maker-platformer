@@ -44,6 +44,8 @@
 | `G` | `#3b4740` | 징두리 판벽 어두운 면 | `C` | `#7fe0d0` | 영적 존재 (도깨비불) |
 | `g` | `#56645a` | 징두리 판벽 | `c` | `#3a9a98` | 영적 존재 그림자 |
 
+색 규칙의 예외는 두 곳뿐입니다. **고어 세트**의 피는 `R`·`r`로 칠하고(피도 위험 신호라 규칙과 어긋나지 않음), **굿 장면**은 오방색(파랑·하양·빨강·검정·노랑)을 옷과 깃발에 그대로 씁니다. 굿은 두 세계의 경계에서 벌어지는 일이라, 평소에는 위험·빛에만 쓰던 색이 화면에 함께 나오는 것 자체를 연출로 봅니다.
+
 ## 규격
 
 | 항목 | 값 | 근거 |
@@ -222,7 +224,7 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 
 ## 점프스케어
 
-화면 전체(320x180)를 덮는 점프스케어 그림 8종입니다. [`jumpscares/`](jumpscares/)에 있고, 시트마다 프레임이 위에서 아래로 쌓여 있습니다(1열). 프레임을 차례로 보여 "다가온다·눈을 뜬다" 같은 짧은 움직임을 만듭니다.
+화면 전체(320x180)를 덮는 점프스케어 그림입니다. 괴이의 얼굴을 클로즈업한 8종, 아래 **1인칭 시점** 8종, 고어 세트의 2종이 있습니다. [`jumpscares/`](jumpscares/)에 있고, 시트마다 프레임이 위에서 아래로 쌓여 있습니다(1열). 프레임을 차례로 보여 "다가온다·눈을 뜬다" 같은 짧은 움직임을 만듭니다.
 
 | | | | |
 |---|---|---|---|
@@ -235,8 +237,21 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 
 - **조용한 예고 뒤에 짧게**: 소리가 잦아들고(환경음 끊김, 형광등 꺼짐) 1~2초 뒤, 마지막 프레임까지 0.3~0.6초에 보여 주고 `sfx/jumpscare.wav`와 [`fx/fx_static.png`](fx/fx_static.png)을 겹칩니다. 남발하면 효과가 떨어지므로 구간마다 한 번 이하를 권합니다.
 - **깜박임 줄이기**: 옵션이 켜져 있으면 프레임을 넘기지 않고 마지막 프레임만, 노이즈 없이 보여 줍니다([`docs/resource-needs.md`](../../../docs/resource-needs.md) 5절의 광과민성 옵션).
-- **고어 없음(D9)**: 피·상처 없이 얼굴, 눈, 손, 실루엣만으로 겁을 줍니다. 빨강은 눈에만 썼습니다.
+- **고어 없음**: 위 8종은 피·상처 없이 얼굴, 눈, 손, 실루엣만으로 겁을 줍니다. 빨강은 눈에만 썼습니다. 고어판은 아래 "고어 세트" 절.
 - 주로 실패(잡힘) 직전이나 이벤트 연출에 씁니다. 실패 연출 자체는 암전·소리로 처리한다는 D9는 그대로입니다.
+
+### 1인칭 시점 점프스케어
+
+주인공의 눈으로 본 장면입니다. 손전등을 든 손, 휴대폰을 쥔 손, 세면대를 짚은 손처럼 **내 몸이 화면 가장자리에 보이게** 해서, 위의 클로즈업보다 "내가 거기 있다"는 느낌을 줍니다. 원근 복도·교실은 저작용 스크립트의 작은 조명 렌더러(재질별 색 단계 + 손전등 원)로 칠했습니다.
+
+| | | | |
+|---|---|---|---|
+| ![](previews/jumpscare_fp_flashlight_x2.png) | ![](previews/jumpscare_fp_phone_x2.png) | ![](previews/jumpscare_fp_mirror_x2.png) | ![](previews/jumpscare_fp_locker_x2.png) |
+| **손전등**: 빈 복도 끝에 서 있던 형체가 다음 순간 코앞에서 손을 뻗음. `empty far near` | **휴대폰 화면**: 눈으로는 빈 복도인데 화면에만 서 있는 소녀, 이어서 화면을 채우는 얼굴. `empty there face` | **거울**: 내 어깨 너머의 얼굴, 그다음 거울에서 내가 사라지고 그것만 남음. `alone behind gone` | **사물함**: 열어 보니 걸린 교복, 다음엔 웅크려 들어앉은 누군가가 벽을 짚고 웃음. `jacket inside` |
+| ![](previews/jumpscare_fp_under_desk_x2.png) | ![](previews/jumpscare_fp_ceiling_x2.png) | ![](previews/jumpscare_fp_door_gap_x2.png) | ![](previews/jumpscare_fp_gore_classroom_x2.png) |
+| **책상 밑**: 숨은 책상 앞에 멈춘 외투 자락과 발, 이어서 바닥까지 고개를 숙여 들여다보는 그림자 손님. `feet looks` | **천장**: 손전등으로 비춘 천장 타일, 그 빛 안에 매달린 여자와 늘어진 머리카락. `tiles there` | **문틈**: 살짝 열린 문틈 너머의 어둠, 다음엔 바로 맞은편에서 들여다보는 눈. `gap eye` | **교실 문 (고어)**: 칠판의 피, 통로를 따라 끌린 자국과 덮인 시신, 다음엔 코앞의 피투성이 원귀. `room there` |
+
+고어가 아닌 7종은 `jumpscare_fp_*.png`, 고어판은 `jumpscare_fp_gore_classroom.png`입니다. 거울 장면의 비친 주인공은 대화용 얼굴(`protagonist_faces`)을 2배로 키워 아래에서 비춘 것처럼 어둡게 한 것이라, 얼굴 디자인이 바뀌면 다시 생성합니다.
 
 ## 바다·배·항구 마을
 
@@ -265,6 +280,61 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 - **배의 흘수선**: `boat_squid`의 선체는 셀의 44번째 줄부터 아래가 어두운 배 밑(`N`)이라, 그 줄을 수면 높이에 맞추면 됩니다.
 - **안벽**: 탑다운에서는 땅 끝에 `quay_upper`·`quay_lower` 두 줄을 두고 그 아래에 `shallow`, 그다음 `water`를 깝니다. 부두(`pier`)는 안벽을 끊고 바다까지 이어 깝니다.
 - 집어등·등대·불 켜진 창은 빛을 받지 않는 레이어에 두거나 PointLight2D를 붙입니다.
+
+## 고어 세트 (선택)
+
+[`docs/decisions.md`](../../../docs/decisions.md)의 D9에 따라 고어 표현은 **따로 떼어 둔 선택 세트**입니다. 설정의 "고어 표현"을 켜면 아래 파일을 쓰고, 끄면 오른쪽 열의 비고어 원본을 씁니다. 모든 고어 파일 원본 머리말에 `GORE SET` 표시가 있습니다.
+
+![gore aftermath](previews/concept_gore_aftermath_x3.png)
+
+| 고어 파일 | 내용 | 끄면 대신 쓰는 것 | 미리보기 |
+|---|---|---|---|
+| [`tiles/tiles_gore.png`](tiles/tiles_gore.png) | 횡스크롤 데칼(투명 배경): 바닥 피 웅덩이(2x1·작은 것), 벽에 튄 피 3종, 손자국, 미끄러져 내린 손자국(1x2), 벽을 따라 끈 손자국(2x1), 바닥을 끈 자국(2x1), 천장에서 떨어지는 피(3프레임), 핏방울, 손톱 긁힌 자국, 흰 천을 덮은 시신(2x1), 환기구와 문 밑으로 피가 새는 사물함(1x2) | 데칼 없음. 사물함은 `locker` | [x4](previews/tiles_gore_x4.png) |
+| [`tiles/tiles_gore_td.png`](tiles/tiles_gore_td.png) | 탑다운 데칼: 웅덩이(1x1·2x2), 튄 피, 끈 자국(가로 2x1·세로 1x2), 발자국(가로·세로), 손자국, 흰 천을 덮은 시신(2x1), 분필 윤곽선 | 데칼 없음 | [x4](previews/tiles_gore_td_x4.png) |
+| [`characters/gore_corpses.png`](characters/gore_corpses.png) | 32x32, 시신 3종: 엎드린 학생, 눈을 뜬 채 누운 회사원, 벽에 기대 고개를 떨군 사람 | 흰 천을 덮은 시신도 빼거나 빈 자리 | [x4](previews/gore_corpses_x4.png) |
+| `characters/zombie_*_gore.png` (5종) | 좀비 횡스크롤 시트의 고어판: 입가·셔츠 앞·손의 피. 프레임 배치가 같아 텍스처만 바꿈 | `zombie_*.png` | [학생](previews/zombie_student_gore_x6.png), [회사원](previews/zombie_office_gore_x6.png) |
+| [`characters/creature_bloody_student.png`](characters/creature_bloody_student.png) | **피투성이 원귀**: 이마에서 쏟아진 피로 얼굴과 흰 블라우스가 젖은 여학생, 핏방울을 남기며 걸음. 24x32, `idle_0 idle_1 walk_0~3 lunge` | 소복 귀신 등 다른 괴이로 대체 | [x6](previews/creature_bloody_student_x6.png) |
+| [`characters/protagonist_death_gore.png`](characters/protagonist_death_gore.png) | 40x32(주인공 셀을 오른쪽으로 8px 옮김). `hit`(잡힐 때 뒤로 튀는 핏방울, `death_0` 대신), `pool_0~2`(쓰러진 자리에 번지는 웅덩이, `death_2` 대신) | `protagonist_side`의 `death_0~2` | [x6](previews/protagonist_death_gore_x6.png) |
+| [`fx/fx_blood_screen.png`](fx/fx_blood_screen.png) | 320x180 화면 덮개 3프레임: `hit`(두 모서리), `heavy`(가장자리 전체), `drip`(게임 오버: 위에서 흘러내림) | 비네트 또는 암전 | [x2](previews/fx_blood_screen_x2.png) |
+| [`jumpscares/jumpscare_gore_bloody_tears.png`](jumpscares/jumpscare_gore_bloody_tears.png) | 소복 귀신의 눈에서 피눈물, 머리 가르마와 입에서 흐르는 피. `tears streams` | `jumpscare_sobok_ghost` | [x2](previews/jumpscare_gore_bloody_tears_x2.png) |
+| [`jumpscares/jumpscare_gore_handprints.png`](jumpscares/jumpscare_gore_handprints.png) | 창밖에서 피 묻은 손바닥이 차례로 유리를 치고 흘러내림. `one three six` | `jumpscare_window` | [x2](previews/jumpscare_gore_handprints_x2.png) |
+| [`jumpscares/jumpscare_fp_gore_classroom.png`](jumpscares/jumpscare_fp_gore_classroom.png) | 1인칭: 피로 물든 교실과 피투성이 원귀 (위 1인칭 절) | `jumpscare_fp_door_gap` | [x2](previews/jumpscare_fp_gore_classroom_x2.png) |
+| [`concepts/concept_gore_aftermath.png`](concepts/concept_gore_aftermath.png), [`mockups/map_classroom_gore_td.png`](mockups/map_classroom_gore_td.png) | 복도 컨셉(위 그림)과 탑다운 교실 맵의 고어판 | `concept_hide` 등, `map_classroom_td` | [복도](previews/concept_gore_aftermath_x3.png), [교실](previews/map_classroom_gore_td_x2.png) |
+
+수위는 "직접 보여 주되 오래 비추지 않는다"에 맞췄습니다. 상처 부위나 훼손된 몸을 클로즈업하지 않고 피, 끈 자국, 덮인 시신처럼 **일이 벌어진 뒤의 흔적**으로 상상하게 합니다. 등급(게임물관리위원회)과 Steam 성인 콘텐츠 설문에는 고어 세트를 켰을 때 기준으로 답해야 합니다.
+
+## 무당과 굿
+
+한국 무속의 굿을 이야기 장치로 쓸 수 있게 만든 인물과 장면입니다. 특정 실존 무당·굿당·무신도를 옮기지 않았고, 복식과 무구는 일반적인 형태(홍철릭·전립, 장삼·고깔, 부채·방울, 오방기, 작두, 지전, 넋당석, 질베)를 단순화했습니다. 실제 굿의 절차를 정확히 재현한 것이 아니라 공포 연출을 위한 각색이므로, 이야기에 넣을 때는 무속을 조롱하거나 악마화하지 않도록 대사와 맥락을 확인합니다.
+
+![gut shrine](previews/gut_shrine_side_x3.png)
+
+| | | |
+|---|---|---|
+| ![](previews/concept_jakdu_x3.png) | ![](previews/concept_ssitgim_x3.png) | ![](previews/concept_neokgeonjigi_x3.png) |
+| **작두타기**: 두 개의 작두날 위에 맨발로 선 무당이 깃발과 부채로 균형을 잡고, 마을 사람들이 지켜봄 | **씻김굿 길닦음**: 주인공과 무당이 질베를 팽팽히 잡고, 넋이 든 넋당석이 그 위를 미끄러짐. 소복 귀신이 조용히 뒤따름 | **넋건지기**: 부두 끝에서 흰 옷의 무당이 신대를 바다로 내밀고, 넋당석과 촛불 앞에서 물귀신이 올라옴 (항구 타일 재사용) |
+| ![](previews/concept_gut_gone_wrong_x3.png) | ![](previews/map_gut_td_x2.png) | |
+| **굿이 틀어짐**: 촛불이 꺼지고 악사가 장구를 버리고 달아남. 무신도의 눈이 붉어지고, 신이 잘못 내린 무당이 칼을 들고 돌아서며, 굿상 뒤로 그림자 손님이 일어섬 | **탑다운 굿당** ([`map_gut_td`](mockups/map_gut_td.png), 320x224): 창호 벽과 무신도, 굿상, 네 귀퉁이의 오방기, 작두, 장구·징, 춤추는 무당, 등을 보인 마을 사람들 | |
+
+인물:
+
+| 파일 | 내용 | 미리보기 |
+|---|---|---|
+| [`characters/npc_mudang.png`](characters/npc_mudang.png) | **무당 (홍철릭·전립)**: 장군 거리 복식. 32x40(어른), 오른쪽을 봄. `idle_0 idle_1 walk_0~3 / dance_0~3(부채와 방울, 치맛자락이 퍼짐) bells fan warn(신칼을 겨눔) bison(꿇어앉아 비손) / possessed_0 possessed_1(고개를 젖히고 청록 눈) jakdu(작두 위에서 깃발과 부채) collapse(쓰러짐)` | [x4](previews/npc_mudang_x4.png) |
+| [`characters/npc_mudang_white.png`](characters/npc_mudang_white.png) | **무당 (흰 장삼·고깔)**: 씻김굿·넋건지기 복식, 붉은 가사, 종이꽃 고깔. `idle walk dance_0~3 pole(신대를 내밂) cloth(질베를 잡음) bison collapse` | [x4](previews/npc_mudang_white_x4.png) |
+| [`characters/$npc_mudang_topdown.png`](characters/$npc_mudang_topdown.png) | 홍철릭 무당 탑다운, MV/MZ `$` 배치, 32x40 셀 | [x4](previews/npc_mudang_topdown_x4.png) |
+| [`portraits/mudang_faces.png`](portraits/mudang_faces.png) | 대화용 얼굴 48x48: `neutral stern shout(경고) possessed(신내림, 청록 눈) smile chant(눈 감고 축원)` | [x4](previews/mudang_faces_x4.png) |
+| [`characters/npc_gut_musicians.png`](characters/npc_gut_musicians.png) | 악사 24x24, 앉은 자세: 장구 `janggu_0/1`, 징 `jing_0/1` | [x6](previews/npc_gut_musicians_x6.png) |
+| [`characters/npc_onlookers.png`](characters/npc_onlookers.png) | 굿을 지켜보는 마을 사람(뒷모습) 24x32: 흰 한복에 비녀, 어두운 점퍼, 갈색 조끼의 노인. 선 자세·앉은 자세. 화면 앞쪽에 두어 관객 시점을 만듦 | [x6](previews/npc_onlookers_x6.png) |
+
+타일:
+
+| 파일 | 내용 | 미리보기 |
+|---|---|---|
+| [`tiles/tiles_gut.png`](tiles/tiles_gut.png) | 횡스크롤 16x16: 돗자리, 창호 벽(촛불에 물든 판 포함), 기둥, 대들보, 굿상(3x2: 사과·배 괴임, 떡, 돼지머리, 북어, 흰 천), 촛대(2프레임 깜박임·꺼짐), 향로, 무신도(2x3, 앉은 장군)와 **눈이 붉어진** 무신도, 오방기(2x3), 지전(1x2), 오색 천(1x2), 장구(2x1), 징 걸이(1x2), 작두(2x2), 신대(1x3), 넋당석(넋이 든 것 포함), 질베(왼끝·가운데·오른끝), 고(매듭 지은 흰 천, 1x2), 정화수, 문 위에 거는 북어 | [x4](previews/tiles_gut_x4.png) |
+| [`tiles/tiles_gut_td.png`](tiles/tiles_gut_td.png) | 탑다운: 돗자리 바닥, 창호 벽면 두 줄, 위에서 본 굿상(3x2), 촛대, 작두(2x1), 장구, 징, 질베(가로·세로), 벽면용 무신도(2x2). 깃발·지전·넋당석은 횡스크롤 타일을 세워서 씀 | [x4](previews/tiles_gut_td_x4.png) |
+
+쓰는 법(제안): 굿 장면은 장구·징 소리에 맞춰 `dance_0~3`을 돌리고, 촛불은 광원과 함께 깜박입니다. "굿이 틀어짐"으로 넘어갈 때는 촛대를 `candle_out`으로, 무신도를 `musindo_watch`로 바꾸고 무당을 `possessed_0/1`로 바꾸면 같은 무대에서 분위기만 뒤집을 수 있습니다.
 
 ## 이계: 팔레트 교체
 
