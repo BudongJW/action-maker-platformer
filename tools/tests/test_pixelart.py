@@ -142,6 +142,21 @@ class PixelArtTest(unittest.TestCase):
         self.assertEqual(pixels[0][0], (0, 0, 0, 255))  # background darkened
         self.assertEqual(pixels[0][1], (255, 0, 0, 255))  # over layer untouched
 
+    def test_swap_palette_and_keep(self):
+        (self.dir / "q.pal").write_text("K 010101\nW 020202\nR 030303\n", encoding="utf-8")
+        self.write("t.pix", "@palette p.pal\n@size 1 1\n@output t.png\n@frame w\nW\n@frame r\nR\n")
+        scene = self.write("w.scene", "@palette p.pal\n@size 3 1\n@output w.png\n@swap q.pal\n@fill K\n"
+                           "@tiles t t.pix\n@legend w t:w\n@layer\nw..\n"
+                           "@sprite t.pix r 1 0\n@sprite t.pix r 2 0 keep\n")
+        pixels = self.render(scene)["w.png"][0]
+        self.assertEqual(pixels[0], (2, 2, 2, 255))  # tile drawn with the swap palette
+        self.assertEqual(pixels[1], (3, 3, 3, 255))  # sprite swapped too
+        self.assertEqual(pixels[2], (255, 0, 0, 255))  # "keep" uses its own palette
+        (self.dir / "bad.pal").write_text("K 010101\n", encoding="utf-8")
+        bad = self.write("b.scene", "@palette p.pal\n@size 1 1\n@output b.png\n@swap bad.pal\n@fill K\n")
+        with self.assertRaises(pixelart.ArtError):
+            self.render(bad)
+
     def test_preview_is_scaled(self):
         src = self.write("p.pix", "@palette p.pal\n@size 1 1\n@output o.png\n@preview big.png 3\n@frame a\nR\n")
         outputs = self.render(src)

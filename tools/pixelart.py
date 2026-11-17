@@ -37,7 +37,11 @@ Formats (how the art uses them: assets/original/art/README.md)
                    @layer [over]            then rows of legend characters; an
                                             "over" layer is drawn above the
                                             darkness (UI in mock-ups)
-                   @sprite PATH FRAME X Y [flip] [over]
+                   @sprite PATH FRAME X Y [flip] [over] [keep]
+                   @swap PALETTE            draw everything with another palette
+                                            that has the same keys (palette
+                                            swap); sprites marked "keep" stay
+                                            in their own colours
                    @darkness KEY ALPHA      night overlay (0..1)
                    @light X Y RADIUS        hole in the darkness
                    @cone X Y ANGLE SPREAD LENGTH   flashlight beam
@@ -258,8 +262,9 @@ class Sprite:
         self._add(number, name, rows)
         return i
 
-    def frame_pixels(self, name, flip=False):
-        out = [[self.colours[ch] for ch in row] for row in self.frames[name]]
+    def frame_pixels(self, name, flip=False, colours=None):
+        colours = colours or self.colours
+        out = [[colours[ch] for ch in row] for row in self.frames[name]]
         return [row[::-1] for row in out] if flip else out
 
     def sheet_frames(self):
@@ -289,6 +294,7 @@ class Scene:
         self.fill = None
         self.tiles, self.legend = {}, {}
         self.darkness = None
+        self.swap = None
         self.lights = []
         self._parse()
 
@@ -342,7 +348,9 @@ class Scene:
                     raise ArtError(f'{self.path}:{number}: no frame {parts[2]!r} in {parts[1]}')
                 flags = set(parts[5:])
                 self.steps.append(('sprite', sprite, parts[2], int(parts[3]), int(parts[4]),
-                                   'flip' in flags, 'over' in flags))
+                                   'flip' in flags, 'keep' in flags, 'over' in flags))
+            elif name == '@swap':
+                self.swap = self._rel(parts[1])
             elif name == '@darkness':
                 self.darkness = (parts[1], float(parts[2]))
             elif name == '@light':
@@ -375,7 +383,13 @@ class Scene:
         return math.floor(level * DARK_STEPS) / DARK_STEPS
 
     def render(self):
-        colours, _ = load_palette(self.palette_path)
+        colours, _ = load_palette(self.swap or self.palette_path)
+        swap = colours if self.swap else None
+        if swap:
+            base, _ = load_palette(self.palette_path)
+            missing = sorted(set(base) - set(swap))
+            if missing:
+                raise ArtError(f'{self.path}: swap palette lacks keys {"".join(missing)}')
         bg = colours[self.fill] if self.fill else (0, 0, 0, 0)
         canvas = [[bg] * self.width for _ in range(self.height)]
 
@@ -397,10 +411,10 @@ class Scene:
                             continue
                         alias, frame = self.legend[ch]
                         tiles = self.tiles[alias]
-                        blit(tiles.frame_pixels(frame), tx * tiles.width, ty * tiles.height)
+                        blit(tiles.frame_pixels(frame, colours=swap), tx * tiles.width, ty * tiles.height)
             else:
-                _, sprite, frame, x, y, flip, _ = step
-                blit(sprite.frame_pixels(frame, flip), x, y)
+                _, sprite, frame, x, y, flip, keep, _ = step
+                blit(sprite.frame_pixels(frame, flip, colours=None if keep else swap), x, y)
 
         over = [step for step in self.steps if step[-1]]
         for step in self.steps:

@@ -1,0 +1,25 @@
+# "Other world" palette: the same keys as night-school.pal with new colours.
+# Swapping palettes turns any scene into its other-world version without
+# separate tiles (see docs/design-references.md 2.3, "world change = palette
+# change"). Rust, dried blood and bone instead of night blues; spirits turn
+# acid green. Keep this file's keys identical to night-school.pal.
+K 0a0507 outline, deepest shadow
+D 24090f dried-blood dark
+N 3a1018 crimson shadow
+U 4e1c22 rust red
+u 6e2a2c rust red light
+M a0503a ember glow (replaces moonlight)
+W a89a7c ash plaster
+w d8ccb0 bone highlight
+G 3a2a18 rotten wood dark
+g 5a4024 rotten wood
+p 3a1a14 charred wood dark
+P 5a2a1c charred wood
+s c8a888 pale skin
+h 8a6458 pale skin shadow
+H 1a1012 hair
+R ff4a2a accent red (brighter)
+r 8a1a14 accent red dark
+Y d8b048 dim gold
+C b8f070 spirit acid green
+c 5a9a3a spirit green dark
