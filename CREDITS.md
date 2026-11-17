@@ -60,9 +60,35 @@ SOFTWARE.
 
 `assets/third_party/`(커밋됨)와 `assets_private/`(커밋 안 됨) 에셋을 모두 적습니다. CC0처럼 크레딧이 필수가 아니어도 출처 추적을 위해 기록합니다.
 
+2026-11-17에 수집한 CC0 팩 25종은 프리프로덕션용 참고 자료·임시 아트입니다. 최종 게임에 실제로 쓰는 팩만 남기고, 쓰지 않는 행은 출시 전에 크레딧 화면 원고에서 빼도 됩니다(CC0이므로 표기 의무 없음). 팩 목록과 미리보기는 [`assets/third_party/README.md`](assets/third_party/README.md)에 있습니다.
+
 | 에셋 | 작가 | 출처 URL | 라이선스 | 크레딧 필수 | 위치 | 크레딧 문구 |
 |---|---|---|---|---|---|---|
-| _(아직 없음)_ | | | | | | |
+| GothicVania Cemetery Pack | ansimuz (Luis Zuno) | https://opengameart.org/content/gothicvania-cemetery-pack | CC0 1.0 | 아니오 | assets/third_party/ansimuz-gothicvania-cemetery/ | GothicVania Cemetery Pack by ansimuz (Luis Zuno) |
+| GothicVania Church Pack | ansimuz (Luis Zuno) | https://opengameart.org/content/gothicvania-church-pack | CC0 1.0 | 아니오 | assets/third_party/ansimuz-gothicvania-church/ | GothicVania Church Pack by ansimuz (Luis Zuno) |
+| Gothicvania Town | ansimuz (Luis Zuno) | https://opengameart.org/content/gothicvania-town | CC0 1.0 | 아니오 | assets/third_party/ansimuz-gothicvania-town/ | Gothicvania Town by ansimuz (Luis Zuno) |
+| Gotthicvania Swamp | ansimuz (Luis Zuno) | https://opengameart.org/content/gotthicvania-swamp | CC0 1.0 | 아니오 | assets/third_party/ansimuz-gothicvania-swamp/ | Gotthicvania Swamp by ansimuz (Luis Zuno) |
+| Free Graveyard Platformer Tileset | pzUH (gameart2d.com) | https://opengameart.org/content/free-graveyard-platformer-tileset | CC0 1.0 | 아니오 | assets/third_party/pzuh-graveyard-platformer-tileset/ | Free Graveyard Platformer Tileset by pzUH (gameart2d.com) |
+| Graveyard Platformer 32x Tileset | Vicplay | https://opengameart.org/content/graveyard-platformer-32x-tileset | CC0 1.0 | 아니오 | assets/third_party/vicplay-graveyard-platformer-32x/ | Graveyard Platformer 32x Tileset by Vicplay |
+| Seamless 2D Graveyard Background | LarryIRL | https://opengameart.org/content/seamless-2d-graveyard-background | CC0 1.0 | 아니오 | assets/third_party/larryirl-seamless-graveyard-background/ | Seamless 2D Graveyard Background by LarryIRL |
+| Haunted Forest Trees + Misc. Dark Fantasy Scenery Sprites | ETTiNGRiNDER | https://opengameart.org/content/haunted-forest-trees, https://opengameart.org/content/misc-dark-fantasy-scenery-sprites | CC0 1.0 | 아니오 | assets/third_party/ettingrinder-dark-fantasy-scenery/ | Haunted Forest Trees + Misc. Dark Fantasy Scenery Sprites by ETTiNGRiNDER |
+| Spooky House + RPG Asset Tile Set 'Cemetery' NES | Chasersgaming | https://opengameart.org/content/spooky-house, https://opengameart.org/content/rpg-asset-tile-set-cemetery-nes | CC0 1.0 | 아니오 | assets/third_party/chasersgaming-spooky-house-and-cemetery/ | Spooky House + RPG Asset Tile Set 'Cemetery' NES by Chasersgaming |
+| haunted graveyard tileset | biodegradableguy | https://opengameart.org/content/haunted-graveyard-tileset | CC0 1.0 | 아니오 | assets/third_party/biodegradableguy-haunted-graveyard-tileset/ | haunted graveyard tileset by biodegradableguy |
+| 1-Bit Graveyard Pixel Art Asset Pack (+ Halloween icons) | Fava Beans | https://opengameart.org/content/1-bit-graveyard-pixel-art-asset-pack | CC0 1.0 | 아니오 | assets/third_party/fava-beans-1-bit-graveyard/ | 1-Bit Graveyard Pixel Art Asset Pack (+ Halloween icons) by Fava Beans |
+| Skeleton and Ghost spritesheets (Ars Notoria) | Balmer | https://opengameart.org/content/skeleton-and-ghost-spritesheets-ars-notoria | CC0 1.0 | 아니오 | assets/third_party/balmer-skeleton-ghost/ | Skeleton and Ghost spritesheets (Ars Notoria) by Balmer |
+| Forest / Graveyard tileset | marionline | https://opengameart.org/content/forest-graveyard-tileset | CC0 1.0 | 아니오 | assets/third_party/marionline-forest-graveyard-tileset/ | Forest / Graveyard tileset by marionline |
+| Fumiko Complete Charset | skoam (Sylvius Fischer) | https://opengameart.org/content/fumiko-complete-charset | CC0 1.0 | 아니오 | assets/third_party/skoam-fumiko-charset/ | Fumiko Complete Charset by skoam (Sylvius Fischer) |
+| 32x32 RPG Character Sprites | Eldiran | https://opengameart.org/content/32x32-rpg-character-sprites | CC0 1.0 | 아니오 | assets/third_party/eldiran-32x32-rpg-character-sprites/ | 32x32 RPG Character Sprites by Eldiran |
+| RPG character sprites | GrafxKid | https://opengameart.org/content/rpg-character-sprites | CC0 1.0 | 아니오 | assets/third_party/grafxkid-rpg-character-sprites/ | RPG character sprites by GrafxKid |
+| 24x32 bases | Cabbit | https://opengameart.org/content/24x32-bases | CC0 1.0 | 아니오 | assets/third_party/cabbit-24x32-bases/ | 24x32 bases by Cabbit |
+| Puny Characters | Shade | https://opengameart.org/content/puny-characters | CC0 1.0 | 아니오 | assets/third_party/shade-puny-characters/ | Puny Characters by Shade |
+| Pixel Adventure 1 | Pixel Frog | https://pixelfrog-assets.itch.io/pixel-adventure-1 | CC0 1.0 | 아니오 | assets/third_party/pixelfrog-pixel-adventure-1/ | Pixel Adventure 1 by Pixel Frog |
+| Ninja Adventure - Asset Pack | Pixel-boy and AAA | https://pixel-boy.itch.io/ninja-adventure-asset-pack | CC0 1.0 | 아니오 | assets/third_party/pixel-boy-ninja-adventure/ | Ninja Adventure - Asset Pack by Pixel-boy and AAA |
+| Zelda-like tilesets and sprites | ArMM1998 | https://opengameart.org/content/zelda-like-tilesets-and-sprites | CC0 1.0 | 아니오 | assets/third_party/armm1998-zelda-like-tilesets/ | Zelda-like tilesets and sprites by ArMM1998 |
+| Simple broad-purpose tileset | surt (contributors: Sharm, surt, vk) | https://opengameart.org/content/simple-broad-purpose-tileset | CC0 1.0 | 아니오 | assets/third_party/surt-simple-broad-purpose-tileset/ | Simple broad-purpose tileset by surt (contributors: Sharm, surt, vk) |
+| Roguelike/RPG pack | Kenney (with Lynn Evers) | https://opengameart.org/content/roguelikerpg-pack-1700-tiles | CC0 1.0 | 아니오 | assets/third_party/kenney-roguelike-rpg-pack/ | Roguelike/RPG pack by Kenney (with Lynn Evers) |
+| 1-Bit Pack 1.1 | Kenney | https://opengameart.org/content/1-bit-pack | CC0 1.0 | 아니오 | assets/third_party/kenney-1-bit-pack/ | 1-Bit Pack 1.1 by Kenney |
+| 16x16 DungeonTileset II v1.7 (+ pumpkin_dude Halloween character) | 0x72 (Robert) | https://0x72.itch.io/dungeontileset-ii | CC0 1.0 | 아니오 | assets/third_party/0x72-dungeontileset-ii/ | 16x16 DungeonTileset II v1.7 (+ pumpkin_dude Halloween character) by 0x72 (Robert) |
 
 <!--
 작성 예시:

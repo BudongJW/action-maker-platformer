@@ -73,7 +73,8 @@ Then add a row to the external assets table ("외부 에셋") in [`CREDITS.md`](
 | Ansimuz Sunny Land | CC0 | Side-scrolling. Check the author's other paid packs one by one |
 | 0x72 DungeonTileset II, Ninja Adventure | CC0 | Top-down 16x16 |
 | LPC (OpenGameArt) | GPL-3.0 / CC BY-SA 3.0 dual | **Record the GPL-3.0 side.** Per-asset CREDITS are required |
-| Pipoya (ぴぽや倉庫) free materials | Own terms | Free redistribution only with the full terms included as `LICENSE`. Paid and supporter materials are not allowed |
+| Pipoya (ぴぽや倉庫) free materials | Own terms | Free redistribution only with the full terms included as `LICENSE`. Paid and supporter materials are not allowed. **The itch.io pages** (e.g. "PIPOYA FREE RPG Character Sprites 32x32", "Pipoya RPG Tileset 32x32") say "Not redistribute or resell this assets", so those downloads go in `assets_private/` (checked 2026-11-17) |
+| OpenGameArt, per asset | Per asset | Use the page's "License(s)" field, and read the description and comments too: some CC0 uploads are edits of RPG Maker RTP or of other artists' work, or are re-uploads by someone other than the author. Those are not committed. Packs already committed are listed in [`third_party/README.md`](third_party/README.md) |
 | Freesound individual files | CC0 / CC BY per file | Check each file's license. **CC BY-NC is not allowed** (no commercial use) |
 | Incompetech (Kevin MacLeod) | CC BY 4.0 | The prescribed credit wording is required |
 | SFX made by us with Bfxr or jfxr | Ours | May go in `original/` |
