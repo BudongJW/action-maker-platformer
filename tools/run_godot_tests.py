@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Run the GDScript story runtime tests in headless Godot.
 
-Builds a throwaway Godot project that contains scripts/story/, tests/godot/ and a story
-compiled by tools/storyc.py from the examples in docs/script-format.md plus
-tests/godot/fixtures/*.dlg, then runs tests/godot/test_story_runtime.gd.
+Builds a throwaway Godot project that contains scripts/ (story runtime, scare director,
+track mixer), tests/godot/ and a story compiled by tools/storyc.py from the examples in
+docs/script-format.md plus tests/godot/fixtures/*.dlg, then runs every script in
+TEST_SCRIPTS.
 
 Usage:
     python3 tools/run_godot_tests.py [--godot PATH] [--require-godot] [--keep]
@@ -33,8 +34,12 @@ sys.path.insert(0, str(REPO / "tools"))
 import storyc  # noqa: E402
 
 SPEC = REPO / "docs" / "script-format.md"
-TEST_SCRIPT = "res://tests/godot/test_story_runtime.gd"
-SUMMARY_RE = re.compile(r"story runtime: (\d+) checks, (\d+) failure\(s\)")
+TEST_SCRIPTS = [
+    ("res://tests/godot/test_story_runtime.gd", "story runtime"),
+    ("res://tests/godot/test_scare_director.gd", "scare director"),
+    ("res://tests/godot/test_track_mixer.gd", "track mixer"),
+]
+SCRIPT_DIRS = ("story", "scare", "tracks")
 
 # Characters used by the spec example besides hongryeon (whose registry is in the spec).
 EXTRA_CHARACTERS = {
@@ -87,7 +92,8 @@ def _add_translations(root: Path) -> None:
 def build_project(root: Path) -> None:
     _write(root / "project.godot",
            'config_version=5\n\n[application]\n\nconfig/name="story-runtime-tests"\n')
-    shutil.copytree(REPO / "scripts" / "story", root / "scripts" / "story")
+    for name in SCRIPT_DIRS:
+        shutil.copytree(REPO / "scripts" / name, root / "scripts" / name)
     shutil.copytree(REPO / "tests" / "godot", root / "tests" / "godot")
 
     story = root / "assets/original/story"
@@ -127,20 +133,28 @@ def main(argv: list[str] | None = None) -> int:
     tmp = Path(tempfile.mkdtemp(prefix="story-runtime-"))
     try:
         build_project(tmp)
-        proc = subprocess.run(
-            [godot, "--headless", "--path", str(tmp), "-s", TEST_SCRIPT],
-            capture_output=True, text=True, timeout=300,
-        )
-        output = proc.stdout + proc.stderr
-        print(output)
-        summary = SUMMARY_RE.search(output)
-        script_errors = "SCRIPT ERROR" in output or "Parse Error" in output
-        if proc.returncode != 0 or summary is None or summary.group(2) != "0" or script_errors:
-            print(f"run_godot_tests: FAILED (exit {proc.returncode}"
-                  f"{', script errors' if script_errors else ''}"
-                  f"{', no summary' if summary is None else ''})", file=sys.stderr)
+        total = 0
+        failed = False
+        for script, label in TEST_SCRIPTS:
+            proc = subprocess.run(
+                [godot, "--headless", "--path", str(tmp), "-s", script],
+                capture_output=True, text=True, timeout=300,
+            )
+            output = proc.stdout + proc.stderr
+            print(output)
+            summary = re.search(re.escape(label) + r": (\d+) checks, (\d+) failure\(s\)", output)
+            script_errors = "SCRIPT ERROR" in output or "Parse Error" in output
+            if proc.returncode != 0 or summary is None or summary.group(2) != "0" or script_errors:
+                print(f"run_godot_tests: {label} FAILED (exit {proc.returncode}"
+                      f"{', script errors' if script_errors else ''}"
+                      f"{', no summary' if summary is None else ''})", file=sys.stderr)
+                failed = True
+                continue
+            total += int(summary.group(1))
+            print(f"run_godot_tests: {label} OK ({summary.group(1)} checks)")
+        if failed:
             return 1
-        print(f"run_godot_tests: OK ({summary.group(1)} checks)")
+        print(f"run_godot_tests: OK ({total} checks in {len(TEST_SCRIPTS)} scripts)")
         return 0
     finally:
         if args.keep:
