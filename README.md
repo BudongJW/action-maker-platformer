@@ -43,7 +43,11 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 ├── assets_private/          # Non-redistributable assets (git-ignored; only its README is tracked)
 ├── docs/
 │   └── script-format.md     # Character script format spec (.dlg), Korean
-├── tools/                   # Repository checks (GPL-3.0)
+├── scripts/
+│   └── story/               # GDScript story runtime (GPL-3.0)
+├── tests/
+│   └── godot/               # GDScript runtime tests and fixtures
+├── tools/                   # Compiler, repository checks and test runners (GPL-3.0)
 ├── reports/                 # Research reports (Korean)
 └── research_notes/          # Research notes (Korean)
 ```
@@ -97,6 +101,18 @@ python3 tools/storyc.py --check    # lint and verify outputs are up to date (wha
 ```
 
 Commit the `.dlg` changes together with the updated `compiled/` and `strings.csv`; CI fails if they are out of sync. Until `assets/original/story/project.json` exists, the compiler has nothing to do and exits successfully.
+
+## Story runtime
+
+[`scripts/story/`](scripts/story/) loads the compiled story and runs it in the game: dialogues with choices and branches, barks, documents, subtitle cues, the loop/save/meta flag tiers, locale fallback, and in-game fallbacks for meta effects the player has not consented to. `StoryRunner` is meant to be an autoload; the game UI listens to its signals (`line_started`, `choices_presented`, `command`, ...) and calls `advance()` / `choose()`. The API is described in section 11 of [`docs/script-format.md`](docs/script-format.md).
+
+The runtime is tested in headless Godot 4.7 (the engine version ACTION GAME MAKER G uses), but **not yet inside ACTION GAME MAKER G itself**. To run the tests locally:
+
+```bash
+GODOT_BIN=/path/to/Godot_v4.7-stable_linux.x86_64 python3 tools/run_godot_tests.py
+```
+
+The runner builds a temporary Godot project from `scripts/story/`, `tests/godot/` and the examples in the spec, compiles it with `storyc`, and runs `tests/godot/test_story_runtime.gd`. Without Godot it skips; CI downloads Godot, verifies its checksum and runs it.
 
 ## Contributing
 

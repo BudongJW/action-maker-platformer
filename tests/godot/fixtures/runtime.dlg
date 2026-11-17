@@ -1,0 +1,55 @@
+// Runtime test fixtures (test-only text). Compiled together with the
+// examples in docs/script-format.md by tools/run_godot_tests.py.
+
+~ rt_wait
+narrator: before wait  #line:rt_w_001
+do wait 0.5
+narrator: after wait  #line:rt_w_002
+
+~ rt_once
+- [once] first option  #line:rt_o_001
+- second option  #line:rt_o_002
+narrator: after options  #line:rt_o_003
+
+~ rt_locked
+- [enable_if save.never_set] locked option  #line:rt_l_001
+narrator: skipped past locked options  #line:rt_l_002
+
+~ rt_switch
+narrator: first dialogue  #line:rt_s_001
+=> ~rt_target
+
+~ rt_target
+narrator: second dialogue  #line:rt_s_002
+
+~ rt_text
+set save.coins = 3
+set save.coins += 2
+narrator: coins {save.coins}, name {@player_name}, user {@os_user}, brace \{x}[wait=0.5] end  #line:rt_t_001
+
+~ rt_meta
+do window_shake 1 0.5
+system [to=os_dialog]: system message  #line:rt_m_001
+system [to=desktop_file]: desktop note  #line:rt_m_002
+
+~ rt_pick_low
+@priority 1
+narrator: low priority  #line:rt_p_001
+
+~ rt_pick_high
+@priority 5
+@once loop
+narrator: high priority once per loop  #line:rt_p_002
+
+~ rt_loop
+narrator: resetting the loop  #line:rt_r_001
+do loop_reset
+narrator: loop count is now {@loop_count}  #line:rt_r_002
+
+~bark rt_bark_free
+narrator: bark one  #line:rt_b_001
+narrator: bark two  #line:rt_b_002
+
+~bark rt_bark_cool
+@cooldown 100
+narrator: cooling bark  #line:rt_b_003

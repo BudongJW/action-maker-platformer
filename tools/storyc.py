@@ -1524,6 +1524,9 @@ def analyze(root: Path) -> Result:
     for loc, table in tables.items():
         result.outputs[compiled_dir / f"strings.{loc}.json"] = _dump(table)
     result.outputs[story_dir / "l10n" / "strings.csv"] = csv_text
+    # Keep Godot (and ACTION GAME MAKER G) from importing strings.csv as a translation table;
+    # the game reads compiled/strings.<locale>.json instead.
+    result.outputs[story_dir / "l10n" / ".gdignore"] = ""
     if compiled_dir.is_dir():
         wanted = {compiled_dir / f"strings.{loc}.json" for loc in tables}
         result.stale_outputs = sorted(p for p in compiled_dir.glob("strings.*.json") if p not in wanted)
