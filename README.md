@@ -43,7 +43,8 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 ├── assets_private/          # Non-redistributable assets (git-ignored; only its README is tracked)
 ├── docs/
 │   ├── script-format.md     # Character script format spec (.dlg), Korean
-│   └── design-references.md # Art references: RPG Maker graphic specs, horror visual references, palettes, Korean
+│   ├── design-references.md # Art references: RPG Maker graphic specs, horror visual references, palettes, Korean
+│   └── resource-needs.md    # What the game still needs (art, audio, text, engine), by priority, Korean
 ├── tools/                   # Repository checks and helpers (GPL-3.0)
 ├── reports/                 # Research reports (Korean)
 └── research_notes/          # Research notes (Korean)
@@ -81,7 +82,7 @@ python3 tools/pixelart.py            # render assets/original/art/src/ to PNG
 python3 tools/pixelart.py --check    # what CI runs
 ```
 
-Collected CC0 art packs (characters, horror tilesets and backgrounds, map tilesets) are in [`assets/third_party/`](assets/third_party/README.md), each with a `preview.png` contact sheet. They are for reference and placeholder art; final art is meant to be original. [`docs/design-references.md`](docs/design-references.md) (Korean) covers RPG Maker sprite and tile formats, horror game visual references, tutorials, palettes and sources that cannot be committed.
+Collected CC0 art packs (characters, horror tilesets and backgrounds, map tilesets) are in [`assets/third_party/`](assets/third_party/README.md), each with a `preview.png` contact sheet. They are for reference and placeholder art; final art is meant to be original. [`docs/resource-needs.md`](docs/resource-needs.md) (Korean) lists what is still missing, with the decisions that block it and a checklist for the first playable build. [`docs/design-references.md`](docs/design-references.md) (Korean) covers RPG Maker sprite and tile formats, horror game visual references, tutorials, palettes and sources that cannot be committed.
 
 To rebuild the contact sheets after adding or changing a pack (needs Pillow):
 
