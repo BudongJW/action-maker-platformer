@@ -1,0 +1,7 @@
+# Footstep on old wooden floor boards (variant a). Pair with b and c at random.
+@output ../sfx/footstep_wood_a.wav
+@length 0.22
+@seed 11
+layer noise amp=0.6 attack=0.001 decay=0.035 lp=2200 hp=150
+layer sine freq=140 freq_end=70 amp=0.5 attack=0.001 decay=0.04
+layer noise at=0.02 amp=0.15 attack=0.005 decay=0.06 lp=900 hp=300

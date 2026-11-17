@@ -1,0 +1,9 @@
+# Sliding door shut hard: short roll and a bang.
+@output ../sfx/door_slide_close.wav
+@length 1.0
+@seed 4
+@echo 0.09 0.4 0.35
+layer noise amp=0.5 attack=0.03 dur=0.45 lp=900 lp_end=1500 hp=120 trem=26 trem_depth=0.6
+layer noise at=0.45 amp=1.0 decay=0.06 lp=2200 hp=80
+layer sine at=0.45 freq=110 freq_end=55 amp=0.9 decay=0.1
+layer noise at=0.47 amp=0.25 decay=0.15 lp=1200 hp=400 trem=30 trem_depth=0.8

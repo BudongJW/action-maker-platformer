@@ -1,0 +1,9 @@
+# The Shadow Visitor notices the player: short dissonant stab.
+@output ../sfx/enemy_notice.wav
+@length 1.2
+@seed 16
+@echo 0.15 0.35 0.3
+layer sine freq=233.08 amp=0.3 attack=0.003 decay=0.4
+layer sine freq=246.94 amp=0.3 attack=0.003 decay=0.4
+layer sine freq=329.63 amp=0.2 attack=0.003 decay=0.35
+layer noise amp=0.4 attack=0.001 decay=0.05 lp=3000 hp=300

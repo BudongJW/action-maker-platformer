@@ -1,0 +1,6 @@
+# Landing after a jump.
+@output ../sfx/land.wav
+@length 0.35
+@seed 5
+layer noise amp=0.8 attack=0.001 decay=0.06 lp=1500 hp=80
+layer sine freq=100 freq_end=45 amp=0.8 attack=0.001 decay=0.08

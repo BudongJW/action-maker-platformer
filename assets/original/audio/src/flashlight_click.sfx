@@ -1,0 +1,7 @@
+# Flashlight switch: two small plastic clicks.
+@output ../sfx/flashlight_click.wav
+@length 0.16
+@seed 12
+layer noise amp=0.7 attack=0.0005 decay=0.004 hp=2500
+layer sine freq=3200 amp=0.2 attack=0.0005 decay=0.006
+layer noise at=0.045 amp=0.5 attack=0.0005 decay=0.003 hp=3000

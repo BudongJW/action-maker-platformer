@@ -6,7 +6,7 @@ See [`../README.md`](../README.md) for the classification rules, the `SOURCE.md`
 
 ## Collected packs (2026-11-17)
 
-Every art pack below is **CC0 1.0** (the font is OFL 1.1, listed separately) (public domain dedication). The license was checked on the source page on the download date, and each folder keeps the author's own license note where one was shipped. Credit is not required, but all of them are listed in [`../../CREDITS.md`](../../CREDITS.md).
+Every art pack below is **CC0 1.0** (public domain dedication); the font is OFL 1.1 and listed separately. The license was checked on the source page on the download date, and each folder keeps the author's own license note where one was shipped. Credit is not required, but all of them are listed in [`../../CREDITS.md`](../../CREDITS.md).
 
 They are reference material and placeholder art for pre-production: a style study for characters, horror atmosphere and map composition, and grey-boxing before original art replaces them. Mixing many packs in the final game will not give a consistent look (different palettes and pixel densities), so pick a small set per prototype.
 

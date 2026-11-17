@@ -12,7 +12,7 @@
 | 대사 체계 | `.dlg` 형식 명세, 컴파일러·검사 도구 (대사 본문은 아직 없음) | [`docs/script-format.md`](script-format.md), [`tools/storyc.py`](../tools/storyc.py) |
 | 라이선스 체계 | 경로별 라이선스, CREDITS, 재배포 불가 목록, AI 기록 | [`README.md`](../README.md), [`CREDITS.md`](../CREDITS.md), [`SOURCES.md`](../SOURCES.md), [`AI_CONTENT.md`](../assets/original/AI_CONTENT.md) |
 
-오디오, 폰트, UI, 대사 본문, AGM G 프로젝트 자체는 아직 없습니다.
+대사 본문과 AGM G 프로젝트 자체는 아직 없습니다. 오디오·폰트·UI는 1차안이 있습니다(아래 표의 상태 참고).
 
 ## 0. 먼저 정해야 할 것
 
@@ -145,20 +145,20 @@ Steam이 요구하는 크기입니다 ([스토어 그래픽 에셋](https://part
 
 그 밖에 키 아트 원본, 실행 파일 아이콘, 트레일러, 프레스 킷이 필요합니다. 320x180 픽셀 아트는 1920x1080에 정확히 6배라 스크린샷은 정수배로 깔끔하게 맞습니다.
 
-## 3. 오디오 (전부 없음)
+## 3. 오디오
 
 조달 원칙은 [`audio_plugins_systems.md` Q1](../research_notes/쯔꾸르%20리소스와%20스토리%20자원%20분석/audio_plugins_systems.md)과 [`assets/README.md`](../assets/README.md)를 따릅니다. 직접 만든 효과음(Bfxr, jfxr)은 오리지널, Freesound는 파일마다 라이선스 확인(CC BY-NC 불가), 일본 무료 BGM 사이트는 대부분 비공개 대상입니다. 수집한 팩 중 Ninja Adventure의 오디오(CC0)는 용량 때문에 빼 두었으므로, 필요한 파일만 골라 다시 들일 수 있습니다. GothicVania 팩의 음악은 재배포 조건이 불명확해 넣지 않았습니다.
 
 | 리소스 | 우선 | 메모 |
 |---|---|---|
-| BGM: 탐색(복도) | P0 | 호러는 무음 구간도 설계 대상. 음악보다 환경음이 주가 될 수 있음 |
-| BGM: 추격 | P0 | |
-| 환경음 루프: 빈 복도 공명, 형광등 웅웅거림 | P0 | |
-| SFX: 발소리 (나무 바닥, 걷기·착지) | P0 | 추격 감지와 연결 (The Coma식 발소리 단서, design-references 2.2) |
-| SFX: 점프, 미닫이문, 사물함, 손전등 딸깍, 줍기 | P0 | |
-| SFX: 피격, 사망 | P0 | |
-| SFX: 그림자 손님 접근 신호 (발소리, 숨소리) | P0 | 화면 밖 접근을 소리로 알려 줌 |
-| SFX: UI (이동, 확인, 취소) | P0 | |
+| BGM: 탐색(복도) | P0 | **임시**: CC0 `40 - Crypt`. 호러는 무음 구간도 설계 대상. 음악보다 환경음이 주가 될 수 있음 |
+| BGM: 추격 | P0 | **임시**: CC0 `28 - Tension` |
+| 환경음 루프: 빈 복도 공명, 형광등 웅웅거림 | P0 | **임시**: 오리지널 합성 `corridor_loop` |
+| SFX: 발소리 (나무 바닥, 걷기·착지) | P0 | **임시**: 오리지널 합성 3종 + 착지. 추격 감지와 연결 (The Coma식 발소리 단서, design-references 2.2) |
+| SFX: 점프, 미닫이문, 사물함, 손전등 딸깍, 줍기 | P0 | **임시**: 오리지널 합성 |
+| SFX: 피격, 사망 | P0 | **임시**: 오리지널 합성 |
+| SFX: 그림자 손님 접근 신호 (발소리, 숨소리) | P0 | **임시**: 오리지널 합성 (발소리, 숨소리 루프, 눈치챔). 화면 밖 접근을 소리로 알려 줌 |
+| SFX: UI (이동, 확인, 취소) | P0 | **임시**: CC0 Ninja Adventure Menu |
 | BGM: 타이틀, 안전 구역, 이계, 엔딩 | P1 | |
 | 환경음: 바람, 비, 먼 곳의 소리 | P1 | |
 | SFX: 소복 귀신 등장, 도깨비불 타닥거림, 점프스케어 스팅, 메모 넘기기, 세이브 | P1 | |
@@ -214,7 +214,7 @@ Steam이 요구하는 크기입니다 ([스토어 그래픽 에셋](https://part
 - [x] 라이트 텍스처 2종 (1차안. 조명 설정과 페이드는 AGM G 작업)
 - [x] 대화창·말풍선·프롬프트·일시정지 최소 UI (1차안)
 - [x] 한글 픽셀 폰트 들이기: Galmuri11 Condensed·Bold ([`assets/third_party/quiple-galmuri/`](../assets/third_party/quiple-galmuri/SOURCE.md))
-- [ ] 오디오: 탐색·추격 BGM, 복도 환경음, 발소리, 문·사물함·손전등·피격·사망, 적 접근 신호, UI 3종
+- [x] 오디오: 탐색·추격 BGM, 복도 환경음, 발소리, 문·사물함·손전등·피격·사망, 적 접근 신호, UI 3종 (효과음은 오리지널 합성 1차안, 음악·UI는 CC0 임시. [`assets/original/audio/`](../assets/original/audio/README.md))
 - [ ] 서사: 이야기 개요, `project.json`·캐릭터 레지스트리, 프롤로그 대사, UI 문자열
 - [ ] 대화 런타임, 숨기·추격 AI
 
