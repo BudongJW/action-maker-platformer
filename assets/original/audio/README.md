@@ -31,6 +31,37 @@
 
 임시 음악은 판타지 어드벤처 팩의 곡이라 호러 톤과 맞지 않을 수 있습니다. 탐색 구간은 음악 없이 환경음만 두는 안도 플레이 테스트로 비교합니다([`resource-needs.md` 3절](../../../docs/resource-needs.md)).
 
+## 추가 소리 (P1, 이야기와 무관하게 미리 만든 것)
+
+| 용도 | 파일 | 메모 |
+|---|---|---|
+| 창밖 바람 / 비 | `ambience/wind_loop.wav` / `ambience/rain_loop.wav` | 6초 루프, 피크 -10 dBFS |
+| 먼 천둥 | `sfx/thunder_far.wav` | 이계 전환이나 폭풍 연출 |
+| 심장 박동 (보통 / 빠름) | `sfx/heartbeat_loop.wav` / `sfx/heartbeat_fast_loop.wav` | 약 75 / 125 bpm. 숨어 있을 때, 쫓길 때 |
+| 소복 귀신 등장 / 소멸 | `sfx/ghost_appear.wav` / `sfx/ghost_vanish.wav` | `fx_ghost_swirl`과 함께 |
+| 말 없는 속삭임 | `sfx/ghost_whisper_loop.wav` | 4초 루프. 귀신 근처에서 거리 감쇠 |
+| 도깨비불 타닥거림 | `sfx/wisp_crackle_loop.wav` | 2초 루프 |
+| 점프스케어 | `sfx/jumpscare.wav` | `fx_static`과 함께. 남용 금지 |
+| 책장 넘김 / 저널 열기 | `sfx/page_turn.wav` | |
+| 열쇠 줍기 | `sfx/key_pickup.wav` | |
+| 전등 스위치 | `sfx/switch_click.wav` | |
+| 창문 열기 | `sfx/window_open.wav` | |
+| TV 지지직 | `sfx/tv_static_loop.wav` | 2초 루프. 교실 TV 타일과 짝 |
+| 이계로 넘어감 | `sfx/otherworld_shift.wav` | 팔레트 교체 셰이더의 `amount`를 올리는 동안 |
+
+## 음악 스케치 (오리지널, 루프)
+
+음표 목록을 레시피로 바꾼 짧은 스케치입니다. 22.05 kHz로 렌더링해 용량을 줄였습니다. 방향 확인용이며, 실제 음악은 작곡가가 맡거나 이 스케치를 바탕으로 다듬는 것을 전제로 합니다.
+
+| 파일 | 길이 | 내용 |
+|---|---|---|
+| `music/title_loop.wav` | 32초 | 타이틀. A 단조 60 bpm, 패드(Am F Dm E) 위의 오르골 선율, 이끎음 G#에서 끝나 반복 |
+| `music/safe_loop.wav` | 24초 | 안전 구역(촛불). C 장조, 따뜻한 패드와 느린 아르페지오 |
+| `music/otherworld_loop.wav` | 24초 | 이계. A1·Bb1 저음이 맥놀이하고 6초마다 부풀고 12초마다 낮게 울림 |
+| `music/chase_loop.wav` | 16초 | 추격. 120 bpm, 반음 긴장의 저음 반복, 박마다 심장 박동 킥, 마디마다 불협 스탭 |
+
+첫 플레이어블의 임시 음악(CC0 `Crypt`, `Tension`)을 이 스케치로 바꿀지는 들어 보고 정합니다.
+
 ## 믹싱 기준 (시작값)
 
 모든 효과음은 피크 -1 dBFS로 정규화되어 있고, 환경음 루프만 -12 dBFS입니다. 실제 크기는 AGM G의 오디오 버스에서 맞춥니다.
@@ -56,5 +87,5 @@ python3 tools/sfxsynth.py --check    # WAV가 레시피와 같은지 확인
 ## 다음 단계
 
 - 사람이 들어 보고 레시피 조정 (특히 문·사물함·숨소리)
-- 오리지널 음악 (탐색, 추격, 안전 구역), P1 효과음([`resource-needs.md` 3절](../../../docs/resource-needs.md))
+- 탐색 구간 음악, 엔딩 음악, 사람이 다듬은 음악([`resource-needs.md` 3절](../../../docs/resource-needs.md))
 - 사람 사운드 디자이너가 맡게 되면 녹음·DAW 원본으로 교체하고 [`AI_CONTENT.md`](../AI_CONTENT.md)의 "Replaced" 표에 기록

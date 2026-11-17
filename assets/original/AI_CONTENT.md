@@ -11,11 +11,11 @@ the row.
 
 | Files | Made with | Date | How |
 |---|---|---|---|
-| `art/palette/night-school.pal`, `art/palette/light.pal` | Anthropic Claude (Claude Code) | 2026-11-17 | Colour values chosen by the AI |
+| `art/palette/*.pal` (night-school, otherworld, light, dark) | Anthropic Claude (Claude Code) | 2026-11-17 | Colour values chosen by the AI |
 | `art/src/*.pix`, `art/src/*.scene` | Anthropic Claude (Claude Code) | 2026-11-17 | The AI wrote the text pixel maps directly, and for the tileset and faces wrote small shape-drawing scripts that emitted the text (those scripts are not kept; the `.pix` text is the source) |
-| `art/characters/*.png`, `art/tiles/*.png`, `art/portraits/*.png`, `art/mockups/*.png`, `art/lights/*.png`, `art/ui/*.png`, `art/palette/*.png`, `art/previews/*.png` | `tools/pixelart.py` (deterministic renderer, no AI) from the sources above | 2026-11-17 | Rendered output of AI-written sources |
-| `audio/src/*.sfx` | Anthropic Claude (Claude Code) | 2026-11-17 | The AI wrote the synthesis recipes (oscillators, noise, envelopes, filters) |
-| `audio/sfx/*.wav`, `audio/ambience/*.wav` | `tools/sfxsynth.py` (deterministic synthesizer, no AI) from the recipes above | 2026-11-17 | Rendered output of AI-written recipes; nobody has listened to them yet |
+| `art/characters/*.png`, `art/tiles/*.png`, `art/portraits/*.png`, `art/mockups/*.png`, `art/lights/*.png`, `art/ui/*.png`, `art/backgrounds/*.png`, `art/fx/*.png`, `art/palette/*.png`, `art/previews/*.png`, `characters/protagonist/portraits/*.png` | `tools/pixelart.py` (deterministic renderer, no AI) from the sources above | 2026-11-17 | Rendered output of AI-written sources |
+| `audio/src/*.sfx` | Anthropic Claude (Claude Code) | 2026-11-17 | The AI wrote the synthesis recipes (oscillators, noise, envelopes, filters); the music recipes were generated from note lists the AI composed |
+| `audio/sfx/*.wav`, `audio/ambience/*.wav`, `audio/music/*.wav` | `tools/sfxsynth.py` (deterministic synthesizer, no AI) from the recipes above | 2026-11-17 | Rendered output of AI-written recipes; nobody has listened to them yet |
 
 What was **not** involved:
 

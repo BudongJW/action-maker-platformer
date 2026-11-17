@@ -45,6 +45,7 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 │   ├── script-format.md     # Character script format spec (.dlg), Korean
 │   ├── design-references.md # Art references: RPG Maker graphic specs, horror visual references, palettes, Korean
 │   └── resource-needs.md    # What the game still needs (art, audio, text, engine), by priority, Korean
+├── shaders/                 # Godot shaders (GPL-3.0), e.g. the other-world palette swap
 ├── tools/                   # Repository checks and helpers (GPL-3.0)
 ├── reports/                 # Research reports (Korean)
 └── research_notes/          # Research notes (Korean)
@@ -82,7 +83,7 @@ python3 tools/pixelart.py            # render assets/original/art/src/ to PNG
 python3 tools/pixelart.py --check    # what CI runs
 ```
 
-First-pass sound effects and a corridor ambience loop are in [`assets/original/audio/`](assets/original/audio/README.md) (Korean), also AI-generated: plain-text synthesis recipes rendered by [`tools/sfxsynth.py`](tools/sfxsynth.py) (`python3 tools/sfxsynth.py`). Nobody has listened to them yet.
+First-pass sound effects, ambience loops and four music sketches are in [`assets/original/audio/`](assets/original/audio/README.md) (Korean), also AI-generated: plain-text synthesis recipes rendered by [`tools/sfxsynth.py`](tools/sfxsynth.py) (`python3 tools/sfxsynth.py`). Nobody has listened to them yet.
 
 Collected CC0 art packs (characters, horror tilesets and backgrounds, map tilesets) are in [`assets/third_party/`](assets/third_party/README.md), each with a `preview.png` contact sheet. They are for reference and placeholder art; final art is meant to be original. [`docs/resource-needs.md`](docs/resource-needs.md) (Korean) lists what is still missing, with the decisions that block it and a checklist for the first playable build. [`docs/design-references.md`](docs/design-references.md) (Korean) covers RPG Maker sprite and tile formats, horror game visual references, tutorials, palettes and sources that cannot be committed.
 
