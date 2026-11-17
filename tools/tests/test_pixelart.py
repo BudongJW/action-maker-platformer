@@ -157,6 +157,13 @@ class PixelArtTest(unittest.TestCase):
         with self.assertRaises(pixelart.ArtError):
             self.render(bad)
 
+    def test_translucent_sprites_blend(self):
+        (self.dir / "a.pal").write_text("K 000000\nH 00000080\nW ffffff\n", encoding="utf-8")
+        self.write("h.pix", "@palette a.pal\n@size 1 1\n@output h.png\n@frame half\nH\n")
+        scene = self.write("bl.scene", "@palette a.pal\n@size 1 1\n@output bl.png\n@fill W\n"
+                           "@sprite h.pix half 0 0\n")
+        self.assertEqual(self.render(scene)["bl.png"][0][0], (127, 127, 127, 255))
+
     def test_preview_is_scaled(self):
         src = self.write("p.pix", "@palette p.pal\n@size 1 1\n@output o.png\n@preview big.png 3\n@frame a\nR\n")
         outputs = self.render(src)

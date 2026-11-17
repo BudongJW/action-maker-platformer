@@ -71,6 +71,16 @@ class ArtError(Exception):
     pass
 
 
+def blend(src, dst):
+    """Source-over compositing of two RGBA tuples (8-bit), rounded."""
+    sa, da = src[3] / 255, dst[3] / 255
+    out_a = sa + da * (1 - sa)
+    if out_a == 0:
+        return (0, 0, 0, 0)
+    rgb = tuple(round((s * sa + d * da * (1 - sa)) / out_a) for s, d in zip(src[:3], dst[:3]))
+    return rgb + (round(out_a * 255),)
+
+
 # ---------------------------------------------------------------- PNG output
 
 def encode_png(width, height, pixels):
@@ -401,7 +411,7 @@ class Scene:
                 for x, px in enumerate(row):
                     cx = ox + x
                     if px[3] and 0 <= cx < self.width:
-                        canvas[cy][cx] = px
+                        canvas[cy][cx] = px if px[3] == 255 else blend(px, canvas[cy][cx])
 
         def draw(step):
             if step[0] == 'layer':
