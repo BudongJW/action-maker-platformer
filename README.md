@@ -44,6 +44,8 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 ├── docs/
 │   ├── script-format.md     # Character script format spec (.dlg), Korean
 │   ├── design-references.md # Art references: RPG Maker graphic specs, horror visual references, palettes, Korean
+│   ├── pixel-technique.md   # Pixel technique notes: hands, faces, hair, outlines, Korean
+│   ├── claude-pixel/        # How people get Claude/LLMs to make pixel art, collected prompts, prompt templates for this repo, Korean
 │   └── resource-needs.md    # What the game still needs (art, audio, text, engine), by priority, Korean
 ├── shaders/                 # Godot shaders (GPL-3.0), e.g. the other-world palette swap
 ├── tools/                   # Repository checks and helpers (GPL-3.0)
