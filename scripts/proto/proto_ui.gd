@@ -35,6 +35,8 @@ var _wave: Control
 var _wave_color := Color(0.5, 0.88, 0.82)
 var _wave_time := 0.0
 var _captions: Array = []
+var _text_scale := 1.0
+var _captions_on := true
 var _caption_clock := 0.0
 var _bubble_left := 0.0
 var _toast_left := 0.0
@@ -313,7 +315,7 @@ func _process(delta: float) -> void:
 		if _caption_clock >= at and _caption_clock < at + dur:
 			var who: String = String(line["attrs"].get("display_name", ""))
 			shown.append((who + ": " if who != "" else "") + String(line.get("text", "")))
-	_caption.text = "\n".join(shown)
+	_caption.text = "\n".join(shown) if _captions_on else ""
 	# Captions sit above the dialogue window while it is open, so the two never overlap.
 	_caption.anchor_top = 0.60 if _window.visible else 0.86
 	_caption.anchor_bottom = 0.68 if _window.visible else 0.93
@@ -365,11 +367,42 @@ func _full_rect(color: Color) -> ColorRect:
 	return r
 
 
+## Text size setting: scales every label created by this UI (dialogue, choices, captions, docs).
+func set_text_scale(scale: float) -> void:
+	_text_scale = scale
+	_rescale(self)
+
+
+func set_captions(on: bool) -> void:
+	_captions_on = on
+
+
+## The skin's panels, shared with the settings screen.
+func window_style() -> StyleBox:
+	return _window.get_theme_stylebox("panel") if _window.has_theme_stylebox_override("panel") else null
+
+
+func choice_style() -> StyleBox:
+	return _choice_style
+
+
+func cursor_texture() -> Texture2D:
+	return _cursor
+
+
+func _rescale(node: Node) -> void:
+	for c in node.get_children():
+		if c is Label and c.has_meta("base_size"):
+			c.add_theme_font_size_override("font_size", int(round(int(c.get_meta("base_size")) * _text_scale)))
+		_rescale(c)
+
+
 func _label(size_px: int, color: Color) -> Label:
 	var l := Label.new()
 	if font != null:
 		l.add_theme_font_override("font", font)
-	l.add_theme_font_size_override("font_size", size_px)
+	l.set_meta("base_size", size_px)
+	l.add_theme_font_size_override("font_size", int(round(size_px * _text_scale)))
 	l.add_theme_color_override("font_color", color)
 	return l
 

@@ -53,6 +53,19 @@ func enabled() -> bool:
 	return not cfg.is_empty()
 
 
+## Ambience volume setting: shifts the ambience and loop players by `db` from their configured gain
+## (the Ambience bus itself belongs to the scare director's ducking).
+func set_ambience_offset(db: float) -> void:
+	for key in _ambience:
+		var p: AudioStreamPlayer = _ambience[key]
+		if p != null:
+			p.volume_db = float(cfg.get("ambience_db", -6.0)) + db
+	for loop in _loops:
+		var p: AudioStreamPlayer = loop["player"]
+		if p != null:
+			p.volume_db = float(loop["spec"].get("db", -6.0)) + db
+
+
 ## The workroom between loops: only the "hub" ambience.
 func enter_hub() -> void:
 	for key in _ambience:

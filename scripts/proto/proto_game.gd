@@ -9,7 +9,7 @@
 ##
 ## Keys: A/D or arrows move, Space jump, W/S climb, Enter/E advance or play, 1-4 choose,
 ## Z LINEAR, X HI-FI, C MIX, R camera REC, F fast-forward, M scare mode (default / soft / off),
-## P photosensitivity-safe scares, Up/Down move the choice cursor.
+## P photosensitivity-safe scares, Up/Down move the choice cursor, Esc settings.
 class_name ProtoGame
 extends Node2D
 
@@ -31,6 +31,7 @@ var ui: ProtoUI
 var fx: ProtoFX
 var art: ProtoArt
 var audio: ProtoAudio
+var settings: ProtoSettings
 var font: Font
 var data: Dictionary = {}
 var phase: Phase = Phase.HUB
@@ -58,6 +59,7 @@ var _step_timer := 0.0
 var _last_rec := false
 var _voice_speakers: Array = []
 var _finished := false
+var _bot_tried_settings := false
 var _selected := 0
 var _after_doc: Callable = Callable()
 
@@ -125,6 +127,15 @@ func _ready() -> void:
 	ui.font = font
 	add_child(ui)
 	ui.apply_skin(art)
+	TranslationServer.set_locale(String(runner.get_flag("sys.locale")))
+	settings = ProtoSettings.new()
+	settings.director = director
+	settings.audio = audio
+	settings.ui = ui
+	settings.runner = runner
+	settings.persist = not bot
+	ui.add_child(settings)
+	settings.setup(font, ui.window_style(), ui.choice_style(), ui.cursor_texture())
 	fx = ProtoFX.new()
 	fx.ui = ui
 	fx.art = art
@@ -264,6 +275,10 @@ func _complete() -> void:
 
 func _process(delta: float) -> void:
 	_stats["frames"] += 1
+	if settings.is_open():
+		# The settings screen pauses the tape, the player and the scare clock.
+		player.frozen = true
+		return
 	director.tick(delta)
 	if phase == Phase.TAPE:
 		var talking := runner.is_running() or ui.doc_open()
@@ -292,6 +307,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if k == null or not k.pressed or k.echo:
 		return
 	var key: int = k.keycode
+	if settings.handle_key(key):
+		return
+	if key == KEY_ESCAPE:
+		settings.open()
+		return
 	if key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
 		if ui.doc_open():
 			_close_doc()
@@ -317,10 +337,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif key == KEY_F:
 		ff = 1.0 if ff > 1.0 else 4.0
 	elif key == KEY_M:
-		director.mode = ((int(director.mode) + 1) % 3) as ScareDirector.Mode
+		settings.set_value("scare_mode", (int(director.mode) + 1) % 3)
 		ui.toast("SCARES " + ["DEFAULT", "SOFT", "OFF"][int(director.mode)])
 	elif key == KEY_P:
-		director.photosafe = not director.photosafe
+		settings.set_value("photosafe", 0 if director.photosafe else 1)
 		ui.toast("PHOTOSAFE " + ("ON" if director.photosafe else "OFF"))
 
 
@@ -629,7 +649,7 @@ func _update_hud() -> void:
 	var mode := ""
 	if director.mode != ScareDirector.Mode.DEFAULT or director.photosafe:
 		mode = "  SCARES %s%s" % [["DEFAULT", "SOFT", "OFF"][int(director.mode)], " PHOTOSAFE" if director.photosafe else ""]
-	ui.set_hud("%s %s  TC %s  PLAY %d%s%s\n[Z]LIN [X]HIFI [C]MIX [R]REC [F]FF [M]SCARES [P]PHOTOSAFE" % [
+	ui.set_hud("%s %s  TC %s  PLAY %d%s%s\n[Z]LIN [X]HIFI [C]MIX [R]REC [F]FF [M]SCARES [P]PHOTOSAFE [Esc]OPTIONS" % [
 		"REC" if player.recording else "   ", names[mixer.get_track()], tc,
 		int(runner.get_flag("sys.loop_count")), "  FF x%d" % int(ff) if ff > 1.0 else "", mode])
 
@@ -656,6 +676,13 @@ func _bot_step(delta: float) -> void:
 					if _choices[i]["enabled"]:
 						_choose(i)
 						break
+		return
+	if phase == Phase.HUB and not _bot_tried_settings:
+		# Exercise the settings screen once: move, change a value and change it back, close.
+		_bot_tried_settings = true
+		settings.open()
+		for key in [KEY_DOWN, KEY_DOWN, KEY_RIGHT, KEY_LEFT, KEY_ESCAPE]:
+			settings.handle_key(key)
 		return
 	if phase == Phase.HUB:
 		if not director.is_busy() and _bot_timer > 0.2:

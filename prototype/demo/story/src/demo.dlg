@@ -6,7 +6,7 @@
 
 title: Before you start  #line:demo_n_001
 p: This is a generic demo for the prototype. It has no game story.  #line:demo_n_002
-p: M changes the scare mode (default, soft, off). P removes flashes.  #line:demo_n_003
+p: Esc opens the settings (scare mode, flashing, volume, text size). M and P are shortcuts.  #line:demo_n_003
 
 
 ~ demo_intro

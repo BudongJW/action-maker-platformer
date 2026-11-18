@@ -96,6 +96,12 @@ def build(out: Path, mode: str) -> str:
     ignore = shutil.ignore_patterns("compiled", "l10n")
     shutil.copytree(story_dir, out / "assets/original/story", ignore=ignore)
     shutil.copytree(chars_dir, out / "assets/original/characters")
+    ui_strings = REPO / "assets/original/ui/strings.csv"
+    if ui_strings.is_file():
+        # UI labels (settings screen); the prototype reads the CSV itself, so keep Godot from importing it.
+        (out / "assets/original/ui").mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ui_strings, out / "assets/original/ui/strings.csv")
+        (out / "assets/original/ui/.gdignore").write_text("", encoding="utf-8")
     log = io.StringIO()
     with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
         code = storyc.main(["--root", str(out)])

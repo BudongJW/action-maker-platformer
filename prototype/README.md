@@ -29,6 +29,7 @@ The demo is placeholder English text with no game story. The prototype code cont
 | F | Fast-forward the tape (x4). It pauses while a scare is pending or relaxing, because the scare director runs in real time |
 | M | Scare mode: default / soft (quieter, with a short prepulse) / off (no sudden onsets) |
 | P | Photosensitivity-safe scares (no flash) |
+| Esc | Settings: scare mode, reduce flashing, master / ambience / effects volume, text size, subtitles, effects outside the game window. Labels come from `assets/original/ui/strings.csv` (`ui.options.*`); values are saved to `user://proto_settings.cfg` |
 
 ## Level file (`proto_level.json`)
 
