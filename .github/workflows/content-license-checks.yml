@@ -80,6 +80,9 @@ jobs:
       - name: Prototype bot playthrough (generic demo content)
         run: python3 tools/build_prototype.py --story demo --smoke --require-godot
 
+      - name: Prototype reel plays through (generic demo content)
+        run: python3 tools/build_prototype.py --story demo --reel prototype/demo/reel.json --require-godot
+
   pixel-art:
     name: Pixel art PNGs match their text sources
     runs-on: ubuntu-latest

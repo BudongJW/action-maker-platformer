@@ -10,7 +10,8 @@
 ## Keys: A/D or arrows move, Space jump, W/S climb, Enter/E advance or play, 1-4 choose,
 ## Z LINEAR, X HI-FI, C MIX, R camera REC, F fast-forward, M scare mode (default / soft / off),
 ## P photosensitivity-safe scares, Up/Down move the choice cursor, Esc settings, B the deduction
-## board in the workroom (when the level has a "board" block).
+## board in the workroom (when the level has a "board" block). `-- --reel <file.json>` plays a
+## scripted sequence of scenes instead (ProtoReel, for demo videos).
 class_name ProtoGame
 extends Node2D
 
@@ -34,6 +35,7 @@ var art: ProtoArt
 var audio: ProtoAudio
 var settings: ProtoSettings
 var board: ProtoBoard
+var reel: ProtoReel
 var font: Font
 var data: Dictionary = {}
 var phase: Phase = Phase.HUB
@@ -198,6 +200,14 @@ func _ready() -> void:
 		_show_doc(String(start_docs[0]), func(): _enter_hub(true))
 	else:
 		_enter_hub(true)
+	var args := OS.get_cmdline_user_args()
+	var at := args.find("--reel")
+	if at >= 0 and at + 1 < args.size():
+		reel = ProtoReel.new()
+		add_child(reel)
+		if not reel.start(self, args[at + 1]):
+			reel.queue_free()
+			reel = null
 
 
 # --- Phases --------------------------------------------------------------------------
@@ -336,6 +346,9 @@ func _complete() -> void:
 
 func _process(delta: float) -> void:
 	_stats["frames"] += 1
+	var reel_on := reel != null and reel.running
+	if reel_on:
+		reel.tick(delta)
 	if settings.is_open() or (board != null and board.is_open()):
 		# The settings screen and the board pause the tape, the player and the scare clock.
 		player.frozen = true
@@ -349,17 +362,21 @@ func _process(delta: float) -> void:
 		var speed := 1.0 if director.is_busy() or director.is_relaxing() else ff
 		mixer.tick(0.0 if talking else delta * speed)
 		_keep_in_level()
-		_check_triggers()
+		if not reel_on:
+			_check_triggers()
 		_update_chaser(delta)
 		level.update_backdrop(player.camera().get_screen_center_position().x, player.camera().zoom.x)
 		audio.update(mixer.tape_time(), _events)
 		_footsteps(delta)
 		_update_water(delta)
 		level.update_flag_props(func(f): return runner.get_flag(f) == true)
-		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)):
+		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)) and not reel_on:
 			_end_loop()
-	_update_hud()
-	if bot:
+	if reel_on:
+		ui.set_hud("")
+	else:
+		_update_hud()
+	if bot and not reel_on:
 		_bot_step(delta)
 		if _stats["frames"] > _max_frames:
 			_finish_bot("frame limit")
@@ -484,6 +501,8 @@ func _on_dialogue_finished(_id: String) -> void:
 	ui.hide_window()
 	ui.set_voice(false)
 	_choices.clear()
+	if reel != null and reel.running:
+		return  # the reel decides what comes next
 	var end_flag: String = String(data.get("end_flag", ""))
 	if end_flag != "" and runner.get_flag(end_flag) == true:
 		_complete()

@@ -90,6 +90,17 @@ Paths are relative to the repository root and are copied into the build like the
 | `step_interval` | Seconds between footsteps. Footsteps stop in the scare director's quiet window (a sound 30-500 ms before a startle stimulus weakens it) |
  Scare frames are the art's own; check them against the photosensitivity rules in [`docs/scare-director.md`](../docs/scare-director.md) (drawn area, no saturated red, one flash per scare).
 
+## Reel (demo videos)
+
+`-- --reel <file.json>` plays a scripted sequence of scenes instead of the game: title cards, the workroom, tape scenes at a given time, track switches, walking, dialogues with their choices, documents, subtitle cues, scares and the deduction board. All visible words come from the reel file and the story; the step list is documented at the top of `scripts/proto/proto_reel.gd`. `prototype/demo/reel.json` is a short example for the demo story.
+
+```
+python3 tools/build_prototype.py --story demo --reel prototype/demo/reel.json            # headless check
+python3 tools/build_prototype.py --story demo --reel prototype/demo/reel.json --movie reel.mp4
+```
+
+With `--movie`, Godot's movie writer records 1280x720 at 30 fps with sound (`.avi`; `.mp4` is converted with ffmpeg). It needs a display; on a server without one, `xvfb-run` is used when it is installed. A reel for the private story belongs in `private/` (for example `private/reels/`), since its title cards and scenes are story material.
+
 ## Bot
 
 `--smoke` runs the game headless with `-- --bot`: it advances dialogue, picks the first enabled choice, keeps REC on, switches to HI-FI once unlocked and walks the level (or the `bot_route`). It opens the settings screen once and the board whenever something new is on it, and walks every row. In a choice menu it meets again (a menu that loops back, such as picking a knot and a card), it takes the next option it has not tried, then the last one, so a looping menu cannot trap it. It prints one summary line (with `board found/total` and `knots untied/total` when the level has a board) and fails on script errors, missing art or sound, and objects leaked at exit. Add `-- --bot --trace` when running Godot directly to print every trigger, dialogue, scare and loop end with its tape time. Falling below the level respawns the player on the last safe ground. The bot presses Enter/E at every prompt, so a `repeat` door on its path needs route windows (with `requires` on the door's `mark` flags) that do not walk it back through the door.

@@ -201,18 +201,62 @@ def smoke(godot: str, out: Path) -> int:
     return 0
 
 
+def reel(godot: str, out: Path, reel_file: Path, movie: Path | None, fps: int = 30) -> int:
+    """Plays a reel (`-- --reel`). Without `movie` it runs headless and checks for errors; with it,
+    Godot's movie writer records the reel (needs a display: on a server without one, xvfb-run is
+    used when present). A .mp4 movie is recorded as .avi and converted with ffmpeg."""
+    subprocess.run([godot, "--headless", "--path", str(out), "--import"], capture_output=True, text=True, timeout=300)
+    user_args = ["--", "--reel", str(reel_file.resolve())]
+    if movie is None:
+        cmd = [godot, "--headless", "--fixed-fps", str(fps), "--quit-after", str(QUIT_AFTER_FRAMES), "--path", str(out)]
+    else:
+        movie = movie.resolve()
+        raw = movie.with_suffix(".avi") if movie.suffix.lower() == ".mp4" else movie
+        cmd = [godot, "--path", str(out), "--resolution", "1280x720", "--write-movie", str(raw),
+               "--fixed-fps", str(fps), "--disable-vsync", "--quit-after", str(QUIT_AFTER_FRAMES)]
+        if not os.environ.get("DISPLAY") and shutil.which("xvfb-run"):
+            cmd = ["xvfb-run", "-a", "-s", "-screen 0 1280x720x24"] + cmd + ["--rendering-driver", "opengl3"]
+    try:
+        proc = subprocess.run(cmd + user_args, capture_output=True, text=True, timeout=SMOKE_TIMEOUT_S)
+    except subprocess.TimeoutExpired:
+        print(f"build_prototype: reel FAILED (no result after {SMOKE_TIMEOUT_S} s)", file=sys.stderr)
+        return 1
+    output = proc.stdout + proc.stderr
+    errors = [line for line in output.splitlines()
+              if "SCRIPT ERROR" in line or "Parse Error" in line or line.startswith("ERROR:")
+              or "ProtoArt:" in line or "ProtoAudio:" in line or "ProtoReel:" in line]
+    done = re.search(r"^reel: (\d+) frames", output, re.M)
+    if proc.returncode != 0 or errors or done is None:
+        print(output)
+        print(f"build_prototype: reel FAILED (exit {proc.returncode}, {len(errors)} error line(s))", file=sys.stderr)
+        return 1
+    print(f"build_prototype: reel OK, {int(done.group(1)) / fps:.0f} s at {fps} fps")
+    if movie is not None and raw != movie:
+        if shutil.which("ffmpeg") is None:
+            print(f"build_prototype: ffmpeg not found; the recording is {raw}")
+            return 0
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-c:v", "libx264", "-preset", "slow",
+                        "-crf", "24", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart",
+                        str(movie)], check=True)
+        raw.unlink()
+        print(f"build_prototype: wrote {movie}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--story", choices=("auto", "demo", "private"), default="auto")
     parser.add_argument("--out", type=Path, default=REPO / "build/prototype")
     parser.add_argument("--run", action="store_true", help="open the game window after building")
     parser.add_argument("--smoke", action="store_true", help="run a headless bot playthrough")
+    parser.add_argument("--reel", type=Path, help="play a reel file (headless check, or record with --movie)")
+    parser.add_argument("--movie", type=Path, help="with --reel: record the reel (.avi, or .mp4 through ffmpeg)")
     parser.add_argument("--godot", help="path to a Godot 4.7 executable")
     parser.add_argument("--require-godot", action="store_true")
     args = parser.parse_args(argv)
     out = args.out.resolve()
     build(out, args.story)
-    if not (args.run or args.smoke):
+    if not (args.run or args.smoke or args.reel):
         return 0
     godot = find_godot(args.godot)
     if godot is None:
@@ -220,6 +264,8 @@ def main(argv: list[str] | None = None) -> int:
         return 1 if args.require_godot else 0
     if args.smoke:
         return smoke(godot, out)
+    if args.reel:
+        return reel(godot, out, args.reel, args.movie)
     subprocess.run([godot, "--path", str(out), "--import"], capture_output=True, text=True, timeout=300)
     return subprocess.call([godot, "--path", str(out)])
 

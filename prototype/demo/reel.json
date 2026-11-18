@@ -1,0 +1,27 @@
+{
+  "line_secs": 0.8,
+  "per_char": 0.045,
+  "min_line_secs": 1.4,
+  "max_line_secs": 3.5,
+  "choice_secs": 1.0,
+  "steps": [
+    {"do": "flags", "set": {"save.hifi_unlocked": true}},
+    {"do": "title", "text": "Prototype reel", "sub": "Generic demo story, not game content", "secs": 2.5},
+    {"do": "hub", "text": ""},
+    {"do": "doc", "id": "demo_notice", "secs": 2.5},
+    {"do": "dialogue", "id": "demo_intro"},
+    {"do": "tape", "at": 300, "track": "linear", "x": 160},
+    {"do": "walk", "to": 1380, "secs": 6},
+    {"do": "dialogue", "id": "demo_rules"},
+    {"do": "track", "track": "hifi"},
+    {"do": "dialogue", "id": "demo_rules"},
+    {"do": "tape", "at": 5990, "track": "hifi", "x": 1500},
+    {"do": "wait", "secs": 1.5},
+    {"do": "dialogue", "id": "demo_dark_hifi"},
+    {"do": "flags", "set": {"save.demo_lamp": true, "save.demo_answer": 1}},
+    {"do": "hub", "text": ""},
+    {"do": "board", "keys": ["RIGHT", "DOWN", "RIGHT", "DOWN"], "key_secs": 0.6},
+    {"do": "title", "text": "End of reel", "sub": "", "secs": 2},
+    {"do": "end"}
+  ]
+}
