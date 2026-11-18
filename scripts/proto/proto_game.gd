@@ -81,6 +81,7 @@ var _water_barked: Array = []
 ## while the player stays near it (for example a soul basket crossing a cloth road).
 var _escorts: Array = []
 var _chaser_flag_started := false
+var _scare_on := ""  # scare id between its onset and its end
 var _selected := 0
 var _after_doc: Callable = Callable()
 
@@ -300,6 +301,7 @@ func _start_loop() -> void:
 	_chaser_on = false
 	_catching = false
 	_chaser_flag_started = false
+	_scare_on = ""
 	player.pose_override = ""
 	_chaser.visible = false
 	_reset_escorts()
@@ -524,6 +526,7 @@ func _on_dialogue_finished(_id: String) -> void:
 
 
 func _on_scare_onset(id: String, info: Dictionary) -> void:
+	_scare_on = id
 	_log("scare " + id)
 	_stats["scares"] += 1
 	fx.onset(id, info)
@@ -533,6 +536,8 @@ func _on_scare_onset(id: String, info: Dictionary) -> void:
 
 
 func _on_scare_finished(id: String) -> void:
+	if _scare_on == id:
+		_scare_on = ""
 	# Level data can wait for a scare to end ("requires": ["loop.scare_done_<id>"]).
 	runner.set_flag("loop.scare_done_" + id, true)
 	var chaser: Dictionary = data.get("chaser", {})
@@ -757,7 +762,8 @@ func _update_chaser(delta: float) -> void:
 		return
 	var linear := mixer.get_track() == TrackMixer.Track.LINEAR
 	_chaser.visible = linear
-	if not linear or runner.is_running():
+	# It holds still while a scare is on screen, so a player startled by one is not caught for it.
+	if not linear or runner.is_running() or _scare_on != "":
 		return
 	var target := player.global_position + Vector2(-18, -56)
 	var speed: float = float(data.get("chaser", {}).get("speed", 150.0))
