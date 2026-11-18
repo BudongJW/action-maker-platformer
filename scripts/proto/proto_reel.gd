@@ -139,6 +139,7 @@ func tick(delta: float) -> void:
 				if _keys.is_empty():
 					if game.board.is_open():
 						game.board.close()
+					game.ui.set_hub("")  # closing the board puts the workroom prompt back
 					_next()
 				else:
 					game.board.handle_key(int(KEYS.get(String(_keys.pop_front()), KEY_RIGHT)))
