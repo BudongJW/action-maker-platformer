@@ -9,15 +9,15 @@
     780
   ],
   "water": {
-    "y": 850
+    "y": 850,
+    "gaps": [
+      [
+        2900,
+        3200
+      ]
+    ]
   },
   "solids": [
-    [
-      0,
-      800,
-      3200,
-      50
-    ],
     [
       600,
       690,
@@ -41,6 +41,12 @@
       560,
       220,
       20
+    ],
+    [
+      0,
+      800,
+      2900,
+      50
     ]
   ],
   "hifi_only": [
@@ -54,6 +60,12 @@
       2250,
       560,
       160,
+      20
+    ],
+    [
+      2900,
+      860,
+      300,
       20
     ]
   ],
@@ -130,7 +142,13 @@
       "demo_intro"
     ],
     "between": [
-      "demo_call"
+      "demo_call",
+      {
+        "doc": "demo_notice",
+        "requires": [
+          "save.hifi_unlocked"
+        ]
+      }
     ],
     "scares": {
       "demo_call": "demo_phone"
@@ -222,6 +240,21 @@
         "demo_dark_hifi",
         "demo_dark_linear"
       ]
+    },
+    {
+      "id": "lamp_switch",
+      "rect": [
+        360,
+        700,
+        100,
+        100
+      ],
+      "requires": [
+        "!loop.lamp_on"
+      ],
+      "interact": true,
+      "prompt": "ui.prompt.examine",
+      "set_flag": "loop.lamp_on"
     }
   ],
   "chaser": {
@@ -238,7 +271,8 @@
     "sys.loop_count",
     "save.hifi_unlocked",
     "save.ev_lipsync",
-    "save.demo_done"
+    "save.demo_done",
+    "save.demo_lamp"
   ],
   "bot_route": [
     {
@@ -287,7 +321,8 @@
         "at": [
           400,
           800
-        ]
+        ],
+        "flag": "loop.lamp_on"
       },
       {
         "block": "fence",
@@ -297,6 +332,16 @@
           960,
           800
         ]
+      },
+      {
+        "block": "fence",
+        "w": 1,
+        "h": 2,
+        "at": [
+          440,
+          800
+        ],
+        "unless_flag": "loop.lamp_on"
       }
     ],
     "player": {
@@ -418,5 +463,33 @@
         "db": -12
       }
     }
-  }
+  },
+  "rising_water": [
+    {
+      "x0": 2900,
+      "x1": 3200,
+      "track": "hifi",
+      "base_y": 880,
+      "linear_y": 850,
+      "rate": 30,
+      "max_rise": 120,
+      "submerge": 24,
+      "respawn": [
+        2860,
+        790
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "all": [
+        "loop.lamp_on"
+      ],
+      "set": "save.demo_lamp"
+    }
+  ],
+  "bot_patrol": [
+    80,
+    3150
+  ]
 }
