@@ -1,0 +1,9 @@
+# PRIVATE (미방송분). Cut 1-14 ECU front / still: just before the generator dies, the tip of the spirit pole Mijeong holds trembles once (a soul came and stopped: regret, not fear)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/114_still.png
+@preview ../previews/114_still_x2.png 2
+@swap ../palette/hifi.pal
+@sprite cu_114.pix still 0 0
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

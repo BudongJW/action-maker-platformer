@@ -1,0 +1,49 @@
+# PRIVATE (미방송분). Cut E5-03: Do Mansu's niece (50s) receives the copies of the duty log and the transcript (he died alone in 2003)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/e503.png
+@preview ../previews/e503_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend C s:concrete
+@legend I h:eave
+@legend Y h:wall_footing
+@legend Z h:wall
+@sprite mbs_bg_reservoir_day.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+IIIIIIIIIIIIIIIIIIII
+ZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZ
+YYYYYYYYYYYYYYYYYYYY
+CCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCC
+@sprite mbs_tiles_house.pix front_door_0_0 200 96
+@sprite mbs_tiles_house.pix front_door_1_0 216 96
+@sprite mbs_tiles_house.pix front_door_2_0 232 96
+@sprite mbs_tiles_house.pix front_door_0_1 200 112
+@sprite mbs_tiles_house.pix front_door_1_1 216 112
+@sprite mbs_tiles_house.pix front_door_2_1 232 112
+@sprite mbs_tiles_house.pix front_door_0_2 200 128
+@sprite mbs_tiles_house.pix front_door_1_2 216 128
+@sprite mbs_tiles_house.pix front_door_2_2 232 128
+@sprite mbs_tiles_house.pix front_door_0_3 200 144
+@sprite mbs_tiles_house.pix front_door_1_3 216 144
+@sprite mbs_tiles_house.pix front_door_2_3 232 144
+@sprite mbs_tiles_house.pix window_grille_0_0 72 104
+@sprite mbs_tiles_house.pix window_grille_1_0 88 104
+@sprite mbs_tiles_house.pix window_grille_0_1 72 120
+@sprite mbs_tiles_house.pix window_grille_1_1 88 120
+@sprite mbs_niece.pix receive 178 121 flip
+@sprite mbs_seojin.pix interact 144 121

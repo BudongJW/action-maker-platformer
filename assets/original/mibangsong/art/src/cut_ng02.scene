@@ -1,0 +1,37 @@
+# PRIVATE (미방송분). Cut NG-02: the same alley as chapter 1: Mijeong raises her head and looks into the lens ("I feel I have seen you somewhere")
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/ng02.png
+@preview ../previews/ng02_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend S s:shore_top
+@legend T s:stonewall
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTT
+SSSSSSSSSSSSSSSSSSSS
+ssssssssssssssssssss
+@sprite mbs_gyeongho.pix idle_0 40 121
+@sprite mbs_mijeong.pix look_up 150 121 flip
+@darkness K 0.6
+@light 160 130 40
+@light 60 130 30
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over

@@ -1,0 +1,8 @@
+# PRIVATE (미방송분). Cut E4-04 ELS from above: old Neoulli under the water, seen from high over the reservoir: stone walls of the lots, plinths and pillar stones, fallen roof tiles, the well, the alley; Eunyoung's '...here.' repeats with no answer; on the far shore the pole stands still
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/e404.png
+@preview ../previews/e404_x2.png 2
+@swap ../palette/hifi.pal
+@sprite cu_e404.pix a 0 0
+@sprite mbs_ui_voice.pix voice_0 112 150 over

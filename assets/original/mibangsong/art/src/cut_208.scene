@@ -1,0 +1,54 @@
+# PRIVATE (미방송분). Cut 2-08: 01:31-01:40: Gyeongho hangs a lantern on each post along the shore path (keeping the second rule)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/208.png
+@preview ../previews/208_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend A s:water_0
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSSSAAA
+sssssssssssssssssaaa
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 24 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 24 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 24 144
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 104 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 104 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 104 144
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_0 184 112
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_1 184 128
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_2 184 144
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_0 264 112
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_1 264 128
+@sprite mbs_tiles_shore.pix lantern_post_unlit_0_2 264 144
+@sprite mbs_tiles_shore.pix generator_0_0 40 128
+@sprite mbs_tiles_shore.pix generator_1_0 56 128
+@sprite mbs_tiles_shore.pix generator_0_1 40 144
+@sprite mbs_tiles_shore.pix generator_1_1 56 144
+@sprite mbs_gyeongho.pix hang_lantern 166 121
+@darkness K 0.84
+@light 36 124 40
+@light 116 124 40
+@light 186 118 26
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

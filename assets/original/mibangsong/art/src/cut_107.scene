@@ -1,0 +1,9 @@
+# PRIVATE (미방송분). Cut 1-07 MCU side: Sunrye's chant at the water; in the dubbed span another voice speaks through her, off the drum beat (not exaggerated)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/107.png
+@preview ../previews/107_x2.png 2
+@swap ../palette/linear.pal
+@sprite cu_107.pix a 0 0
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over
