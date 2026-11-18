@@ -173,7 +173,7 @@ func _ready() -> void:
 		_voice_speakers = wave.get("speakers", [])
 		ui.set_voice_color(Color.html(String(wave.get("color", "7fe0d0"))))
 
-	runner.dialogue_started.connect(func(id): _stats["dialogues"] += 1; _log("dialogue " + id))
+	runner.dialogue_started.connect(_on_dialogue_started)
 	runner.line_started.connect(_on_line)
 	runner.choices_presented.connect(_on_choices)
 	runner.dialogue_finished.connect(_on_dialogue_finished)
@@ -295,6 +295,9 @@ func _start_loop() -> void:
 	player.frozen = false
 	if not _hifi_unlocked():
 		mixer.set_track(TrackMixer.Track.LINEAR)
+	# The story cleared loop.* flags when the last loop ended; a loop that starts on the same
+	# track needs its track flags written again.
+	mixer.sync_flags()
 	mixer.apply_layers(level)
 	_apply_tint()
 
@@ -463,7 +466,16 @@ func _choose(index: int) -> void:
 	runner.choose(index)
 
 
+func _on_dialogue_started(id: String) -> void:
+	_stats["dialogues"] += 1
+	_log("dialogue " + id)
+	# Art "cuts": {dialogue_id: {"texture", "frame"}} shows a picture while that dialogue plays.
+	var cut: Dictionary = art.cfg.get("cuts", {}).get(id, {}) if art.enabled() else {}
+	ui.set_cut(null if cut.is_empty() else art.frame(String(cut.get("texture", "")), String(cut.get("frame", ""))))
+
+
 func _on_dialogue_finished(_id: String) -> void:
+	ui.set_cut(null)
 	ui.hide_window()
 	ui.set_voice(false)
 	_choices.clear()
@@ -539,13 +551,18 @@ func _check_triggers() -> void:
 		if not _requirements_met(tr):
 			continue
 		if bool(tr.get("interact", false)):
+			# No prompt when pressing would do nothing (no dialogue of the list can start).
+			if tr.has("dialogue") and runner.pick(tr["dialogue"]) == "":
+				continue
 			_prompt_here = String(tr.get("prompt", "ui.prompt.examine"))
 			if not _interact_pressed:
 				continue
 			_interact_pressed = false
 		if _fire(tr):
 			_stats["triggers"] += 1
-			_done[id] = true
+			# "repeat": true keeps a trigger (a door) usable again in the same loop.
+			if not bool(tr.get("repeat", false)):
+				_done[id] = true
 			_log("trigger " + id)
 			if tr.has("mark"):
 				runner.set_flag(String(tr["mark"]), true)
@@ -558,6 +575,14 @@ func _check_triggers() -> void:
 func _fire(tr: Dictionary) -> bool:
 	if tr.has("sfx"):
 		audio.play(String(tr["sfx"]))
+	if tr.has("warp"):
+		# A door: move the player to [x, y] (for example into a room built elsewhere in the level).
+		var to: Array = tr["warp"]
+		player.global_position = Vector2(float(to[0]), float(to[1]))
+		player.velocity = Vector2.ZERO
+		_last_safe = player.global_position
+		player.camera().reset_smoothing()
+		return true
 	if tr.has("set_flag"):
 		runner.set_flag(String(tr["set_flag"]), true)
 		return true

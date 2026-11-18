@@ -63,6 +63,14 @@ func test_track_flag_and_crossfade() -> void:
 	check_eq(story.flags.get("loop.track_mix"), false, "leaving MIX clears it")
 	m.set_track(Mixer.Track.MIX)
 	check_eq(changes, [Mixer.Track.HIFI, Mixer.Track.MIX, Mixer.Track.LINEAR, Mixer.Track.MIX], "track_changed signals")
+	# A new loop clears loop.* flags; staying on the same track must not leave them unset.
+	m.set_track(Mixer.Track.HIFI)
+	story.flags.clear()
+	m.set_track(Mixer.Track.HIFI)
+	check_eq(story.flags.get("loop.track_hifi"), null, "set_track to the same track writes nothing")
+	m.sync_flags()
+	check_eq(story.flags.get("loop.track_hifi"), true, "sync_flags writes the HIFI flag again")
+	check_eq(story.flags.get("loop.track_mix"), false, "sync_flags writes the MIX flag again")
 
 
 func test_segments_and_divergence() -> void:

@@ -28,6 +28,8 @@ var _flash: ColorRect
 var _dark: ColorRect
 var _backdrop: TextureRect
 var _viewfinder: TextureRect
+var _cut: TextureRect
+var _cut_back: ColorRect
 var _badge: TextureRect
 var _timecode: Label
 var _vf_rec: Texture2D
@@ -61,6 +63,14 @@ func _ready() -> void:
 	tc_box.bg_color = Color(0.05, 0.04, 0.07, 1.0)
 	_timecode.add_theme_stylebox_override("normal", tc_box)
 	_timecode.visible = false
+	# A picture for one dialogue (art "cuts"): over the world and the viewfinder, fitted into
+	# the space above the dialogue window so the window never covers it.
+	_cut_back = _full_rect(Color(0.02, 0.02, 0.03, 1.0))
+	_cut_back.visible = false
+	_cut = _full_texture()
+	_cut.anchor_bottom = 0.69
+	_cut.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_cut.visible = false
 	_flash = _full_rect(Color(1, 1, 1, 0))
 	_window = PanelContainer.new()
 	_window.anchor_left = 0.08
@@ -145,6 +155,13 @@ func set_backdrop(tex: Texture2D) -> void:
 	_backdrop.visible = tex != null
 	_viewfinder.visible = tex == null
 	_badge.visible = tex == null
+
+
+## Shows a full-screen picture while a dialogue plays (null hides it).
+func set_cut(tex: Texture2D) -> void:
+	_cut.texture = tex
+	_cut.visible = tex != null
+	_cut_back.visible = tex != null
 
 
 ## Nine-slice panels from the art block's "ui" entry:

@@ -280,6 +280,21 @@
       "interact": true,
       "prompt": "ui.prompt.examine",
       "set_flag": "loop.lamp_on"
+    },
+    {
+      "id": "shortcut",
+      "rect": [
+        2000,
+        700,
+        60,
+        100
+      ],
+      "interact": true,
+      "prompt": "ui.prompt.open",
+      "warp": [
+        2120,
+        780
+      ]
     }
   ],
   "chaser": {
@@ -454,6 +469,11 @@
         "frame": "paper",
         "margin": 8,
         "padding": 12
+      }
+    },
+    "cuts": {
+      "demo_intro": {
+        "texture": "assets/original/art/backgrounds/bg_harbor.png"
       }
     }
   },

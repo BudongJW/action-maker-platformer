@@ -63,12 +63,13 @@ func build(level: Dictionary, label_font: Font = null, level_art: ProtoArt = nul
 		water_zones.append({"cfg": zone, "node": holder})
 	if art != null:
 		_build_props()
+	# A fifth element names the art tiles for that one shape (for example a room floor).
 	for r in level.get("solids", []):
-		_solid(_rect(r), COLOR_SOLID, "", "solid")
+		_solid(_rect(r), COLOR_SOLID, "", _tile_key(r, "solid"))
 	for r in level.get("hifi_only", []):
-		_solid(_rect(r), COLOR_HIFI, "track_hifi_only", "hifi_only")
+		_solid(_rect(r), COLOR_HIFI, "track_hifi_only", _tile_key(r, "hifi_only"))
 	for r in level.get("linear_only", []):
-		_solid(_rect(r), COLOR_LINEAR, "track_linear_only", "linear_only")
+		_solid(_rect(r), COLOR_LINEAR, "track_linear_only", _tile_key(r, "linear_only"))
 	for r in level.get("ladders", []):
 		var rect := _rect(r)
 		ladders.append(rect)
@@ -133,6 +134,10 @@ func _rect(r: Variant) -> Rect2:
 	return ProtoLevel.to_rect(r)
 
 
+func _tile_key(r: Variant, fallback: String) -> String:
+	return String(r[4]) if r.size() > 4 else fallback
+
+
 func _solid(rect: Rect2, color: Color, group: String, tile_key: String) -> void:
 	var body := StaticBody2D.new()
 	body.position = rect.position + rect.size / 2.0
@@ -171,15 +176,20 @@ func _build_backdrop() -> void:
 	layer.add_child(_backdrop)
 
 
-## Fills `rect` with the art block's tiles for `key`: ["top_frame", "fill_frame"] or one frame.
+## Fills `rect` with the art block's tiles for `key`: ["top_frame", "fill_frame"], one frame, or
+## {"sheet": path, "frames": [...]} for tiles from another sheet.
 func _art_rect(rect: Rect2, key: String, parent: Node, alpha: float = 1.0) -> bool:
 	if art == null:
 		return false
 	var tiles: Dictionary = art.cfg.get("tiles", {})
 	if not tiles.has(key):
 		return false
-	var names: Array = tiles[key] if typeof(tiles[key]) == TYPE_ARRAY else [tiles[key], tiles[key]]
+	var entry: Variant = tiles[key]
 	var sheet: String = String(tiles.get("sheet", ""))
+	if typeof(entry) == TYPE_DICTIONARY:
+		sheet = String(entry.get("sheet", sheet))
+		entry = entry.get("frames", [])
+	var names: Array = entry if typeof(entry) == TYPE_ARRAY else [entry, entry]
 	var top := _tile_tex(sheet, String(names[0]))
 	var fill := _tile_tex(sheet, String(names[min(1, names.size() - 1)]))
 	if top == null or fill == null:
@@ -219,6 +229,8 @@ func _build_props() -> void:
 		var at: Array = prop.get("at", [0, 0])
 		var holder := Node2D.new()
 		holder.position = Vector2(float(at[0]), float(at[1]))
+		# "scale" shrinks or grows the piece around its bottom-left point (small items).
+		holder.scale = Vector2.ONE * float(prop.get("scale", 1.0))
 		holder.material = art.world_material if bool(prop.get("recolour", true)) else null
 		var repeat := maxi(1, int(prop.get("repeat", 1)))
 		if prop.has("block"):
@@ -236,16 +248,22 @@ func _build_props() -> void:
 				var step := float(prop.get("step", tex.get_width()))
 				for i in repeat:
 					_prop_sprite(holder, tex, Vector2(i * step, -tex.get_height()))
+		# The track mixer shows and hides the track group; a flag prop sits inside it so the flag
+		# cannot show it on the other track.
+		var outer: Node2D = holder
+		if prop.has("track") and (prop.has("flag") or prop.has("unless_flag")):
+			outer = Node2D.new()
+			outer.add_child(holder)
 		match String(prop.get("track", "")):
 			"hifi":
-				holder.add_to_group("track_hifi_only")
+				outer.add_to_group("track_hifi_only")
 			"linear":
-				holder.add_to_group("track_linear_only")
+				outer.add_to_group("track_linear_only")
 		if prop.has("flag") or prop.has("unless_flag"):
 			flag_props.append({"node": holder, "flag": String(prop.get("flag", prop.get("unless_flag", ""))),
 				"negate": prop.has("unless_flag")})
 			holder.visible = prop.has("unless_flag")
-		add_child(holder)
+		add_child(outer)
 
 
 func _prop_sprite(holder: Node2D, tex: Texture2D, top_left: Vector2) -> void:

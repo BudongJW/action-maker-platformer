@@ -58,6 +58,12 @@ func _process(delta: float) -> void:
 ## Connects a StoryRunner so the track and timeline events become story flags.
 func bind_story(runner: Node) -> void:
 	_story = runner
+	sync_flags()
+
+
+## Writes the track flags for the current track again. Call it when a new loop starts: the story
+## clears loop.* flags, and set_track() only writes them when the track changes.
+func sync_flags() -> void:
 	_write_flag(hifi_flag, _track == Track.HIFI)
 	_write_flag(mix_flag, _track == Track.MIX)
 
