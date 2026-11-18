@@ -77,6 +77,10 @@ var _water_rise: Array = []
 ## `-- --trace` prints triggers, dialogues, scares and loop ends with the tape time (bot debugging).
 var _trace := false
 var _water_barked: Array = []
+## Escorts ("escorts" in the level): [{cfg, node, ribbon, index, done}] — a prop that walks a path
+## while the player stays near it (for example a soul basket crossing a cloth road).
+var _escorts: Array = []
+var _chaser_flag_started := false
 var _selected := 0
 var _after_doc: Callable = Callable()
 
@@ -129,6 +133,7 @@ func _ready() -> void:
 	level.build(data, font, art)
 	add_child(level)
 	_build_chaser()
+	_build_escorts()
 
 	player = ProtoPlayer.new()
 	player.level = level
@@ -294,8 +299,10 @@ func _start_loop() -> void:
 	_events.clear()
 	_chaser_on = false
 	_catching = false
+	_chaser_flag_started = false
 	player.pose_override = ""
 	_chaser.visible = false
+	_reset_escorts()
 	ui.set_darkness(0.0)
 	_water_rise.clear()
 	_water_barked.clear()
@@ -360,7 +367,7 @@ func _process(delta: float) -> void:
 		# Fast-forward pauses while a scare is pending or relaxing: the director runs in real
 		# time, so a sped-up tape would push the next scare past its moment.
 		var speed := 1.0 if director.is_busy() or director.is_relaxing() else ff
-		mixer.tick(0.0 if talking else delta * speed)
+		mixer.tick(0.0 if talking else delta * speed * _tape_scale())
 		_keep_in_level()
 		if not reel_on:
 			_check_triggers()
@@ -369,6 +376,7 @@ func _process(delta: float) -> void:
 		audio.update(mixer.tape_time(), _events)
 		_footsteps(delta)
 		_update_water(delta)
+		_update_escorts(delta)
 		level.update_flag_props(func(f): return runner.get_flag(f) == true)
 		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)) and not reel_on:
 			_end_loop()
@@ -525,6 +533,8 @@ func _on_scare_onset(id: String, info: Dictionary) -> void:
 
 
 func _on_scare_finished(id: String) -> void:
+	# Level data can wait for a scare to end ("requires": ["loop.scare_done_<id>"]).
+	runner.set_flag("loop.scare_done_" + id, true)
 	var chaser: Dictionary = data.get("chaser", {})
 	if id == String(chaser.get("catch_scare", "")):
 		_catching = false
@@ -599,6 +609,8 @@ func _check_triggers() -> void:
 func _fire(tr: Dictionary) -> bool:
 	if tr.has("sfx"):
 		audio.play(String(tr["sfx"]))
+	if tr.has("set_track"):
+		_set_track(_track_named(String(tr["set_track"])), true)
 	if tr.has("warp"):
 		# A door: move the player to [x, y] (for example into a room built elsewhere in the level).
 		var to: Array = tr["warp"]
@@ -727,6 +739,20 @@ func _keep_in_level() -> void:
 
 
 func _update_chaser(delta: float) -> void:
+	# "start_flag" / "stop_flag": a chase that a flag starts (once per loop, "start_offset" from the
+	# player) and another flag ends.
+	var chaser_cfg: Dictionary = data.get("chaser", {})
+	var stop_flag: String = String(chaser_cfg.get("stop_flag", ""))
+	if _chaser_on and stop_flag != "" and runner.get_flag(stop_flag) == true:
+		_chaser_on = false
+		_chaser.visible = false
+	var start_flag: String = String(chaser_cfg.get("start_flag", ""))
+	if not _chaser_on and not _catching and not _chaser_flag_started and start_flag != "" \
+			and runner.get_flag(start_flag) == true and not runner.is_running() \
+			and (stop_flag == "" or runner.get_flag(stop_flag) != true):
+		_chaser_flag_started = true
+		_chaser_on = true
+		_chaser.position = player.global_position + Vector2(float(chaser_cfg.get("start_offset", -360)), -56)
 	if not _chaser_on or _catching:
 		return
 	var linear := mixer.get_track() == TrackMixer.Track.LINEAR
@@ -802,12 +828,20 @@ func _hifi_unlocked() -> bool:
 	return runner.get_flag(flag) == true
 
 
-func _set_track(track: TrackMixer.Track) -> void:
+func _set_track(track: TrackMixer.Track, forced: bool = false) -> void:
 	var tracks: Dictionary = data.get("tracks", {})
-	if track == TrackMixer.Track.HIFI and not _hifi_unlocked():
+	# "locks": [{"requires": [...], "allow": ["linear", "mix"]}] keeps the player off a track while
+	# the flags hold. A trigger's "set_track" is forced and ignores locks and unlocks.
+	if not forced:
+		var track_name: String = ["hifi", "linear", "mix"][int(track)]
+		for lock in tracks.get("locks", []):
+			if _requirements_met(lock) and not lock.get("allow", []).has(track_name):
+				ui.toast(track_name.to_upper() + " LOCKED")
+				return
+	if not forced and track == TrackMixer.Track.HIFI and not _hifi_unlocked():
 		ui.toast("HI-FI locked")
 		return
-	if track == TrackMixer.Track.MIX and runner.get_flag(String(tracks.get("mix_flag", "save.mix_unlocked"))) != true:
+	if not forced and track == TrackMixer.Track.MIX and runner.get_flag(String(tracks.get("mix_flag", "save.mix_unlocked"))) != true:
 		ui.toast("MIX locked")
 		return
 	mixer.set_track(track)
@@ -850,6 +884,12 @@ func _update_hud() -> void:
 	var t := int(mixer.tape_time())
 	var tc := "%02d:%02d:%02d" % [t / 3600, (t / 60) % 60, t % 60]
 	ui.set_timecode(tc)
+	# art "viewfinder": {"off_flag": ...} — once the camera is switched off for good, no viewfinder.
+	var off_flag: String = String(art.cfg.get("viewfinder", {}).get("off_flag", "")) if art.enabled() else ""
+	var camera_off: bool = off_flag != "" and runner.get_flag(off_flag) == true
+	ui.set_camera_off(camera_off)
+	if camera_off:
+		player.recording = false
 	ui.set_recording(player.recording)
 	if player.recording != _last_rec:
 		_last_rec = player.recording
@@ -861,6 +901,100 @@ func _update_hud() -> void:
 	ui.set_hud("%s %s  TC %s  PLAY %d%s%s\n[Z]LIN [X]HIFI [C]MIX [R]REC [F]FF [M]SCARES [P]PHOTOSAFE [Esc]OPTIONS" % [
 		"REC" if player.recording else "   ", names[mixer.get_track()], tc,
 		int(runner.get_flag("sys.loop_count")), "  FF x%d" % int(ff) if ff > 1.0 else "", mode])
+
+
+# --- Escorts, tape speed, tracks by name ---------------------------------------------------
+
+
+func _track_named(track_name: String) -> TrackMixer.Track:
+	return {"hifi": TrackMixer.Track.HIFI, "linear": TrackMixer.Track.LINEAR, "mix": TrackMixer.Track.MIX}.get(track_name, TrackMixer.Track.HIFI)
+
+
+## "tape": {"slow": [{"requires": [...], "scale": 0.25}]} slows the tape while the flags hold
+## (the last matching rule wins).
+func _tape_scale() -> float:
+	var scale := 1.0
+	for rule in data.get("tape", {}).get("slow", []):
+		if _requirements_met(rule):
+			scale = float(rule.get("scale", 1.0))
+	return scale
+
+
+func _build_escorts() -> void:
+	for cfg in data.get("escorts", []):
+		var path: Array = cfg.get("path", [])
+		if path.size() < 2:
+			continue
+		var ribbon := Line2D.new()
+		var rib: Dictionary = cfg.get("ribbon", {})
+		ribbon.width = float(rib.get("width", 6.0))
+		ribbon.default_color = Color.html(String(rib.get("color", "d8d8d0")))
+		for pt in path:
+			ribbon.add_point(Vector2(float(pt[0]), float(pt[1])))
+		ribbon.visible = false
+		level.add_child(ribbon)
+		var node := Node2D.new()
+		node.visible = false
+		var spec: Dictionary = cfg.get("sprite", {})
+		var tex := art.frame(String(spec.get("sheet", "")), String(spec.get("frame", ""))) if art.enabled() and not spec.is_empty() else null
+		if tex != null:
+			var sprite := Sprite2D.new()
+			sprite.texture = tex
+			sprite.offset = Vector2(0, -tex.get_height() / 2.0)
+			sprite.scale = Vector2.ONE * float(spec.get("scale", 1.0))
+			node.add_child(sprite)
+		else:
+			var box := ColorRect.new()
+			box.color = Color(0.86, 0.84, 0.78)
+			box.size = Vector2(20, 14)
+			box.position = Vector2(-10, -14)
+			node.add_child(box)
+		level.add_child(node)
+		_escorts.append({"cfg": cfg, "node": node, "ribbon": ribbon, "index": 1, "done": false})
+	_reset_escorts()
+
+
+func _reset_escorts() -> void:
+	for e in _escorts:
+		var start: Array = e["cfg"]["path"][0]
+		e["node"].position = Vector2(float(start[0]), float(start[1]))
+		e["node"].visible = false
+		e["ribbon"].visible = false
+		e["index"] = 1
+		e["done"] = false
+
+
+## Moves each active escort along its path while the player keeps within "max_gap" pixels (it waits
+## otherwise); at the end it sets "done_flag".
+func _update_escorts(delta: float) -> void:
+	for e in _escorts:
+		var cfg: Dictionary = e["cfg"]
+		var active: bool = _requirements_met(cfg) and not e["done"]
+		e["ribbon"].visible = active or e["done"]
+		e["node"].visible = active
+		if not active or runner.is_running():
+			continue
+		var node: Node2D = e["node"]
+		if absf(player.global_position.x - node.position.x) > float(cfg.get("max_gap", 180.0)):
+			continue
+		var path: Array = cfg["path"]
+		var goal := Vector2(float(path[e["index"]][0]), float(path[e["index"]][1]))
+		node.position = node.position.move_toward(goal, float(cfg.get("speed", 40.0)) * delta)
+		if node.position.distance_to(goal) < 0.5:
+			e["index"] += 1
+			if e["index"] >= path.size():
+				e["done"] = true
+				node.visible = false
+				if cfg.has("done_flag"):
+					runner.set_flag(String(cfg["done_flag"]), true)
+				_log("escort " + String(cfg.get("id", "")) + " done")
+
+
+func _escort_x(id: String) -> float:
+	for e in _escorts:
+		if String(e["cfg"].get("id", "")) == id:
+			return e["node"].position.x
+	return player.global_position.x
 
 
 # --- Bot -----------------------------------------------------------------------------------
@@ -920,7 +1054,7 @@ func _bot_step(delta: float) -> void:
 	var route_ff := float(data.get("bot_ff", 20.0))
 	for r in data.get("bot_route", []):
 		if t >= float(r["from"]) and t <= float(r["to"]) and _requirements_met(r):
-			target = float(r["x"])
+			target = _escort_x(String(r["follow"])) if r.has("follow") else float(r["x"])
 			route_track = String(r.get("track", ""))
 			route_ff = float(r.get("ff", data.get("bot_ff", 20.0)))
 	ff = route_ff

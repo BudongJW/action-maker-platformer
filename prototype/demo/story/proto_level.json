@@ -129,13 +129,34 @@
         "name": "power_cut",
         "flag": "loop.power_cut"
       }
+    ],
+    "slow": [
+      {
+        "requires": [
+          "loop.demo_slip",
+          "!loop.demo_free"
+        ],
+        "scale": 0.5
+      }
     ]
   },
   "darkness_event": "power_cut",
   "darkness_alpha": 0.55,
   "tracks": {
     "hifi_flag": "save.hifi_unlocked",
-    "mix_flag": "save.mix_unlocked"
+    "mix_flag": "save.mix_unlocked",
+    "locks": [
+      {
+        "requires": [
+          "loop.demo_slip",
+          "!loop.demo_free"
+        ],
+        "allow": [
+          "linear",
+          "mix"
+        ]
+      }
+    ]
   },
   "hub": {
     "start": [
@@ -323,6 +344,25 @@
         2120,
         780
       ]
+    },
+    {
+      "id": "demo_slip",
+      "from": 3000,
+      "to": 3100,
+      "requires": [
+        "save.hifi_unlocked"
+      ],
+      "set_track": "linear",
+      "set_flag": "loop.demo_slip"
+    },
+    {
+      "id": "demo_unslip",
+      "from": 3300,
+      "requires": [
+        "loop.demo_slip"
+      ],
+      "set_track": "hifi",
+      "set_flag": "loop.demo_free"
     }
   ],
   "chaser": {
@@ -340,7 +380,9 @@
     "save.hifi_unlocked",
     "save.ev_lipsync",
     "save.demo_done",
-    "save.demo_lamp"
+    "save.demo_lamp",
+    "loop.demo_free",
+    "loop.demo_escort_done"
   ],
   "bot_route": [
     {
@@ -564,5 +606,30 @@
   "bot_patrol": [
     80,
     3150
+  ],
+  "escorts": [
+    {
+      "id": "lamp_walk",
+      "requires": [
+        "save.demo_lamp"
+      ],
+      "path": [
+        [
+          700,
+          797
+        ],
+        [
+          1000,
+          797
+        ]
+      ],
+      "speed": 60,
+      "max_gap": 2000,
+      "ribbon": {
+        "color": "d8d8d0",
+        "width": 4
+      },
+      "done_flag": "loop.demo_escort_done"
+    }
   ]
 }

@@ -16,6 +16,7 @@
 ##   dialogue {id, choices: [i...], stop_after}  plays a dialogue; choices are taken in order
 ##   doc {id, secs}                 shows a document
 ##   walk {to, secs, jump}          walks the player toward x (secs is the limit)
+##   follow {escort, gap, secs}     walks beside a level escort (`gap` pixels behind it) for secs
 ##   warp {x, y}, track {track}, wait {secs}, cue {id, secs}, scare {id, secs}
 ##   board {keys: ["RIGHT", "DOWN", ...], key_secs}   opens the deduction board and presses keys
 ##   end                            stops every sound and quits (ends the movie)
@@ -131,6 +132,13 @@ func tick(delta: float) -> void:
 			if bool(_step.get("jump", false)) and fmod(_t, 1.0) < delta:
 				game.player.bot_jump = true
 			if absf(dx) <= 12.0 or _t >= (secs if secs > 0.0 else 20.0):
+				game.player.bot_axis = 0.0
+				_next()
+		"follow":
+			var x := game._escort_x(String(_step.get("escort", ""))) + float(_step.get("gap", 50.0))
+			var fdx := x - game.player.global_position.x
+			game.player.bot_axis = signf(fdx) if absf(fdx) > 10.0 else 0.0
+			if _t >= secs:
 				game.player.bot_axis = 0.0
 				_next()
 		"board":

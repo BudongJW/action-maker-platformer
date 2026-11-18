@@ -30,6 +30,7 @@ var _backdrop: TextureRect
 var _viewfinder: TextureRect
 var _cut: TextureRect
 var _cut_back: ColorRect
+var _camera_off := false
 var _badge: TextureRect
 var _timecode: Label
 var _vf_rec: Texture2D
@@ -136,6 +137,15 @@ func set_voice_color(color: Color) -> void:
 	_wave_color = color
 
 
+## Once the camera is off for good: no viewfinder, badge or timecode.
+func set_camera_off(off: bool) -> void:
+	if off == _camera_off:
+		return
+	_camera_off = off
+	_viewfinder.visible = not off and not _backdrop.visible
+	_badge.visible = not off and not _backdrop.visible
+
+
 func set_recording(on: bool) -> void:
 	if _vf_rec != null:
 		_viewfinder.texture = _vf_rec if on else _vf_standby
@@ -153,8 +163,8 @@ func set_badge(tex: Texture2D) -> void:
 func set_backdrop(tex: Texture2D) -> void:
 	_backdrop.texture = tex
 	_backdrop.visible = tex != null
-	_viewfinder.visible = tex == null
-	_badge.visible = tex == null
+	_viewfinder.visible = tex == null and not _camera_off
+	_badge.visible = tex == null and not _camera_off
 
 
 ## Shows a full-screen picture while a dialogue plays (null hides it).
@@ -356,7 +366,7 @@ func _process(delta: float) -> void:
 	if _wave.visible:
 		_wave_time += delta
 		_wave.queue_redraw()
-	_timecode.visible = _vf_rec != null and not _backdrop.visible
+	_timecode.visible = _vf_rec != null and not _backdrop.visible and not _camera_off
 	var shown: PackedStringArray = []
 	for line in _captions:
 		var at: float = float(line["attrs"].get("at", 0.0))

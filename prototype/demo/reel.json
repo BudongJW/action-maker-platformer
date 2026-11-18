@@ -19,6 +19,8 @@
     {"do": "wait", "secs": 1.5},
     {"do": "dialogue", "id": "demo_dark_hifi"},
     {"do": "flags", "set": {"save.demo_lamp": true, "save.demo_answer": 1}},
+    {"do": "tape", "at": 1000, "track": "hifi", "x": 640},
+    {"do": "follow", "escort": "lamp_walk", "gap": -40, "secs": 5.5},
     {"do": "hub", "text": ""},
     {"do": "board", "keys": ["RIGHT", "DOWN", "RIGHT", "DOWN"], "key_secs": 0.6},
     {"do": "title", "text": "End of reel", "sub": "", "secs": 2},
