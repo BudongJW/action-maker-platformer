@@ -42,6 +42,8 @@ ART_SUFFIXES = (".png", ".pal", ".wav", ".ogg")
 PRIVATE_STORY = REPO / "private/assets/original/story"
 PRIVATE_CHARS = REPO / "private/assets/original/characters"
 DEMO = REPO / "prototype/demo"
+QUIT_AFTER_FRAMES = 150000
+SMOKE_TIMEOUT_S = 1800
 SUMMARY_RE = re.compile(r"prototype: (\d+) frames, (\d+) loops, (\d+) dialogues, (\d+) lines, (\d+) scares")
 
 PROJECT_GODOT = """config_version=5
@@ -169,8 +171,16 @@ def find_godot(explicit: str | None) -> str | None:
 
 def smoke(godot: str, out: Path) -> int:
     subprocess.run([godot, "--headless", "--path", str(out), "--import"], capture_output=True, text=True, timeout=300)
-    proc = subprocess.run([godot, "--headless", "--fixed-fps", "60", "--path", str(out), "--", "--bot"],
-                          capture_output=True, text=True, timeout=600)
+    # --quit-after caps the frames: if the main script fails to load (a parse error), Godot would
+    # otherwise run an empty scene forever and the error would never be reported.
+    try:
+        proc = subprocess.run([godot, "--headless", "--fixed-fps", "60", "--quit-after", str(QUIT_AFTER_FRAMES),
+                               "--path", str(out), "--", "--bot"],
+                              capture_output=True, text=True, timeout=SMOKE_TIMEOUT_S)
+    except subprocess.TimeoutExpired as exc:
+        print((exc.stdout or b"").decode("utf-8", "replace") if isinstance(exc.stdout, bytes) else (exc.stdout or ""))
+        print(f"build_prototype: smoke FAILED (no result after {SMOKE_TIMEOUT_S} s)", file=sys.stderr)
+        return 1
     output = proc.stdout + proc.stderr
     summary = SUMMARY_RE.search(output)
     errors = [line for line in output.splitlines()

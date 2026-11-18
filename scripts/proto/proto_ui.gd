@@ -22,6 +22,7 @@ var _caption: Label
 var _bubble: Label
 var _hud: Label
 var _toast: Label
+var _prompt: Label
 var _hub: Label
 var _flash: ColorRect
 var _dark: ColorRect
@@ -100,6 +101,8 @@ func _ready() -> void:
 	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hub = _anchored_label(0.1, 0.9, 0.35, 0.6, 22)
 	_hub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_prompt = _anchored_label(0.3, 0.7, 0.62, 0.68, 20)
+	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	# Last, so a document covers the HUD and captions while it is open.
 	_build_doc()
 
@@ -286,6 +289,11 @@ func toast(text: String, seconds: float = 2.0) -> void:
 
 func set_hud(text: String) -> void:
 	_hud.text = text
+
+
+## Interaction prompt (for example "hang the lantern [E]"); "" hides it.
+func set_prompt(text: String) -> void:
+	_prompt.text = text
 
 
 func set_hub(text: String) -> void:

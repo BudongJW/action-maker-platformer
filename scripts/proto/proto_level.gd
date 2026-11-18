@@ -22,6 +22,10 @@ var font: Font
 var art: ProtoArt
 ## NPC sprites by their "sprite" key, so the game can change poses.
 var npc_sprites: Dictionary = {}
+## Props shown only while a flag is on ("flag") or off ("unless_flag"): [{node, flag, negate}].
+var flag_props: Array = []
+## Water that rises in one stretch of the level ("rising_water"): [{cfg, node}].
+var water_zones: Array = []
 var _backdrop: Sprite2D
 var _backdrop_parallax := 0.2
 var _tiles: Dictionary = {}
@@ -37,9 +41,26 @@ func build(level: Dictionary, label_font: Font = null, level_art: ProtoArt = nul
 		_build_backdrop()
 	var water: Dictionary = level.get("water", {})
 	if not water.is_empty():
-		var wr := Rect2(0, float(water.get("y", size.y)), size.x, size.y)
-		if not _art_rect(wr, "water", self, 0.9):
-			_rect_visual(wr, COLOR_WATER, self)
+		# "gaps": [[x0, x1], ...] leave room for rising-water zones.
+		var wy := float(water.get("y", size.y))
+		var x := 0.0
+		var cuts: Array = water.get("gaps", []).duplicate()
+		cuts.append([size.x, size.x])
+		for gap in cuts:
+			var wr := Rect2(x, wy, float(gap[0]) - x, size.y - wy + 200.0)
+			if wr.size.x > 0.0 and not _art_rect(wr, "water", self, 0.9):
+				_rect_visual(wr, COLOR_WATER, self)
+			x = float(gap[1])
+	for zone in level.get("rising_water", []):
+		var holder := Node2D.new()
+		var x0 := float(zone["x0"])
+		var x1 := float(zone["x1"])
+		holder.position = Vector2(x0, float(zone.get("linear_y", zone.get("base_y", size.y))))
+		var wr := Rect2(0, 0, x1 - x0, size.y + 400.0)
+		if not _art_rect(wr, "water", holder, 0.9):
+			_rect_visual(wr, COLOR_WATER, holder)
+		add_child(holder)
+		water_zones.append({"cfg": zone, "node": holder})
 	if art != null:
 		_build_props()
 	for r in level.get("solids", []):
@@ -82,6 +103,17 @@ func on_ladder(point: Vector2) -> bool:
 		if r.has_point(point):
 			return true
 	return false
+
+
+## Shows or hides flag props; `is_on` maps a flag name to true or false.
+func update_flag_props(is_on: Callable) -> void:
+	for entry in flag_props:
+		entry["node"].visible = bool(is_on.call(entry["flag"])) != bool(entry["negate"])
+
+
+## Puts the water of rising zone `index` at height `y`.
+func set_zone_water(index: int, y: float) -> void:
+	water_zones[index]["node"].position.y = y
 
 
 ## Scrolls the backdrop with the camera (call every frame).
@@ -209,6 +241,10 @@ func _build_props() -> void:
 				holder.add_to_group("track_hifi_only")
 			"linear":
 				holder.add_to_group("track_linear_only")
+		if prop.has("flag") or prop.has("unless_flag"):
+			flag_props.append({"node": holder, "flag": String(prop.get("flag", prop.get("unless_flag", ""))),
+				"negate": prop.has("unless_flag")})
+			holder.visible = prop.has("unless_flag")
 		add_child(holder)
 
 

@@ -60,12 +60,21 @@ var _last_rec := false
 var _voice_speakers: Array = []
 var _finished := false
 var _bot_tried_settings := false
+## Triggers with "interact" fire only when the player presses Enter/E inside them.
+var _interact_pressed := false
+var _prompt_shown := ""
+var _prompt_here := ""
+var _water_rise: Array = []
+## `-- --trace` prints triggers, dialogues, scares and loop ends with the tape time (bot debugging).
+var _trace := false
+var _water_barked: Array = []
 var _selected := 0
 var _after_doc: Callable = Callable()
 
 
 func _ready() -> void:
 	bot = "--bot" in OS.get_cmdline_user_args()
+	_trace = "--trace" in OS.get_cmdline_user_args()
 	var sf := SystemFont.new()
 	sf.font_names = PackedStringArray(FONT_NAMES)
 	font = sf
@@ -155,7 +164,7 @@ func _ready() -> void:
 		_voice_speakers = wave.get("speakers", [])
 		ui.set_voice_color(Color.html(String(wave.get("color", "7fe0d0"))))
 
-	runner.dialogue_started.connect(func(_id): _stats["dialogues"] += 1)
+	runner.dialogue_started.connect(func(id): _stats["dialogues"] += 1; _log("dialogue " + id))
 	runner.line_started.connect(_on_line)
 	runner.choices_presented.connect(_on_choices)
 	runner.dialogue_finished.connect(_on_dialogue_finished)
@@ -165,7 +174,9 @@ func _ready() -> void:
 	mixer.set_track(TrackMixer.Track.LINEAR)
 	mixer.apply_layers(level)
 	if bot:
-		ff = 20.0
+		ff = float(data.get("bot_ff", 20.0))
+		_max_frames = int(data.get("bot_max_frames", _max_frames))
+		_bot_loops = int(data.get("bot_loops", _bot_loops))
 	# A start notice (content warning, settings) can be shown as a document before anything else.
 	var start_docs: Array = data.get("hub", {}).get("start_docs", [])
 	if not start_docs.is_empty() and not runner.get_doc(String(start_docs[0])).is_empty():
@@ -193,7 +204,16 @@ func _enter_hub(first: bool) -> void:
 func _run_hub_queue() -> void:
 	var hub_scares: Dictionary = data.get("hub", {}).get("scares", {})
 	while not _hub_queue.is_empty():
-		var id: String = String(_hub_queue.pop_front())
+		var entry: Variant = _hub_queue.pop_front()
+		if typeof(entry) == TYPE_DICTIONARY:
+			# A document found in the workroom: collect it once and show it, then go on.
+			var doc_id: String = String(entry.get("doc", ""))
+			if doc_id == "" or runner.is_doc_collected(doc_id) or not _requirements_met(entry):
+				continue
+			runner.collect_doc(doc_id)
+			_show_doc(doc_id, _run_hub_queue)
+			return
+		var id: String = String(entry)
 		if not runner.is_available(id):
 			continue
 		var scare: String = String(hub_scares.get(id, ""))
@@ -235,6 +255,11 @@ func _start_loop() -> void:
 	player.pose_override = ""
 	_chaser.visible = false
 	ui.set_darkness(0.0)
+	_water_rise.clear()
+	_water_barked.clear()
+	for i in level.water_zones.size():
+		_water_rise.append(0.0)
+		_water_barked.append(false)
 	var start: Array = data.get("player_start", [100, 600])
 	player.global_position = Vector2(float(start[0]), float(start[1]))
 	player.velocity = Vector2.ZERO
@@ -247,6 +272,7 @@ func _start_loop() -> void:
 
 
 func _end_loop() -> void:
+	_log("loop end")
 	_stats["loops"] += 1
 	director.cancel_all()
 	audio.play("deck_rewind")
@@ -293,6 +319,8 @@ func _process(delta: float) -> void:
 		level.update_backdrop(player.camera().get_screen_center_position().x, player.camera().zoom.x)
 		audio.update(mixer.tape_time(), _events)
 		_footsteps(delta)
+		_update_water(delta)
+		level.update_flag_props(func(f): return runner.get_flag(f) == true)
 		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)):
 			_end_loop()
 	_update_hud()
@@ -322,6 +350,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				_choose(_selected)
 		elif phase == Phase.HUB and not director.is_busy():
 			_on_play()
+		elif phase == Phase.TAPE and _prompt_here != "":
+			_interact_pressed = true
 	elif key in [KEY_UP, KEY_DOWN] and not _choices.is_empty():
 		_move_selection(-1 if key == KEY_UP else 1)
 	elif key >= KEY_1 and key <= KEY_4:
@@ -417,6 +447,7 @@ func _on_dialogue_finished(_id: String) -> void:
 
 
 func _on_scare_onset(id: String, info: Dictionary) -> void:
+	_log("scare " + id)
 	_stats["scares"] += 1
 	fx.onset(id, info)
 	var cue: String = String(info.get("cue", ""))
@@ -447,8 +478,11 @@ func _on_timeline_event(event_name: String) -> void:
 
 
 func _check_triggers() -> void:
+	_prompt_here = ""
 	if runner.is_running() or _catching or ui.doc_open():
+		_show_prompt()
 		return
+	_apply_rules()
 	var t := mixer.tape_time()
 	var p := player.global_position + Vector2(0, -20)
 	for tr in data.get("triggers", []):
@@ -469,14 +503,31 @@ func _check_triggers() -> void:
 			continue
 		if tr.has("rec_flag") and not player.recording:
 			continue
+		if not _requirements_met(tr):
+			continue
+		if bool(tr.get("interact", false)):
+			_prompt_here = String(tr.get("prompt", "ui.prompt.examine"))
+			if not _interact_pressed:
+				continue
+			_interact_pressed = false
 		if _fire(tr):
 			_stats["triggers"] += 1
 			_done[id] = true
+			_log("trigger " + id)
+			if tr.has("mark"):
+				runner.set_flag(String(tr["mark"]), true)
 		if runner.is_running():
-			return
+			break
+	_interact_pressed = false
+	_show_prompt()
 
 
 func _fire(tr: Dictionary) -> bool:
+	if tr.has("sfx"):
+		audio.play(String(tr["sfx"]))
+	if tr.has("set_flag"):
+		runner.set_flag(String(tr["set_flag"]), true)
+		return true
 	if tr.has("rec_flag"):
 		runner.set_flag(String(tr["rec_flag"]), true)
 		ui.toast("REC  " + String(tr["rec_flag"]))
@@ -505,6 +556,74 @@ func _fire(tr: Dictionary) -> bool:
 			runner.start(id)
 			return true
 	return false
+
+
+## Level "requires": flags that must be true; a leading "!" means it must not be true.
+## Works for any trigger or hub entry; seen.* flags are allowed.
+func _requirements_met(entry: Dictionary) -> bool:
+	for f in entry.get("requires", []):
+		var name: String = String(f)
+		var negate := name.begins_with("!")
+		if negate:
+			name = name.substr(1)
+		var on: bool = runner.get_flag(name) == true
+		if on == negate:
+			return false
+	return true
+
+
+## Level "rules": {"all": [flags], "set": flag} turns a flag on once all the others are on.
+func _apply_rules() -> void:
+	for rule in data.get("rules", []):
+		var target: String = String(rule.get("set", ""))
+		if target == "" or runner.get_flag(target) == true:
+			continue
+		var all_on := true
+		for f in rule.get("all", []):
+			if runner.get_flag(String(f)) != true:
+				all_on = false
+				break
+		if all_on:
+			runner.set_flag(target, true)
+
+
+func _show_prompt() -> void:
+	if _prompt_here == _prompt_shown:
+		return
+	_prompt_shown = _prompt_here
+	ui.set_prompt(tr(_prompt_here) + "  [E]" if _prompt_here != "" else "")
+
+
+## Rising water ("rising_water"): while the player stays in the zone on its track (HI-FI by default)
+## the water climbs `rate` px/s up to `max_rise`; elsewhere it falls back. On other tracks it stands
+## at `linear_y`. Going under puts the player back at `respawn` and lets the water fall again.
+func _update_water(delta: float) -> void:
+	var feet := player.global_position
+	for i in level.water_zones.size():
+		var cfg: Dictionary = level.water_zones[i]["cfg"]
+		var inside := feet.x >= float(cfg["x0"]) and feet.x <= float(cfg["x1"])
+		var on_track := _track_is(String(cfg.get("track", "hifi")))
+		var rise: float = _water_rise[i]
+		if on_track and inside and not runner.is_running() and not ui.doc_open():
+			rise = minf(rise + float(cfg.get("rate", 4.0)) * delta, float(cfg.get("max_rise", 120.0)))
+		elif not inside:
+			rise = maxf(rise - float(cfg.get("rate", 4.0)) * 4.0 * delta, 0.0)
+		_water_rise[i] = rise
+		var y := float(cfg.get("base_y", level.size.y)) - rise if on_track else float(cfg.get("linear_y", cfg.get("base_y", level.size.y)))
+		level.set_zone_water(i, y)
+		if on_track and not _water_barked[i] and rise >= float(cfg.get("bark_rise", 1e9)):
+			_water_barked[i] = true
+			var line := runner.bark(String(cfg.get("bark", "")))
+			if not line.is_empty():
+				ui.bubble(String(line.get("text", "")))
+		if inside and feet.y > y + float(cfg.get("submerge", 24.0)):
+			var spot: Array = cfg.get("respawn", [float(cfg["x0"]) - 40.0, float(cfg.get("linear_y", 800.0)) - 10.0])
+			player.global_position = Vector2(float(spot[0]), float(spot[1]))
+			player.velocity = Vector2.ZERO
+			_last_safe = player.global_position
+			_water_rise[i] = 0.0
+			_water_barked[i] = false
+			ui.toast("RESPAWN")
 
 
 ## Falling below the level (into the water) puts the player back on the last safe ground.
@@ -692,26 +811,49 @@ func _bot_step(delta: float) -> void:
 	if phase != Phase.TAPE:
 		return
 	player.recording = true
-	if _hifi_unlocked() and mixer.get_track() != TrackMixer.Track.HIFI:
-		_set_track(TrackMixer.Track.HIFI)
-	# Optional route in the level data: stand at `x` during a tape-time window.
+	# Optional route in the level data: stand at `x` during a tape-time window, optionally on a
+	# given track ("requires" works as for triggers). Otherwise the bot listens to HI-FI once it can.
 	var t := mixer.tape_time()
 	var target := -1.0
+	var route_track := ""
+	var route_ff := float(data.get("bot_ff", 20.0))
 	for r in data.get("bot_route", []):
-		if t >= float(r["from"]) and t <= float(r["to"]):
+		if t >= float(r["from"]) and t <= float(r["to"]) and _requirements_met(r):
 			target = float(r["x"])
+			route_track = String(r.get("track", ""))
+			route_ff = float(r.get("ff", data.get("bot_ff", 20.0)))
+	ff = route_ff
+	if route_track != "":
+		_bot_track(route_track)
+	elif _hifi_unlocked() and mixer.get_track() != TrackMixer.Track.HIFI:
+		_set_track(TrackMixer.Track.HIFI)
+	if _prompt_here != "":
+		_interact_pressed = true
 	if target >= 0.0:
 		var dx := target - player.global_position.x
 		player.bot_axis = signf(dx) if absf(dx) > 16.0 else 0.0
 	else:
-		if player.global_position.x > level.size.x - 80.0:
+		# "bot_patrol": [x_min, x_max] keeps the wandering bot out of parts it cannot use yet.
+		var patrol: Array = data.get("bot_patrol", [80.0, level.size.x - 80.0])
+		if player.global_position.x > float(patrol[1]):
 			_bot_dir = -1.0
-		elif player.global_position.x < 80.0:
+		elif player.global_position.x < float(patrol[0]):
 			_bot_dir = 1.0
 		player.bot_axis = _bot_dir
 	if _bot_jump_timer > 1.1 and player.bot_axis != 0.0:
 		_bot_jump_timer = 0.0
 		player.bot_jump = true
+
+
+func _log(what: String) -> void:
+	if _trace:
+		print("trace: f%d tape %d loop %d %s" % [_stats["frames"], int(mixer.tape_time()), int(runner.get_flag("sys.loop_count")), what])
+
+
+func _bot_track(track_name: String) -> void:
+	var want: TrackMixer.Track = {"hifi": TrackMixer.Track.HIFI, "linear": TrackMixer.Track.LINEAR, "mix": TrackMixer.Track.MIX}.get(track_name, mixer.get_track())
+	if mixer.get_track() != want:
+		_set_track(want)
 
 
 func _finish_bot(reason: String) -> void:

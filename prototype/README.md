@@ -35,17 +35,20 @@ The demo is placeholder English text with no game story. The prototype code cont
 
 | Key | Meaning |
 |---|---|
-| `size`, `player_start`, `water` | Level size, start position, water line (visual) |
+| `size`, `player_start`, `water` | Level size, start position, water line (visual; `gaps: [[x0, x1]]` leaves room for rising-water zones) |
+| `rising_water` | Zones `{x0, x1, track, base_y, linear_y, rate, max_rise, bark, bark_rise, submerge, respawn}`: on `track` (default `hifi`) the water climbs `rate` px/s while the player stays inside and falls back when they leave; on other tracks it stands at `linear_y`. Going under puts the player at `respawn`. `bark` is shown once the rise passes `bark_rise` |
 | `solids`, `hifi_only`, `linear_only`, `ladders` | `[x, y, w, h]` rectangles. Track-only shapes exist only in that track |
 | `npcs`, `labels` | Markers and text drawn on the level; an NPC's optional `sprite` names an entry of `art.npcs` |
 | `tape` | `length`, `time_scale`, dubbed `segments`, timeline `events` (`at`, `name`, `flag`) |
 | `darkness_event`, `darkness_alpha` | Event that darkens the screen |
 | `tracks` | Flags that unlock HI-FI and MIX |
-| `hub` | Workroom between loops: `start` and `between` dialogues, `scares` that precede a dialogue, `on_play` dialogue + scare before the tape starts, `start_docs` (a document shown before anything else, such as a content warning) |
-| `triggers` | `id` plus conditions (`rect`, `from`/`to` tape seconds, `track`, `loop`, `after_event`) and one action: `dialogue` (list, first available), `cue` (`hifi`/`linear`), `bark`, `doc` (collects it and opens the document viewer), `scare`, `rec_flag` (needs REC) |
+| `hub` | Workroom between loops: `start` and `between` dialogues (or `{"doc": id, "requires": [...]}` to collect and show a document found in the workroom), `scares` that precede a dialogue, `on_play` dialogue + scare before the tape starts, `start_docs` (a document shown before anything else, such as a content warning) |
+| `triggers` | `id` plus conditions (`rect`, `from`/`to` tape seconds, `track` (`hifi` / `linear` / `mix`), `loop`, `after_event`, `requires`: flags that must be on, `"!flag"` for off, `seen.*` allowed) and one action: `dialogue` (list, first available), `cue` (`hifi`/`linear`), `bark`, `doc` (collects it and opens the document viewer), `scare`, `rec_flag` (needs REC), `set_flag`. Options: `interact` (fires on Enter/E inside the rect, with the `prompt` UI string key), `mark` (flag set when it fires, for once-only triggers with `requires: ["!flag"]`), `sfx` (named sound). A trigger fires at most once per loop |
+| `rules` | `{"all": [flags], "set": flag}`: turns a flag on once all the others are on (for example six lanterns hung) |
 | `chaser` | Pursuer that starts after the listed scares in LINEAR and triggers `catch_scare` when it reaches the player |
 | `end_flag`, `report_flags` | Flag that ends the slice; flags printed by the bot |
-| `bot_route` | Optional `{from, to, x}` windows the bot walks to (smoke test) |
+| `bot_route` | Optional `{from, to, x}` windows the bot walks to (smoke test); a window can also set `track`, `ff` (tape speed) and `requires`. The last matching window wins |
+| `bot_ff`, `bot_max_frames`, `bot_loops`, `bot_patrol` | Bot tape speed (default 20), frame limit, loop limit, and `[x_min, x_max]` for wandering outside route windows |
 | `art` | Optional pixel art (next section) |
 | `audio` | Optional sound ("Audio block" below) |
 
@@ -60,7 +63,7 @@ Paths are relative to the repository root. `build_prototype.py` copies every `.p
 | `backdrop` | `texture` (320x180) scrolled behind the level with `parallax` |
 | `hub_backdrop` | Full-screen picture for the workroom between loops |
 | `tiles` | `sheet` plus frames for `solid`, `hifi_only`, `linear_only`, `water` (`[top, fill]` or one frame) and `ladder` |
-| `props` | Decoration: `{"frame", "at": [x, ground_y]}` or a tile block `{"block", "w", "h", "at"}` (frames `<block>_<col>_<row>`); optional `sheet`, `repeat` and `step` (copies side by side), `track` (`hifi` / `linear`) |
+| `props` | Decoration: `{"frame", "at": [x, ground_y]}` or a tile block `{"block", "w", "h", "at"}` (frames `<block>_<col>_<row>`); optional `sheet`, `repeat` and `step` (copies side by side), `track` (`hifi` / `linear`), `flag` / `unless_flag` (shown only while a flag is on / off, for example a lantern before and after it is hung) |
 | `player`, `npcs`, `chaser` | Animated sprites: `{"sheet", "fps", "anims": {"idle": [frames], ...}}`. The player uses `idle`, `walk`, `jump`, `climb` and `caught`; the chaser `idle` and `lunge` |
 | `viewfinder` | Camera overlay `sheet` with `rec` and `standby` frames; the live timecode is drawn over it |
 | `badges` | Track badge frames (`linear`, `hifi`, `mix`) |
@@ -86,4 +89,4 @@ Paths are relative to the repository root and are copied into the build like the
 
 ## Bot
 
-`--smoke` runs the game headless with `-- --bot`: it advances dialogue, picks the first enabled choice, keeps REC on, switches to HI-FI once unlocked and walks the level (or the `bot_route`). It prints one summary line and fails on script errors, missing art or sound, and objects leaked at exit. Falling below the level respawns the player on the last safe ground.
+`--smoke` runs the game headless with `-- --bot`: it advances dialogue, picks the first enabled choice, keeps REC on, switches to HI-FI once unlocked and walks the level (or the `bot_route`). It prints one summary line and fails on script errors, missing art or sound, and objects leaked at exit. Add `-- --bot --trace` when running Godot directly to print every trigger, dialogue, scare and loop end with its tape time. Falling below the level respawns the player on the last safe ground.
