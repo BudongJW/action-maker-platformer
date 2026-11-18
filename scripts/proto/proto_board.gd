@@ -3,7 +3,9 @@
 ## The level's "board" block lists cards: {"flag", "doc", "tc"}. A card is pinned once its flag is
 ## on. Its title and text come from the story document `doc` (never from code), and `tc` (tape
 ## seconds) is printed on the card and, inside the board's timecode axis, marked on the waveforms.
-## Version 1 shows cards only; the seven knots and the three conclusion slots come later.
+## Optional rows (version 2): "knots" {"requires", "slots": [{"flag", "doc"}]} fills the seven knot
+## slots as knots are untied, and "conclusions" {"requires", "slots": [{"flag", "docs"}]} shows the
+## chosen answer of each conclusion (flag value n picks docs[n - 1]). Up/Down change the row.
 class_name ProtoBoard
 extends Control
 
@@ -23,13 +25,23 @@ const CARD_STRIP := Rect2(3, 30, 27, 15)
 const PAPER := Color8(216, 216, 208)
 const INK := Color8(30, 30, 36)
 const ACCENT := Color8(240, 208, 112)
-## The header row between the waveforms and the knots, and the text panel over the knot row.
+## The header row between the waveforms and the knots, and the text panel: over the knot row
+## while the board has no knot row, otherwise over the lower half of the waveforms.
 const HEADER := Rect2(14, 71, 300, 7)
 const DETAIL := Rect2(12, 78, 304, 38)
+const DETAIL_HIGH := Rect2(12, 28, 304, 40)
+## Knot slots (seven, 44 px apart) and conclusion slots (three, 32 px apart).
+const KNOT := Rect2(14, 80, 37, 33)
+const KNOT_STEP := 44.0
+const CONCLUSION := Rect2(222, 122, 27, 47)
+const CONCLUSION_STEP := 32.0
+enum Row { CARDS, KNOTS, CONCLUSIONS }
 
 var runner: StoryRunner
 var cfg: Dictionary = {}
 var _selected := 0
+var _row: int = Row.CARDS
+var _row_selected: Dictionary = {}
 var _scale := 4.0
 var _font: Font
 var _panel_style: StyleBox
@@ -85,6 +97,8 @@ func open() -> void:
 	if is_inside_tree():
 		_scale = get_viewport_rect().size.y / ART_HEIGHT
 	_selected = 0
+	_row = Row.CARDS
+	_row_selected = {}
 	visible = true
 	_refresh()
 
@@ -94,21 +108,80 @@ func close() -> void:
 	closed.emit()
 
 
-## Left/Right choose a card; B or Esc closes. Returns true if the key was used.
+## Left/Right choose in the row, Up/Down change the row; B or Esc closes. Returns true if used.
 func handle_key(key: int) -> bool:
 	if not visible:
 		return false
-	var count: int = cfg.get("cards", []).size()
+	var rows := _rows()
 	match key:
 		KEY_ESCAPE, KEY_B:
 			close()
 			return true
+		KEY_UP, KEY_DOWN:
+			var i := rows.find(_row)
+			_row = rows[(i + (1 if key == KEY_DOWN else rows.size() - 1)) % rows.size()]
 		KEY_LEFT:
-			_selected = maxi(0, _selected - 1)
+			_set_index(maxi(0, _index() - 1))
 		KEY_RIGHT:
-			_selected = mini(count - 1, _selected + 1)
+			_set_index(mini(_row_size(_row) - 1, _index() + 1))
 	_refresh()
 	return true
+
+
+## Untied knots (filled knot slots).
+func knot_count() -> int:
+	var n := 0
+	for knot in _slots("knots"):
+		if _found(knot):
+			n += 1
+	return n
+
+
+func has_knots() -> bool:
+	return _row_open("knots")
+
+
+func _rows() -> Array:
+	var rows: Array = [Row.CARDS]
+	if _row_open("knots"):
+		rows.append(Row.KNOTS)
+	if _row_open("conclusions"):
+		rows.append(Row.CONCLUSIONS)
+	return rows
+
+
+func _row_open(key: String) -> bool:
+	var block: Dictionary = cfg.get(key, {})
+	if block.get("slots", []).is_empty():
+		return false
+	for f in block.get("requires", []):
+		if runner.get_flag(String(f)) != true:
+			return false
+	return true
+
+
+func _slots(key: String) -> Array:
+	return cfg.get(key, {}).get("slots", [])
+
+
+func _row_size(row: int) -> int:
+	match row:
+		Row.KNOTS:
+			return _slots("knots").size()
+		Row.CONCLUSIONS:
+			return _slots("conclusions").size()
+	return cfg.get("cards", []).size()
+
+
+func _index() -> int:
+	return _selected if _row == Row.CARDS else int(_row_selected.get(_row, 0))
+
+
+func _set_index(i: int) -> void:
+	if _row == Row.CARDS:
+		_selected = i
+	else:
+		_row_selected[_row] = i
 
 
 func found_count() -> int:
@@ -134,7 +207,10 @@ func _refresh() -> void:
 		_layer.remove_child(c)
 		c.queue_free()
 	var cards: Array = cfg.get("cards", [])
-	var title := _label(tr("ui.board.title") + "   %d / %d" % [found_count(), cards.size()], 16, ACCENT)
+	var heading := tr("ui.board.title") + "   %d / %d" % [found_count(), cards.size()]
+	if has_knots():
+		heading += "      " + tr("ui.board.knots") + "   %d / %d" % [knot_count(), _slots("knots").size()]
+	var title := _label(heading, 16, ACCENT)
 	_place(title, HEADER)
 	var hint := _label(tr("ui.board.controls"), 14, Color(0.62, 0.64, 0.7))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -143,22 +219,88 @@ func _refresh() -> void:
 	var first := clampi(_selected - 2, 0, maxi(0, cards.size() - CARD_X.size()))
 	for slot in CARD_X.size():
 		if first + slot < cards.size():
-			_card(cards[first + slot], float(CARD_X[slot]), first + slot == _selected)
+			_card(cards[first + slot], float(CARD_X[slot]), _row == Row.CARDS and first + slot == _selected)
 	if first > 0:
 		_place(_label("<", 20, ACCENT), Rect2(5, 138, 8, 12))
 	if first + CARD_X.size() < cards.size():
 		_place(_label(">", 20, ACCENT), Rect2(209, 138, 8, 12))
-	_detail(cards[_selected] if _selected < cards.size() else {})
+	if has_knots():
+		var knots := _slots("knots")
+		for i in knots.size():
+			_knot(knots[i], i, _row == Row.KNOTS and _index() == i)
+	if _row_open("conclusions"):
+		var slots := _slots("conclusions")
+		for i in slots.size():
+			_conclusion(slots[i], i, _row == Row.CONCLUSIONS and _index() == i)
+	match _row:
+		Row.KNOTS:
+			var knot: Dictionary = _slots("knots")[_index()]
+			_detail_doc(String(knot.get("doc", "")), _found(knot))
+		Row.CONCLUSIONS:
+			var slot: Dictionary = _slots("conclusions")[_index()]
+			_detail_doc(_conclusion_doc(slot), _conclusion_doc(slot) != "")
+		_:
+			_detail(cards[_selected] if _selected < cards.size() else {})
+
+
+## A knot slot: the knot's number, lit once the knot is untied.
+func _knot(knot: Dictionary, i: int, selected: bool) -> void:
+	var at := KNOT.position + Vector2(i * KNOT_STEP, 0)
+	if selected:
+		_frame(Rect2(at - Vector2(2, 2), KNOT.size + Vector2(4, 4)))
+	var untied := _found(knot)
+	var fill := ColorRect.new()
+	fill.color = PAPER if untied else Color(0.06, 0.06, 0.08)
+	_place(fill, Rect2(at + Vector2(2, 2), KNOT.size - Vector2(4, 4)))
+	var number := _label(str(i + 1), 22, INK if untied else Color(0.5, 0.5, 0.56))
+	number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	number.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_place(number, Rect2(at, KNOT.size))
+
+
+## A conclusion slot: the short title of the chosen answer, or "?".
+func _conclusion(slot: Dictionary, i: int, selected: bool) -> void:
+	var at := CONCLUSION.position + Vector2(i * CONCLUSION_STEP, 0)
+	if selected:
+		_frame(Rect2(at - Vector2(2, 2), CONCLUSION.size + Vector2(4, 4)))
+	var doc_id := _conclusion_doc(slot)
+	if doc_id == "":
+		var unknown := _label("?", 24, Color(0.45, 0.45, 0.5))
+		unknown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		unknown.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		_place(unknown, Rect2(at, CONCLUSION.size))
+		return
+	var fill := ColorRect.new()
+	fill.color = PAPER
+	_place(fill, Rect2(at + Vector2(2, 2), CONCLUSION.size - Vector2(4, 4)))
+	var text := _label(ProtoUI.keep_words(String(runner.get_doc(doc_id).get("title", ""))), 12, INK)
+	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	text.clip_text = true
+	_place(text, Rect2(at + Vector2(3, 3), CONCLUSION.size - Vector2(6, 6)))
+
+
+## The document of the answer chosen for a conclusion slot, or "" while it is open.
+func _conclusion_doc(slot: Dictionary) -> String:
+	var value: Variant = runner.get_flag(String(slot.get("flag", "")))
+	var docs: Array = slot.get("docs", [])
+	if typeof(value) != TYPE_INT and typeof(value) != TYPE_FLOAT:
+		return ""
+	var i := int(value) - 1
+	return String(docs[i]) if i >= 0 and i < docs.size() else ""
+
+
+func _frame(art_rect: Rect2) -> void:
+	var frame := ReferenceRect.new()
+	frame.editor_only = false
+	frame.border_color = ACCENT
+	frame.border_width = 3.0
+	_place(frame, art_rect)
 
 
 func _card(card: Dictionary, x: float, selected: bool) -> void:
 	var at := Vector2(x, CARD.position.y)
 	if selected:
-		var frame := ReferenceRect.new()
-		frame.editor_only = false
-		frame.border_color = ACCENT
-		frame.border_width = 3.0
-		_place(frame, Rect2(at - Vector2(2, 2), CARD.size + Vector2(4, 4)))
+		_frame(Rect2(at - Vector2(2, 2), CARD.size + Vector2(4, 4)))
 	if not _found(card):
 		var cover := ColorRect.new()
 		cover.color = Color(0.06, 0.06, 0.08, 0.88)
@@ -215,24 +357,33 @@ static func axis_x(tc: float) -> float:
 	return -1.0
 
 
-## The selected card's document over the knot row (the knots come in a later version).
+## The selected card's document.
 func _detail(card: Dictionary) -> void:
+	_detail_doc("" if card.is_empty() else String(card.get("doc", "")), not card.is_empty() and _found(card))
+
+
+## A document in the text panel: title and paragraphs when `shown`, otherwise only the title of a
+## knot (what the lie is) or "Not found yet".
+func _detail_doc(doc_id: String, shown: bool) -> void:
+	var rect := DETAIL_HIGH if has_knots() else DETAIL
 	var panel := Panel.new()
 	if _panel_style != null:
 		panel.add_theme_stylebox_override("panel", _panel_style)
-	_place(panel, DETAIL)
+	_place(panel, rect)
 	var text := _label("", 16, Color(0.88, 0.9, 0.92))
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.clip_text = true
-	if not card.is_empty() and _found(card):
-		var doc := runner.get_doc(String(card.get("doc", "")))
+	var doc := runner.get_doc(doc_id) if doc_id != "" else {}
+	if shown and not doc.is_empty():
 		var lines := PackedStringArray([String(doc.get("title", ""))])
 		for p in doc.get("paragraphs", []):
 			lines.append(String(p))
 		text.text = ProtoUI.keep_words("\n".join(lines))
+	elif _row == Row.KNOTS and not doc.is_empty():
+		text.text = ProtoUI.keep_words(String(doc.get("title", "")) + "\n" + tr("ui.board.knot_tied"))
 	else:
 		text.text = tr("ui.board.empty")
-	_place(text, Rect2(DETAIL.position + Vector2(4, 3), DETAIL.size - Vector2(8, 6)))
+	_place(text, Rect2(rect.position + Vector2(4, 3), rect.size - Vector2(8, 6)))
 
 
 func _place(node: Control, art_rect: Rect2) -> void:

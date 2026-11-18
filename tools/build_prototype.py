@@ -188,7 +188,7 @@ def smoke(godot: str, out: Path) -> int:
               if "SCRIPT ERROR" in line or "Parse Error" in line or line.startswith("ERROR:")
               or "ProtoArt:" in line or "ProtoAudio:" in line or "leaked at exit" in line]
     # A level with a board must let the bot open it once (", board 2/3 unopened" otherwise).
-    unopened = re.search(r"^prototype: .*, board \d+/\d+ unopened", output, re.M) is not None
+    unopened = re.search(r"^prototype: .*, board \d+/\d+( knots \d+/\d+)? unopened", output, re.M) is not None
     if proc.returncode != 0 or summary is None or errors or int(summary.group(3)) == 0 or unopened:
         print(output)
         print(f"build_prototype: smoke FAILED (exit {proc.returncode}, {len(errors)} error line(s)"

@@ -162,6 +162,8 @@ func set_cut(tex: Texture2D) -> void:
 	_cut.texture = tex
 	_cut.visible = tex != null
 	_cut_back.visible = tex != null
+	# The workroom text would sit on top of the picture during a hub dialogue.
+	_hub.visible = tex == null and _hub.text != ""
 
 
 ## Nine-slice panels from the art block's "ui" entry:

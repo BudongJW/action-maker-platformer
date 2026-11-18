@@ -63,6 +63,10 @@ var _voice_speakers: Array = []
 var _finished := false
 var _bot_tried_settings := false
 var _bot_tried_board := false
+## Board state the bot last looked at (it opens the board again when something new is on it).
+var _bot_board_seen := ""
+## Choice menus the bot has met in the current dialogue: key -> indices already chosen.
+var _bot_menus: Dictionary = {}
 ## Triggers with "interact" fire only when the player presses Enter/E inside them.
 var _interact_pressed := false
 var _prompt_shown := ""
@@ -467,6 +471,7 @@ func _choose(index: int) -> void:
 
 
 func _on_dialogue_started(id: String) -> void:
+	_bot_menus.clear()
 	_stats["dialogues"] += 1
 	_log("dialogue " + id)
 	# Art "cuts": {dialogue_id: {"texture", "frame"}} shows a picture while that dialogue plays.
@@ -660,7 +665,9 @@ func _update_water(delta: float) -> void:
 	for i in level.water_zones.size():
 		var cfg: Dictionary = level.water_zones[i]["cfg"]
 		var inside := feet.x >= float(cfg["x0"]) and feet.x <= float(cfg["x1"])
-		var on_track := _track_is(String(cfg.get("track", "hifi")))
+		# A zone with "after_event" / "requires" floods only once those hold (otherwise it stays at
+		# its linear_y, as on the other track).
+		var on_track := _track_is(String(cfg.get("track", "hifi"))) and _zone_active(cfg)
 		var rise: float = _water_rise[i]
 		if on_track and inside and not runner.is_running() and not ui.doc_open():
 			rise = minf(rise + float(cfg.get("rate", 4.0)) * delta, float(cfg.get("max_rise", 120.0)))
@@ -682,6 +689,12 @@ func _update_water(delta: float) -> void:
 			_water_rise[i] = 0.0
 			_water_barked[i] = false
 			ui.toast("RESPAWN")
+
+
+func _zone_active(cfg: Dictionary) -> bool:
+	if cfg.has("after_event") and not _events.has(String(cfg["after_event"])):
+		return false
+	return _requirements_met(cfg)
 
 
 ## Falling below the level (into the water) puts the player back on the last safe ground.
@@ -849,10 +862,7 @@ func _bot_step(delta: float) -> void:
 			if _choices.is_empty():
 				runner.advance()
 			else:
-				for i in _choices.size():
-					if _choices[i]["enabled"]:
-						_choose(i)
-						break
+				_choose(_bot_choice())
 		return
 	if phase == Phase.HUB and not _bot_tried_settings:
 		# Exercise the settings screen once: move, change a value and change it back, close.
@@ -861,14 +871,18 @@ func _bot_step(delta: float) -> void:
 		for key in [KEY_DOWN, KEY_DOWN, KEY_RIGHT, KEY_LEFT, KEY_ESCAPE]:
 			settings.handle_key(key)
 		return
-	if not _bot_tried_board and _board_ready():
-		# Exercise the board once it is available: open, look through every card, close.
+	if _board_ready() and _bot_board_seen != _board_state():
+		# Exercise the board whenever something new is on it: every card, then the other rows.
 		_bot_tried_board = true
+		_bot_board_seen = _board_state()
 		_open_board()
 		var keys: Array = []
 		for i in board.cfg.get("cards", []).size():
 			keys.append(KEY_RIGHT)
-		for key in keys + [KEY_LEFT, KEY_B]:
+		keys.append(KEY_LEFT)
+		for row in 2:
+			keys += [KEY_DOWN, KEY_RIGHT, KEY_RIGHT, KEY_LEFT]
+		for key in keys + [KEY_UP, KEY_B]:
 			board.handle_key(key)
 		return
 	if phase == Phase.HUB:
@@ -913,6 +927,32 @@ func _bot_step(delta: float) -> void:
 		player.bot_jump = true
 
 
+## The first enabled option the bot has not taken yet in this menu; once all are taken, the last
+## enabled one (usually "leave"). Menus that loop back (pick a knot, show a card) cannot trap it.
+func _bot_choice() -> int:
+	var key := runner.current_dialogue()
+	for c in _choices:
+		key += "|" + String(c["text"])
+	var taken: Array = _bot_menus.get(key, [])
+	var pick := -1
+	for i in _choices.size():
+		if _choices[i]["enabled"] and not taken.has(i):
+			pick = i
+			break
+	if pick < 0:
+		for i in range(_choices.size() - 1, -1, -1):
+			if _choices[i]["enabled"]:
+				pick = i
+				break
+	taken.append(pick)
+	_bot_menus[key] = taken
+	return maxi(pick, 0)
+
+
+func _board_state() -> String:
+	return "%d/%d/%s" % [board.found_count(), board.knot_count(), str(board.has_knots())]
+
+
 func _log(what: String) -> void:
 	if _trace:
 		print("trace: f%d tape %d loop %d %s" % [_stats["frames"], int(mixer.tape_time()), int(runner.get_flag("sys.loop_count")), what])
@@ -933,7 +973,8 @@ func _finish_bot(reason: String) -> void:
 		flags.append("%s=%s" % [f, str(runner.get_flag(String(f)))])
 	var board_text := ""
 	if board != null:
-		board_text = ", board %d/%d%s" % [board.found_count(), board.cfg.get("cards", []).size(),
+		board_text = ", board %d/%d%s%s" % [board.found_count(), board.cfg.get("cards", []).size(),
+			" knots %d/%d" % [board.knot_count(), board.cfg.get("knots", {}).get("slots", []).size()] if board.has_knots() else "",
 			"" if _bot_tried_board else " unopened"]
 	print("prototype: %d frames, %d loops, %d dialogues, %d lines, %d scares, %d triggers, %d docs%s (%s) %s" % [
 		_stats["frames"], _stats["loops"], _stats["dialogues"], _stats["lines"], _stats["scares"],

@@ -47,9 +47,11 @@ ui.options.controls,"위·아래 항목, 좌·우 값, Esc 닫기","Up/Down: ite
 ui.prompt.hang_lantern,등불 걸기,Hang the Lantern
 ui.board.title,추리 보드,Deduction Board
 ui.board.empty,아직 없음,Not Found Yet
-ui.board.controls,"좌·우 카드, B·Esc 닫기","Left/Right: card, B or Esc: close"
+ui.board.controls,"좌·우 고르기, 위·아래 줄, B·Esc 닫기","Left/Right: choose, Up/Down: row, B or Esc: close"
 ui.board.open,추리 보드 [B],Deduction Board [B]
 ui.prompt.enter,들어가기,Go In
 ui.prompt.go_out,나가기,Go Out
 ui.prompt.take,가져가기,Take
 ui.prompt.put_down,내려놓기,Put Down
+ui.board.knots,매듭,Knots
+ui.board.knot_tied,아직 풀리지 않았다,Not untied yet

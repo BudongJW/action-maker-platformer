@@ -181,7 +181,35 @@
         "doc": "demo_card_end",
         "tc": 6000
       }
-    ]
+    ],
+    "knots": {
+      "requires": [
+        "save.hifi_unlocked"
+      ],
+      "slots": [
+        {
+          "flag": "save.demo_lamp",
+          "doc": "demo_knot_1"
+        },
+        {
+          "flag": "save.ev_lipsync",
+          "doc": "demo_knot_2"
+        }
+      ]
+    },
+    "conclusions": {
+      "requires": [
+        "save.hifi_unlocked"
+      ],
+      "slots": [
+        {
+          "flag": "save.demo_answer",
+          "docs": [
+            "demo_answer_1"
+          ]
+        }
+      ]
+    }
   },
   "triggers": [
     {

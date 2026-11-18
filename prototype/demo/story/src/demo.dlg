@@ -28,6 +28,25 @@ title: End of the tape  #line:demo_card_005
 p: The last card of the demo. It stays unknown until the demo ends.  #line:demo_card_006
 
 
+~doc demo_knot_1
+@category board_knot
+
+title: First knot — the lamp  #line:demo_knot_001
+p: Untied once someone switched the lamp on.  #line:demo_knot_002
+
+~doc demo_knot_2
+@category board_knot
+
+title: Second knot — the clip  #line:demo_knot_003
+p: Untied once the clip was recorded.  #line:demo_knot_004
+
+~doc demo_answer_1
+@category board_conclusion
+
+title: The keeper  #line:demo_answer_001
+p: The keeper told the rules.  #line:demo_answer_002
+
+
 ~ demo_intro
 @style window
 @once save
