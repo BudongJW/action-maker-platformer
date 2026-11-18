@@ -32,6 +32,7 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 
 ```
 .
+├── .claude/skills/          # Claude Code slash commands for pixel art (/pixel-sprite, /pixel-scene, /pixel-review, ...), Korean
 ├── LICENSE                  # GPL-3.0 full text (code only)
 ├── LICENSE-EXCEPTION.md     # GPL-3.0 section 7 additional permission (ACTION GAME MAKER G runtime)
 ├── CREDITS.md               # Source for in-game credits (required notices + third-party assets/add-ons)

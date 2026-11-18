@@ -75,6 +75,8 @@
 
 ## 2. 이 저장소용 템플릿
 
+T0~T7과 3절의 R1~R3는 같은 내용이 슬래시 명령으로도 들어 있습니다. 예: T1 → `/pixel-sprite`, R1 → `/pixel-review`. 전체 목록은 [`README.md`](README.md)의 "슬래시 명령" 표에 있습니다. 템플릿을 고치면 명령(`.claude/skills/*/SKILL.md`)도 함께 고칩니다.
+
 ### T0. 공통 머리말 (모든 요청 앞에)
 
 ```text
