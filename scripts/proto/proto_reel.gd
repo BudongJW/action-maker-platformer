@@ -7,7 +7,8 @@
 ##
 ## {"line_secs": 1.4, "per_char": 0.06, "max_line_secs": 5.5, "choice_secs": 1.6, "steps": [...]}
 ## Steps ({"do": kind, ...}):
-##   title {text, sub, secs}        black card with two lines of text (fades in and out)
+##   title {text, sub, secs}        black card with two lines of text (fades in and out; before the
+##                                  first scene the screen behind it stays black)
 ##   hub {text}                     the 2026 workroom picture, no tape
 ##   tape {at, track, x, y, events, rec} play the tape from `at` seconds; `events` fires timeline
 ##                                  events already passed (for example "power_cut"); REC is on
@@ -39,6 +40,7 @@ var _lines := 0
 var _started := false
 var _keys: Array = []
 var _key_left := 0.0
+var _opening := true  # no scene shown yet: title cards keep the screen black behind them
 var _overlay: CanvasLayer
 var _back: ColorRect
 var _title: Label
@@ -55,6 +57,7 @@ func start(owner_game: ProtoGame, path: String) -> bool:
 	_cfg = parsed
 	_steps = parsed["steps"]
 	_build_overlay()
+	_back.color.a = 1.0 if String(_steps[0].get("do", "")) in ["title", "flags"] else 0.0
 	running = true
 	# Take over from the start screen: no start document, no workroom queue.
 	game._hub_queue.clear()
@@ -183,7 +186,8 @@ func _tick_dialogue(delta: float) -> void:
 
 
 func _set_card_alpha(a: float) -> void:
-	_back.color.a = a
+	# Before the first scene the game screen (start document, workroom) must not show through.
+	_back.color.a = 1.0 if _opening else a
 	_title.add_theme_color_override("font_color", Color(0.92, 0.9, 0.84, a))
 	_sub.add_theme_color_override("font_color", Color(0.7, 0.72, 0.76, a))
 
@@ -198,6 +202,9 @@ func _next() -> void:
 		_finish()
 		return
 	_step = _steps[_index]
+	if _opening and not String(_step.get("do", "")) in ["title", "flags"]:
+		_opening = false
+		_back.color.a = 0.0
 	match String(_step.get("do", "")):
 		"title":
 			_title.text = String(_step.get("text", ""))
