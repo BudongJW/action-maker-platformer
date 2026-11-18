@@ -158,6 +158,31 @@
       "demo_notice"
     ]
   },
+  "board": {
+    "requires": [
+      "save.hifi_unlocked"
+    ],
+    "art": {
+      "sheet": "assets/original/mibangsong/art/fx/mbs_ui_board.png",
+      "frame": "board"
+    },
+    "cards": [
+      {
+        "flag": "save.ev_lipsync",
+        "doc": "demo_card_rec",
+        "tc": 4745
+      },
+      {
+        "flag": "save.demo_lamp",
+        "doc": "demo_card_lamp"
+      },
+      {
+        "flag": "save.demo_done",
+        "doc": "demo_card_end",
+        "tc": 6000
+      }
+    ]
+  },
   "triggers": [
     {
       "id": "crowd",

@@ -138,10 +138,11 @@ def _sources_by_output() -> dict[str, Path]:
 
 
 def copy_art(out: Path) -> int:
-    """Copies the files named in the level's "art" and "audio" blocks, the palette-swap shader,
-    and writes assets/art_atlas.json with each sprite sheet's frame size, columns and frame names."""
+    """Copies the files named in the level's "art", "audio" and "board" blocks, the palette-swap
+    shader, and writes assets/art_atlas.json with each sprite sheet's frame size, columns and frame
+    names."""
     level = json.loads((out / "assets/original/story/proto_level.json").read_text(encoding="utf-8"))
-    paths = sorted(set(_art_paths(level.get("art", {})) + _art_paths(level.get("audio", {}))))
+    paths = sorted(set(_art_paths([level.get(block, {}) for block in ("art", "audio", "board")])))
     if not paths:
         return 0
     missing = [p for p in paths if not (REPO / p).is_file()]
@@ -186,10 +187,13 @@ def smoke(godot: str, out: Path) -> int:
     errors = [line for line in output.splitlines()
               if "SCRIPT ERROR" in line or "Parse Error" in line or line.startswith("ERROR:")
               or "ProtoArt:" in line or "ProtoAudio:" in line or "leaked at exit" in line]
-    if proc.returncode != 0 or summary is None or errors or int(summary.group(3)) == 0:
+    # A level with a board must let the bot open it once (", board 2/3 unopened" otherwise).
+    unopened = re.search(r"^prototype: .*, board \d+/\d+ unopened", output, re.M) is not None
+    if proc.returncode != 0 or summary is None or errors or int(summary.group(3)) == 0 or unopened:
         print(output)
         print(f"build_prototype: smoke FAILED (exit {proc.returncode}, {len(errors)} error line(s)"
-              f"{', no summary' if summary is None else ''})", file=sys.stderr)
+              f"{', no summary' if summary is None else ''}{', board never opened' if unopened else ''})",
+              file=sys.stderr)
         return 1
     line = next(l for l in output.splitlines() if l.startswith("prototype:"))
     print(line)

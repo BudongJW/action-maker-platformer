@@ -29,6 +29,7 @@ The demo is placeholder English text with no game story. The prototype code cont
 | F | Fast-forward the tape (x4). It pauses while a scare is pending or relaxing, because the scare director runs in real time |
 | M | Scare mode: default / soft (quieter, with a short prepulse) / off (no sudden onsets) |
 | P | Photosensitivity-safe scares (no flash) |
+| B | Deduction board in the workroom, once the level's `board` block allows it: Left / Right choose a card, B or Esc close |
 | Esc | Settings: scare mode, reduce flashing, master / ambience / effects volume, text size, subtitles, effects outside the game window. Labels come from `assets/original/ui/strings.csv` (`ui.options.*`); values are saved to `user://proto_settings.cfg` |
 
 ## Level file (`proto_level.json`)
@@ -43,6 +44,7 @@ The demo is placeholder English text with no game story. The prototype code cont
 | `darkness_event`, `darkness_alpha` | Event that darkens the screen |
 | `tracks` | Flags that unlock HI-FI and MIX |
 | `hub` | Workroom between loops: `start` and `between` dialogues (or `{"doc": id, "requires": [...]}` to collect and show a document found in the workroom), `scares` that precede a dialogue, `on_play` dialogue + scare before the tape starts, `start_docs` (a document shown before anything else, such as a content warning) |
+| `board` | Optional deduction board (B in the workroom): `requires` (flags that must be on), `art` (`sheet`, `frame`: a 320x180 board picture shown full screen) and `cards` `[{flag, doc, tc}]`. A card is pinned once its `flag` is on; its title and text come from the story document `doc` (category `board` by convention) and `tc` (tape seconds) is printed on the card and pinned on the timecode axis. Version 1 shows cards only. The layout follows `assets/original/mibangsong/art/fx/mbs_ui_board.png` (axis 01:19 to 01:59, five card slots that scroll) |
 | `triggers` | `id` plus conditions (`rect`, `from`/`to` tape seconds, `track` (`hifi` / `linear` / `mix`), `loop`, `after_event`, `requires`: flags that must be on, `"!flag"` for off, `seen.*` allowed) and one action: `dialogue` (list, first available), `cue` (`hifi`/`linear`), `bark`, `doc` (collects it and opens the document viewer), `scare`, `rec_flag` (needs REC), `set_flag`. Options: `interact` (fires on Enter/E inside the rect, with the `prompt` UI string key), `mark` (flag set when it fires, for once-only triggers with `requires: ["!flag"]`), `sfx` (named sound). A trigger fires at most once per loop |
 | `rules` | `{"all": [flags], "set": flag}`: turns a flag on once all the others are on (for example six lanterns hung) |
 | `chaser` | Pursuer that starts after the listed scares in LINEAR and triggers `catch_scare` when it reaches the player |
@@ -89,4 +91,4 @@ Paths are relative to the repository root and are copied into the build like the
 
 ## Bot
 
-`--smoke` runs the game headless with `-- --bot`: it advances dialogue, picks the first enabled choice, keeps REC on, switches to HI-FI once unlocked and walks the level (or the `bot_route`). It prints one summary line and fails on script errors, missing art or sound, and objects leaked at exit. Add `-- --bot --trace` when running Godot directly to print every trigger, dialogue, scare and loop end with its tape time. Falling below the level respawns the player on the last safe ground.
+`--smoke` runs the game headless with `-- --bot`: it advances dialogue, picks the first enabled choice, keeps REC on, switches to HI-FI once unlocked and walks the level (or the `bot_route`). It opens the settings screen and, once it is available, the board once each. It prints one summary line (with `board found/total` when the level has a board) and fails on script errors, missing art or sound, and objects leaked at exit. Add `-- --bot --trace` when running Godot directly to print every trigger, dialogue, scare and loop end with its tape time. Falling below the level respawns the player on the last safe ground.

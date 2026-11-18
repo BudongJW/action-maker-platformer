@@ -9,7 +9,8 @@
 ##
 ## Keys: A/D or arrows move, Space jump, W/S climb, Enter/E advance or play, 1-4 choose,
 ## Z LINEAR, X HI-FI, C MIX, R camera REC, F fast-forward, M scare mode (default / soft / off),
-## P photosensitivity-safe scares, Up/Down move the choice cursor, Esc settings.
+## P photosensitivity-safe scares, Up/Down move the choice cursor, Esc settings, B the deduction
+## board in the workroom (when the level has a "board" block).
 class_name ProtoGame
 extends Node2D
 
@@ -32,6 +33,7 @@ var fx: ProtoFX
 var art: ProtoArt
 var audio: ProtoAudio
 var settings: ProtoSettings
+var board: ProtoBoard
 var font: Font
 var data: Dictionary = {}
 var phase: Phase = Phase.HUB
@@ -60,6 +62,7 @@ var _last_rec := false
 var _voice_speakers: Array = []
 var _finished := false
 var _bot_tried_settings := false
+var _bot_tried_board := false
 ## Triggers with "interact" fire only when the player presses Enter/E inside them.
 var _interact_pressed := false
 var _prompt_shown := ""
@@ -137,6 +140,12 @@ func _ready() -> void:
 	add_child(ui)
 	ui.apply_skin(art)
 	TranslationServer.set_locale(String(runner.get_flag("sys.locale")))
+	if data.has("board"):
+		# Under the settings screen, so Esc settings still draw on top.
+		board = ProtoBoard.new()
+		ui.add_child(board)
+		board.setup(data["board"], art, runner, font, ui.window_style())
+		board.closed.connect(_show_hub_prompt)
 	settings = ProtoSettings.new()
 	settings.director = director
 	settings.audio = audio
@@ -222,7 +231,26 @@ func _run_hub_queue() -> void:
 		else:
 			runner.start(id)
 		return
-	ui.set_hub("WORKROOM  -  PLAY %d\n[Enter] play the tape" % int(runner.get_flag("sys.loop_count")))
+	_show_hub_prompt()
+
+
+func _show_hub_prompt() -> void:
+	var text := "WORKROOM  -  PLAY %d\n[Enter] play the tape" % int(runner.get_flag("sys.loop_count"))
+	if _board_ready():
+		text += "\n" + tr("ui.board.open")
+	ui.set_hub(text)
+
+
+## The board opens in the workroom between dialogues once its "requires" flags are on.
+func _board_ready() -> bool:
+	return board != null and phase == Phase.HUB and board.available() and not runner.is_running() \
+		and not ui.doc_open() and not director.is_busy() and _hub_queue.is_empty()
+
+
+func _open_board() -> void:
+	ui.set_hub("")
+	board.open()
+	_log("board %d/%d" % [board.found_count(), board.cfg.get("cards", []).size()])
 
 
 func _on_play() -> void:
@@ -301,8 +329,8 @@ func _complete() -> void:
 
 func _process(delta: float) -> void:
 	_stats["frames"] += 1
-	if settings.is_open():
-		# The settings screen pauses the tape, the player and the scare clock.
+	if settings.is_open() or (board != null and board.is_open()):
+		# The settings screen and the board pause the tape, the player and the scare clock.
 		player.frozen = true
 		return
 	director.tick(delta)
@@ -336,6 +364,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	var key: int = k.keycode
 	if settings.handle_key(key):
+		return
+	if board != null and board.handle_key(key):
+		return
+	if key == KEY_B and _board_ready():
+		_open_board()
 		return
 	if key == KEY_ESCAPE:
 		settings.open()
@@ -803,6 +836,16 @@ func _bot_step(delta: float) -> void:
 		for key in [KEY_DOWN, KEY_DOWN, KEY_RIGHT, KEY_LEFT, KEY_ESCAPE]:
 			settings.handle_key(key)
 		return
+	if not _bot_tried_board and _board_ready():
+		# Exercise the board once it is available: open, look through every card, close.
+		_bot_tried_board = true
+		_open_board()
+		var keys: Array = []
+		for i in board.cfg.get("cards", []).size():
+			keys.append(KEY_RIGHT)
+		for key in keys + [KEY_LEFT, KEY_B]:
+			board.handle_key(key)
+		return
 	if phase == Phase.HUB:
 		if not director.is_busy() and _bot_timer > 0.2:
 			_bot_timer = 0.0
@@ -863,9 +906,13 @@ func _finish_bot(reason: String) -> void:
 	var flags: PackedStringArray = []
 	for f in data.get("report_flags", []):
 		flags.append("%s=%s" % [f, str(runner.get_flag(String(f)))])
-	print("prototype: %d frames, %d loops, %d dialogues, %d lines, %d scares, %d triggers, %d docs (%s) %s" % [
+	var board_text := ""
+	if board != null:
+		board_text = ", board %d/%d%s" % [board.found_count(), board.cfg.get("cards", []).size(),
+			"" if _bot_tried_board else " unopened"]
+	print("prototype: %d frames, %d loops, %d dialogues, %d lines, %d scares, %d triggers, %d docs%s (%s) %s" % [
 		_stats["frames"], _stats["loops"], _stats["dialogues"], _stats["lines"], _stats["scares"],
-		_stats["triggers"], _stats["docs"], reason, " ".join(flags)])
+		_stats["triggers"], _stats["docs"], board_text, reason, " ".join(flags)])
 	# Stop every sound and give the audio thread a moment to release its playbacks, so a
 	# headless run exits without leaked audio objects.
 	audio.stop_all()

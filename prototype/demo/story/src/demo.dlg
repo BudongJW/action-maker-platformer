@@ -9,6 +9,25 @@ p: This is a generic demo for the prototype. It has no game story.  #line:demo_n
 p: Esc opens the settings (scare mode, flashing, volume, text size). M and P are shortcuts.  #line:demo_n_003
 
 
+~doc demo_card_rec
+@category board
+
+title: Recorded clip  #line:demo_card_001
+p: A clip you recorded with the camera (R) on the LINEAR track. Its timecode is pinned to the board.  #line:demo_card_002
+
+~doc demo_card_lamp
+@category board
+
+title: Lamp switched on  #line:demo_card_003
+p: Someone switched the lamp on. The flag stays on for the whole save.  #line:demo_card_004
+
+~doc demo_card_end
+@category board
+
+title: End of the tape  #line:demo_card_005
+p: The last card of the demo. It stays unknown until the demo ends.  #line:demo_card_006
+
+
 ~ demo_intro
 @style window
 @once save

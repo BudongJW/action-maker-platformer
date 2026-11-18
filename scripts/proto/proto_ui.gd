@@ -208,10 +208,32 @@ func show_choices(options: Array, selected: int = 0) -> void:
 
 ## The document viewer: title and paragraphs drawn over the paper panel.
 func show_doc(doc: Dictionary) -> void:
-	_doc_title.text = String(doc.get("title", ""))
+	_doc_title.text = ProtoUI.keep_words(String(doc.get("title", "")))
 	_doc_title.visible = _doc_title.text != ""
-	_doc_body.text = "\n\n".join(PackedStringArray(doc.get("paragraphs", [])))
+	_doc_body.text = ProtoUI.keep_words("\n\n".join(PackedStringArray(doc.get("paragraphs", []))))
 	_doc.visible = true
+
+
+## Korean wraps between words, not between syllables (CSS "word-break: keep-all"): the line
+## breaker may split Hangul anywhere, so a word joiner (U+2060) goes between the letters of a word.
+static func keep_words(text: String) -> String:
+	var out := PackedStringArray()
+	var prev := 0
+	for i in text.length():
+		var c := text.unicode_at(i)
+		if i > 0 and not _is_space(prev) and not _is_space(c) and (_is_hangul(prev) or _is_hangul(c)):
+			out.append(char(0x2060))
+		out.append(char(c))
+		prev = c
+	return "".join(out)
+
+
+static func _is_hangul(c: int) -> bool:
+	return (c >= 0xAC00 and c <= 0xD7A3) or (c >= 0x1100 and c <= 0x11FF) or (c >= 0x3130 and c <= 0x318F)
+
+
+static func _is_space(c: int) -> bool:
+	return c == 0x20 or c == 0x0A or c == 0x09 or c == 0x3000
 
 
 func hide_doc() -> void:
