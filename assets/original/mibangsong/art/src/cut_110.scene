@@ -1,0 +1,53 @@
+# PRIVATE (미방송분). Cut 1-10: between loops, 2026: the officer on the phone (one side only); the capture log shows two LINEAR discontinuities
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/110.png
+@preview ../previews/110_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend B w:wall_block
+@legend F w:floor
+@legend L w:lamp_on
+@layer
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+FFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFF
+@layer
+.........L..........
+@sprite mbs_tiles_workroom.pix shelf_0_0 8 112
+@sprite mbs_tiles_workroom.pix shelf_1_0 24 112
+@sprite mbs_tiles_workroom.pix shelf_0_1 8 128
+@sprite mbs_tiles_workroom.pix shelf_1_1 24 128
+@sprite mbs_tiles_workroom.pix shelf_0_2 8 144
+@sprite mbs_tiles_workroom.pix shelf_1_2 24 144
+@sprite mbs_tiles_workroom.pix desk_0_0 128 128
+@sprite mbs_tiles_workroom.pix desk_1_0 144 128
+@sprite mbs_tiles_workroom.pix desk_2_0 160 128
+@sprite mbs_tiles_workroom.pix desk_0_1 128 144
+@sprite mbs_tiles_workroom.pix desk_1_1 144 144
+@sprite mbs_tiles_workroom.pix desk_2_1 160 144
+@sprite mbs_tiles_workroom.pix chair 160 144
+@sprite mbs_tiles_workroom.pix door_0_0 288 112
+@sprite mbs_tiles_workroom.pix door_0_1 288 128
+@sprite mbs_tiles_workroom.pix door_0_2 288 144
+@sprite mbs_seojin.pix phone 186 121 flip
+@darkness K 0.55
+@light 152 8 80
+@light 150 140 30
+@sprite mbs_ui_popups.pix capture_log 150 14 over
+@sprite mbs_ui_popups.pix call 12 18 over

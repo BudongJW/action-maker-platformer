@@ -1,0 +1,44 @@
+# PRIVATE (미방송분). Cut 4-06: 01:39 by the generator, from below: Jonggil has his hand on the switch; whatever is said, 01:40 comes
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/406.png
+@preview ../previews/406_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend S s:shore_top
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSSSSSS
+@sprite mbs_tiles_shore.pix pole_0_0 248 80
+@sprite mbs_tiles_shore.pix pole_0_1 248 96
+@sprite mbs_tiles_shore.pix pole_0_2 248 112
+@sprite mbs_tiles_shore.pix pole_0_3 248 128
+@sprite mbs_tiles_shore.pix pole_0_4 248 144
+@sprite mbs_tiles_shore.pix pole_0_5 248 160
+@sprite mbs_tiles_shore.pix generator_0_0 120 144
+@sprite mbs_tiles_shore.pix generator_1_0 136 144
+@sprite mbs_tiles_shore.pix generator_0_1 120 160
+@sprite mbs_tiles_shore.pix generator_1_1 136 160
+@sprite mbs_jonggil.pix switch 152 137 flip
+@darkness K 0.62
+@light 140 150 40
+@light 168 150 30
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over

@@ -1,0 +1,53 @@
+# PRIVATE (미방송분). Cut 3-04: the gut place under lanterns: Sunrye prepares the washing but there are not enough clothes; Mijeong answers in the local speech
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/304.png
+@preview ../previews/304_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend A s:water_0
+@legend M g:mat
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....MMMMMMMMM.......
+SSSSSSSSSSSSSSSSAAAA
+ssssssssssssssssaaaa
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 16 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 16 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 16 144
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 232 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 232 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 232 144
+@sprite ../../../art/src/tiles_gut.pix altar_0_0 88 128
+@sprite ../../../art/src/tiles_gut.pix altar_1_0 104 128
+@sprite ../../../art/src/tiles_gut.pix altar_2_0 120 128
+@sprite ../../../art/src/tiles_gut.pix altar_0_1 88 144
+@sprite ../../../art/src/tiles_gut.pix altar_1_1 104 144
+@sprite ../../../art/src/tiles_gut.pix altar_2_1 120 144
+@sprite mbs_items.pix soul_bowl 96 118
+@sprite mbs_sunrye.pix rules 176 121 flip
+@sprite mbs_mijeong.pix idle_0 140 121
+@darkness K 0.72
+@light 28 124 40
+@light 244 124 40
+@light 150 140 36
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

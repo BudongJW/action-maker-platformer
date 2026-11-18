@@ -1,0 +1,9 @@
+# PRIVATE (미방송분). Cut 1-01 MS front (viewfinder POV): Jonggil reads the episode and date to the camera instead of a slate
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/101.png
+@preview ../previews/101_x2.png 2
+@swap ../palette/linear.pal
+@sprite cu_101.pix a 0 0
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over

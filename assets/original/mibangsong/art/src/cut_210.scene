@@ -1,0 +1,9 @@
+# PRIVATE (미방송분). Cut 2-10 CU level: the pole in her hands does not tremble yet; from the water a very small voice; Mijeong lifts her head
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/210.png
+@preview ../previews/210_x2.png 2
+@swap ../palette/hifi.pal
+@sprite cu_210.pix a 0 0
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

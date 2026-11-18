@@ -1,0 +1,37 @@
+# PRIVATE (미방송분). Cut 4-11: LINEAR, glitching: each untied knot makes broadcast caption fragments drop off the Thing (it shrinks, it is not beaten)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/411.png
+@preview ../previews/411_x2.png 2
+@swap ../palette/linear.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend A s:water_0
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+SSSSSSSSSSSSSSSAAAAA
+sssssssssssssssaaaaa
+@sprite mbs_overdub.pix shed 136 97
+@darkness K 0.78
+@light 160 120 50
+@sprite mbs_ui_popups.pix shards 80 60 over
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix linear 14 24 over

@@ -1,0 +1,46 @@
+# PRIVATE (미방송분). Cut 4-12: all seven knots untied: Sunrye lays the loose cotton long toward the water
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/412.png
+@preview ../previews/412_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend A s:water_0
+@legend M g:mat
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+MMMMMM..............
+SSSSSSSSSSSSSSSSAAAA
+ssssssssssssssssaaaa
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 8 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 8 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 8 144
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 296 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 296 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 296 144
+@sprite mbs_prop_cloth.pix cloth_drape 92 124
+@sprite mbs_sunrye.pix cloth_1 64 121
+@darkness K 0.76
+@light 20 124 40
+@light 300 124 36
+@light 170 140 50
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

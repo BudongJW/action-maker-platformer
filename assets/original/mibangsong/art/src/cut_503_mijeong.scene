@@ -1,0 +1,9 @@
+# PRIVATE (미방송분). Cut 5-03 CU (leaves) -> MS (Mijeong) / mijeong: the spirit-pole leaves begin to tremble and Mijeong's shoulders shake; the soul comes to the one holding the pole
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/503_mijeong.png
+@preview ../previews/503_mijeong_x2.png 2
+@swap ../palette/hifi.pal
+@sprite cu_503.pix mijeong 0 0
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over

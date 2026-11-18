@@ -1,0 +1,68 @@
+# PRIVATE (미방송분). Cut 4-04: between the reserve stacks Seojin calls Gitae (51), who hesitates a long time (one side only)
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/404.png
+@preview ../previews/404_x2.png 2
+@swap ../palette/2026.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend B w:wall_block
+@legend F w:floor
+@legend L w:lamp_on
+@layer
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBB
+FFFFFFFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFFFFFF
+@layer
+......L.............
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_0 16 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_0 32 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_1 16 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_1 32 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_2 16 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_2 32 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_3 16 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_3 32 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_0 52 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_0 68 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_1 52 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_1 68 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_2 52 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_2 68 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_3 52 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_3 68 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_0 228 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_0 244 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_1 228 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_1 244 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_2 228 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_2 244 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_3 228 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_3 244 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_0 264 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_0 280 96
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_1 264 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_1 280 112
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_2 264 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_2 280 128
+@sprite mbs_tiles_workroom.pix mobile_shelf_0_3 264 144
+@sprite mbs_tiles_workroom.pix mobile_shelf_1_3 280 144
+@sprite mbs_seojin.pix phone 150 121
+@darkness K 0.66
+@light 104 8 70
+@light 164 130 34
+@sprite mbs_ui_popups.pix call 110 18 over

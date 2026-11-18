@@ -1,0 +1,44 @@
+# PRIVATE (미방송분). Cut 5-02: quiet shore: Sunrye scatters salt, ties the bowl to the untied cotton and puts it back in the water; Mijeong holds the pole
+@palette ../../../art/palette/night-school.pal
+@size 320 180
+@output ../cuts/502.png
+@preview ../previews/502_x2.png 2
+@swap ../palette/hifi.pal
+@fill D
+
+@tiles w mbs_tiles_workroom.pix
+@tiles s mbs_tiles_shore.pix
+@tiles x mbs_tiles_extra.pix
+@tiles g ../../../art/src/tiles_gut.pix
+@tiles h mbs_tiles_house.pix
+@legend A s:water_0
+@legend M g:mat
+@legend S s:shore_top
+@legend a s:water_fill
+@legend s s:shore_fill
+@sprite mbs_bg_reservoir.pix layer 0 0
+@layer
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+MMMMMMM.............
+SSSSSSSSSSSSSSSAAAAA
+sssssssssssssssaaaaa
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_0 8 112
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_1 8 128
+@sprite mbs_tiles_shore.pix lantern_post_lit_0_2 8 144
+@sprite mbs_prop_cloth.pix cloth_bowl 100 124
+@sprite mbs_sunrye.pix salt 36 121
+@sprite mbs_mijeong.pix sindae_0 70 121
+@darkness K 0.74
+@light 20 124 40
+@light 120 136 40
+@light 240 146 30
+@sprite mbs_fx_viewfinder.pix rec 0 0 over
+@sprite mbs_ui_badges.pix hifi 14 24 over
