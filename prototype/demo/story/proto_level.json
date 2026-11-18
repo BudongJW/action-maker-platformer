@@ -543,7 +543,13 @@
     },
     "cuts": {
       "demo_intro": {
-        "texture": "assets/original/art/backgrounds/bg_harbor.png"
+        "texture": "assets/original/art/backgrounds/bg_harbor.png",
+        "when": [
+          {
+            "from_line": "demo_i_004",
+            "texture": "assets/original/art/backgrounds/bg_sea.png"
+          }
+        ]
       }
     }
   },

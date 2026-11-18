@@ -54,6 +54,7 @@ p: The keeper told the rules.  #line:demo_answer_002
 narrator: A tape is waiting in the deck.  #line:demo_i_001
 - Play it  #line:demo_i_002
 - Label it and play it  #line:demo_i_003
+narrator: The counter starts at zero.  #line:demo_i_004
 => END
 
 

@@ -82,6 +82,9 @@ var _water_barked: Array = []
 var _escorts: Array = []
 var _chaser_flag_started := false
 var _scare_on := ""  # scare id between its onset and its end
+var _cut_cfg: Dictionary = {}  # the running dialogue's art "cuts" entry
+var _cut_lines := {}  # line ids shown in the running dialogue
+var _cut_shown: Dictionary = {}
 var _selected := 0
 var _after_doc: Callable = Callable()
 
@@ -382,10 +385,11 @@ func _process(delta: float) -> void:
 		level.update_flag_props(func(f): return runner.get_flag(f) == true)
 		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)) and not reel_on:
 			_end_loop()
+	var tc := _update_camera()
 	if reel_on:
 		ui.set_hud("")
 	else:
-		_update_hud()
+		_update_hud(tc)
 	if bot and not reel_on:
 		_bot_step(delta)
 		if _stats["frames"] > _max_frames:
@@ -444,9 +448,12 @@ func _unhandled_input(event: InputEvent) -> void:
 # --- Story and scares ----------------------------------------------------------------------
 
 
-func _on_line(_id: String, speaker: String, _expression: String, attrs: Dictionary, text: String) -> void:
+func _on_line(id: String, speaker: String, _expression: String, attrs: Dictionary, text: String) -> void:
 	_stats["lines"] += 1
 	_choices.clear()
+	if not _cut_cfg.is_empty():
+		_cut_lines[id] = true
+		_apply_cut()
 	ui.show_line(String(attrs.get("display_name", speaker)), text)
 	# Some voices have no body on screen; a soft waveform stands in for them.
 	ui.set_voice(speaker in _voice_speakers)
@@ -501,12 +508,32 @@ func _on_dialogue_started(id: String) -> void:
 	_bot_menus.clear()
 	_stats["dialogues"] += 1
 	_log("dialogue " + id)
-	# Art "cuts": {dialogue_id: {"texture", "frame"}} shows a picture while that dialogue plays.
-	var cut: Dictionary = art.cfg.get("cuts", {}).get(id, {}) if art.enabled() else {}
-	ui.set_cut(null if cut.is_empty() else art.frame(String(cut.get("texture", "")), String(cut.get("frame", ""))))
+	# Art "cuts": {dialogue_id: {"texture", "frame", "when"}} shows a picture while that dialogue plays.
+	_cut_cfg = art.cfg.get("cuts", {}).get(id, {}) if art.enabled() else {}
+	_cut_lines.clear()
+	_cut_shown = {}
+	_apply_cut()
+
+
+## Picks the dialogue's picture: the last "when" entry ({from_line, requires, texture, frame}) whose
+## line has been shown and whose flags hold, else the entry itself. Checked again on every line, so
+## the picture can change halfway (a close-up, then the wide shot; the camera switched off).
+func _apply_cut() -> void:
+	if _cut_cfg.is_empty():
+		ui.set_cut(null)
+		return
+	var pick: Dictionary = _cut_cfg
+	for alt in _cut_cfg.get("when", []):
+		if (not alt.has("from_line") or _cut_lines.has(String(alt["from_line"]))) and _requirements_met(alt):
+			pick = alt
+	if pick == _cut_shown:
+		return
+	_cut_shown = pick
+	ui.set_cut(art.frame(String(pick.get("texture", "")), String(pick.get("frame", ""))))
 
 
 func _on_dialogue_finished(_id: String) -> void:
+	_cut_cfg = {}
 	ui.set_cut(null)
 	ui.hide_window()
 	ui.set_voice(false)
@@ -886,7 +913,8 @@ func _track_is(track_name: String) -> bool:
 	return true
 
 
-func _update_hud() -> void:
+## The camera overlay: timecode, REC and the camera switched off. Runs in reel mode too.
+func _update_camera() -> String:
 	var t := int(mixer.tape_time())
 	var tc := "%02d:%02d:%02d" % [t / 3600, (t / 60) % 60, t % 60]
 	ui.set_timecode(tc)
@@ -900,6 +928,11 @@ func _update_hud() -> void:
 	if player.recording != _last_rec:
 		_last_rec = player.recording
 		audio.play("rec_on" if player.recording else "rec_off")
+	return tc
+
+
+## The debug line at the top of the screen (not shown in reel mode).
+func _update_hud(tc: String) -> void:
 	var names := ["HI-FI", "LINEAR", "MIX"]
 	var mode := ""
 	if director.mode != ScareDirector.Mode.DEFAULT or director.photosafe:
