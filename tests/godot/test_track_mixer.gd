@@ -45,6 +45,7 @@ func test_track_flag_and_crossfade() -> void:
 	_nodes.append(story)
 	m.bind_story(story)
 	check_eq(story.flags.get("loop.track_hifi"), false, "LINEAR at start")
+	check_eq(story.flags.get("loop.track_mix"), false, "not MIX at start")
 	var changes: Array = []
 	m.track_changed.connect(func(t): changes.append(t))
 	m.set_track(Mixer.Track.HIFI)
@@ -57,7 +58,11 @@ func test_track_flag_and_crossfade() -> void:
 	m.tick(1.0)
 	check_near(m.gains().x, sqrt(0.5), "MIX keeps equal power")
 	check_eq(story.flags.get("loop.track_hifi"), false, "MIX is not HIFI for the story")
-	check_eq(changes, [Mixer.Track.HIFI, Mixer.Track.MIX], "track_changed signals")
+	check_eq(story.flags.get("loop.track_mix"), true, "MIX sets its own flag")
+	m.set_track(Mixer.Track.LINEAR)
+	check_eq(story.flags.get("loop.track_mix"), false, "leaving MIX clears it")
+	m.set_track(Mixer.Track.MIX)
+	check_eq(changes, [Mixer.Track.HIFI, Mixer.Track.MIX, Mixer.Track.LINEAR, Mixer.Track.MIX], "track_changed signals")
 
 
 func test_segments_and_divergence() -> void:

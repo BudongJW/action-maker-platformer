@@ -34,6 +34,8 @@ var linear_group: String = "track_linear_only"
 var mix_alpha: float = 0.5
 ## Flag written to the bound StoryRunner when the track changes (true only in HIFI).
 var hifi_flag: String = "loop.track_hifi"
+## Flag written alongside it, true only in MIX (scripts can tell MIX apart from LINEAR).
+var mix_flag: String = "loop.track_mix"
 ## Call tick() from _process(). Turn off in tests.
 var auto_process: bool = true
 ## Stop the clock (for example while a dialogue is open).
@@ -57,6 +59,7 @@ func _process(delta: float) -> void:
 func bind_story(runner: Node) -> void:
 	_story = runner
 	_write_flag(hifi_flag, _track == Track.HIFI)
+	_write_flag(mix_flag, _track == Track.MIX)
 
 
 func set_track(track: Track) -> void:
@@ -64,6 +67,7 @@ func set_track(track: Track) -> void:
 		return
 	_track = track
 	_write_flag(hifi_flag, track == Track.HIFI)
+	_write_flag(mix_flag, track == Track.MIX)
 	track_changed.emit(track)
 
 
