@@ -169,7 +169,8 @@
         "requires": [
           "save.hifi_unlocked"
         ]
-      }
+      },
+      "demo_close"
     ],
     "scares": {
       "demo_call": "demo_phone"
@@ -177,6 +178,17 @@
     "on_play": [],
     "start_docs": [
       "demo_notice"
+    ],
+    "actions": [
+      {
+        "key": "N",
+        "dialogue": "demo_notes",
+        "requires": [
+          "save.hifi_unlocked"
+        ],
+        "prompt": "ui.hub.notes",
+        "bot": true
+      }
     ]
   },
   "board": {
@@ -363,6 +375,13 @@
       ],
       "set_track": "hifi",
       "set_flag": "loop.demo_free"
+    },
+    {
+      "id": "rewind",
+      "requires": [
+        "save.demo_done"
+      ],
+      "end_loop": true
     }
   ],
   "chaser": {
@@ -374,15 +393,17 @@
     "speed": 160,
     "offset": -360
   },
-  "end_flag": "save.demo_done",
+  "end_flag": "save.demo_closed",
   "report_flags": [
     "sys.loop_count",
     "save.hifi_unlocked",
     "save.ev_lipsync",
     "save.demo_done",
     "save.demo_lamp",
-    "loop.demo_free",
-    "loop.demo_escort_done"
+    "save.demo_labelled",
+    "save.demo_ending",
+    "save.demo_closed",
+    "save.demo_walked"
   ],
   "bot_route": [
     {
@@ -550,6 +571,20 @@
             "texture": "assets/original/art/backgrounds/bg_sea.png"
           }
         ]
+      },
+      "demo_close": {
+        "texture": "assets/original/art/fx/fx_static.png",
+        "frames": [
+          "static_0",
+          "static_1"
+        ],
+        "fps": 4,
+        "when": [
+          {
+            "from_line": "demo_cl_004",
+            "none": true
+          }
+        ]
       }
     }
   },
@@ -635,7 +670,16 @@
         "color": "d8d8d0",
         "width": 4
       },
-      "done_flag": "loop.demo_escort_done"
+      "done_flag": "save.demo_walked"
     }
+  ],
+  "end_docs": [
+    {
+      "doc": "demo_end"
+    }
+  ],
+  "bot_prefer": [
+    "demo_cl_003",
+    "demo_i_003"
   ]
 }

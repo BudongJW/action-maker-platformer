@@ -85,6 +85,10 @@ var _scare_on := ""  # scare id between its onset and its end
 var _cut_cfg: Dictionary = {}  # the running dialogue's art "cuts" entry
 var _cut_lines := {}  # line ids shown in the running dialogue
 var _cut_shown: Dictionary = {}
+var _cut_anim: Array = []  # frames of an animated cut
+var _cut_anim_fps := 2.0
+var _cut_anim_t := 0.0
+var _bot_actions := {}  # workroom action keys the bot has used
 var _selected := 0
 var _after_doc: Callable = Callable()
 
@@ -100,6 +104,10 @@ func _ready() -> void:
 
 	runner = StoryRunner.new()
 	add_child(runner)
+	if bot or "--reel" in OS.get_cmdline_user_args():
+		# Bot runs and reels keep meta.* (endings seen, second playthrough) in memory only, so they
+		# neither read nor change the player's file and every run starts the same.
+		runner.flags.meta_path = ""
 	if runner.load_story(STORY, STRINGS) != OK:
 		push_error("ProtoGame: no compiled story at %s" % STORY)
 	runner.new_game()
@@ -261,7 +269,27 @@ func _show_hub_prompt() -> void:
 	var text := "WORKROOM  -  PLAY %d\n[Enter] play the tape" % int(runner.get_flag("sys.loop_count"))
 	if _board_ready():
 		text += "\n" + tr("ui.board.open")
+	for action in _hub_actions_ready():
+		text += "\n" + tr(String(action.get("prompt", "")))
 	ui.set_hub(text)
+
+
+## Workroom actions ("hub": {"actions": [{key, dialogue, requires, prompt, bot}]}): a key that opens
+## a dialogue between tapes, for example closing out the job early. They wait like the board.
+func _hub_actions_ready() -> Array:
+	var ready: Array = []
+	if phase != Phase.HUB or runner.is_running() or ui.doc_open() or director.is_busy() or not _hub_queue.is_empty():
+		return ready
+	for action in data.get("hub", {}).get("actions", []):
+		if _requirements_met(action) and runner.is_available(String(action.get("dialogue", ""))):
+			ready.append(action)
+	return ready
+
+
+func _hub_action(action: Dictionary) -> void:
+	ui.set_hub("")
+	_log("hub action " + String(action.get("key", "")))
+	runner.start(String(action.get("dialogue", "")))
 
 
 ## The board opens in the workroom between dialogues once its "requires" flags are on.
@@ -348,6 +376,18 @@ func _end_loop() -> void:
 func _complete() -> void:
 	phase = Phase.END
 	player.frozen = true
+	# "end_docs": [{doc, requires}] — the first document whose flags hold is shown before the end
+	# (an ending's title card, credits).
+	for entry in data.get("end_docs", []):
+		var doc_id: String = String(entry.get("doc", ""))
+		if _requirements_met(entry) and not runner.get_doc(doc_id).is_empty():
+			runner.collect_doc(doc_id)
+			_show_doc(doc_id, _end_card)
+			return
+	_end_card()
+
+
+func _end_card() -> void:
 	ui.set_hub("END OF SLICE")
 	if bot:
 		_finish_bot("complete")
@@ -366,6 +406,7 @@ func _process(delta: float) -> void:
 		player.frozen = true
 		return
 	director.tick(delta)
+	_animate_cut(delta)
 	if phase == Phase.TAPE:
 		var talking := runner.is_running() or ui.doc_open()
 		player.frozen = talking or _catching
@@ -408,6 +449,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if key == KEY_B and _board_ready():
 		_open_board()
 		return
+	for action in _hub_actions_ready():
+		if key == OS.find_keycode_from_string(String(action.get("key", ""))):
+			_hub_action(action)
+			return
 	if key == KEY_ESCAPE:
 		settings.open()
 		return
@@ -529,17 +574,46 @@ func _apply_cut() -> void:
 	if pick == _cut_shown:
 		return
 	_cut_shown = pick
-	ui.set_cut(art.frame(String(pick.get("texture", "")), String(pick.get("frame", ""))))
+	_cut_anim.clear()
+	if bool(pick.get("none", false)):
+		ui.set_cut(null)  # no picture from here on
+		return
+	var texture: String = String(pick.get("texture", ""))
+	for f in pick.get("frames", []):
+		_cut_anim.append(art.frame(texture, String(f)))
+	_cut_anim_fps = float(pick.get("fps", 2.0))
+	_cut_anim_t = 0.0
+	ui.set_cut(_cut_anim[0] if not _cut_anim.is_empty() else art.frame(texture, String(pick.get("frame", ""))))
+
+
+## "frames": [names] with "fps" turns a cut into a short loop (a counter ticking over).
+func _animate_cut(delta: float) -> void:
+	if _cut_anim.size() < 2:
+		return
+	var before := int(_cut_anim_t * _cut_anim_fps)
+	_cut_anim_t += delta
+	var now := int(_cut_anim_t * _cut_anim_fps)
+	if now != before:
+		ui.set_cut(_cut_anim[now % _cut_anim.size()])
 
 
 func _on_dialogue_finished(_id: String) -> void:
 	_cut_cfg = {}
+	_cut_anim.clear()
 	ui.set_cut(null)
 	ui.hide_window()
 	ui.set_voice(false)
 	_choices.clear()
 	if reel != null and reel.running:
 		return  # the reel decides what comes next
+	# A dialogue that hands over to another ("=> ~id") finishes before the next one starts; decide
+	# what comes next once that has happened.
+	_after_dialogue.call_deferred()
+
+
+func _after_dialogue() -> void:
+	if runner.is_running():
+		return
 	var end_flag: String = String(data.get("end_flag", ""))
 	if end_flag != "" and runner.get_flag(end_flag) == true:
 		_complete()
@@ -641,6 +715,10 @@ func _check_triggers() -> void:
 func _fire(tr: Dictionary) -> bool:
 	if tr.has("sfx"):
 		audio.play(String(tr["sfx"]))
+	if bool(tr.get("end_loop", false)):
+		# The tape is over for this loop (for example rewound once the story has reached its end).
+		_end_loop.call_deferred()
+		return true
 	if tr.has("set_track"):
 		_set_track(_track_named(String(tr["set_track"])), true)
 	if tr.has("warp"):
@@ -692,7 +770,13 @@ func _requirements_met(entry: Dictionary) -> bool:
 		var negate := name.begins_with("!")
 		if negate:
 			name = name.substr(1)
-		var on: bool = runner.get_flag(name) == true
+		var on: bool
+		var eq := name.find("=")
+		if eq > 0:
+			# "flag=value" compares a number or text flag, for example "save.ending=5".
+			on = str(runner.get_flag(name.substr(0, eq))) == name.substr(eq + 1)
+		else:
+			on = runner.get_flag(name) == true
 		if on == negate:
 			return false
 	return true
@@ -1078,6 +1162,11 @@ func _bot_step(delta: float) -> void:
 			board.handle_key(key)
 		return
 	if phase == Phase.HUB:
+		for action in _hub_actions_ready():
+			if bool(action.get("bot", false)) and not _bot_actions.has(action.get("key", "")):
+				_bot_actions[action.get("key", "")] = true
+				_hub_action(action)
+				return
 		if not director.is_busy() and _bot_timer > 0.2:
 			_bot_timer = 0.0
 			_on_play()
@@ -1122,6 +1211,11 @@ func _bot_step(delta: float) -> void:
 ## The first enabled option the bot has not taken yet in this menu; once all are taken, the last
 ## enabled one (usually "leave"). Menus that loop back (pick a knot, show a card) cannot trap it.
 func _bot_choice() -> int:
+	# "bot_prefer": [choice line ids] the bot takes whenever they are offered (an ending, a route).
+	var prefer: Array = data.get("bot_prefer", [])
+	for i in _choices.size():
+		if _choices[i]["enabled"] and prefer.has(String(_choices[i].get("line_id", ""))):
+			return i
 	var key := runner.current_dialogue()
 	for c in _choices:
 		key += "|" + String(c["text"])

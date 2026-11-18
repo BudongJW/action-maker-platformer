@@ -54,6 +54,7 @@ p: The keeper told the rules.  #line:demo_answer_002
 narrator: A tape is waiting in the deck.  #line:demo_i_001
 - Play it  #line:demo_i_002
 - Label it and play it  #line:demo_i_003
+    set save.demo_labelled = true
 narrator: The counter starts at zero.  #line:demo_i_004
 => END
 
@@ -124,3 +125,33 @@ set save.demo_done = true
 
 crowd: Quiet tonight.  #line:demo_b_001
 crowd: Look how low the water is.  #line:demo_b_002
+
+
+// Workroom action (hub "actions", key N): a note on the deck.
+~ demo_notes
+@style window
+
+narrator: A note on the deck says to check the switch at the back.  #line:demo_note_001
+=> END
+
+
+// After the last tape: close out the job. The level's bot_prefer picks the second option.
+~ demo_close
+@requires save.demo_done
+@once save
+@style window
+
+narrator: The tape has run to the end. Time to file it.  #line:demo_cl_001
+- Ship it as it is  #line:demo_cl_002
+    set save.demo_ending = 1
+- File it with notes  #line:demo_cl_003
+    set save.demo_ending = 2
+narrator: A label goes on the spine.  #line:demo_cl_004
+set save.demo_closed = true
+=> END
+
+~doc demo_end
+@category system
+
+title: End of the demo  #line:demo_end_001
+p: The level's end_docs show this card when the end flag turns on.  #line:demo_end_002

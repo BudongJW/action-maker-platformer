@@ -55,3 +55,5 @@ ui.prompt.take,가져가기,Take
 ui.prompt.put_down,내려놓기,Put Down
 ui.board.knots,매듭,Knots
 ui.board.knot_tied,아직 풀리지 않았다,Not untied yet
+ui.hub.deadline,마감 처리 [D],Close Out the Job [D]
+ui.hub.notes,메모 보기 [N],Read the Notes [N]
