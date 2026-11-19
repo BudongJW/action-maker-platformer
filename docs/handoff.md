@@ -7,7 +7,7 @@
 
 | 항목 | 상태 |
 |---|---|
-| 작업 브랜치 | `claude/inspiring-galileo-f9ez1u` (main보다 34커밋 앞섬, 마지막 `9e62f3f`) |
+| 작업 브랜치 | `claude/inspiring-galileo-f9ez1u` (main에 없는 커밋은 `git log --oneline origin/main..HEAD`로 확인) |
 | PR | [BudongJW/action-maker-platformer#4](https://github.com/BudongJW/action-maker-platformer/pull/4) 열림. main과 충돌 없음, CI 모두 통과. **병합은 직접 요청할 때만** |
 | 스토리 런타임 | `scripts/story/` 완성, Godot 4.7 헤드리스 테스트 246개 통과 |
 | 프로토타입 | 비공개 팩으로 시작부터 진엔딩까지 봇이 끝까지 진행(약 77,000프레임, 오류 0). 공개 데모 콘텐츠로는 CI가 같은 기능을 검사 |
