@@ -582,6 +582,21 @@
         "when": [
           {
             "from_line": "demo_cl_004",
+            "texture": "assets/original/art/backgrounds/bg_harbor.png",
+            "text": {
+              "rect": [
+                20,
+                20,
+                180,
+                24
+              ],
+              "size": 10,
+              "color": "f0f0e8",
+              "fill": "202028"
+            }
+          },
+          {
+            "from_line": "demo_cl_005",
             "none": true
           }
         ]
@@ -681,5 +696,9 @@
   "bot_prefer": [
     "demo_cl_003",
     "demo_i_003"
-  ]
+  ],
+  "credits": {
+    "doc": "demo_credits",
+    "secs": 4
+  }
 }

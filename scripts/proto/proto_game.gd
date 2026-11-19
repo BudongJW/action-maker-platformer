@@ -83,7 +83,7 @@ var _escorts: Array = []
 var _chaser_flag_started := false
 var _scare_on := ""  # scare id between its onset and its end
 var _cut_cfg: Dictionary = {}  # the running dialogue's art "cuts" entry
-var _cut_lines := {}  # line ids shown in the running dialogue
+var _cut_lines := {}  # line id -> text of the lines shown in the running dialogue
 var _cut_shown: Dictionary = {}
 var _cut_anim: Array = []  # frames of an animated cut
 var _cut_anim_fps := 2.0
@@ -388,6 +388,17 @@ func _complete() -> void:
 
 
 func _end_card() -> void:
+	# "credits": {doc, secs} rolls a document before the last card (Enter or Esc skips it).
+	var credits: Dictionary = data.get("credits", {})
+	var doc := runner.get_doc(String(credits.get("doc", "")))
+	if not doc.is_empty() and not ui.credits_running():
+		_log("credits")
+		ui.roll_credits(doc, float(credits.get("secs", 40.0)), _end_text)
+		return
+	_end_text()
+
+
+func _end_text() -> void:
 	ui.set_hub("END OF SLICE")
 	if bot:
 		_finish_bot("complete")
@@ -442,6 +453,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if k == null or not k.pressed or k.echo:
 		return
 	var key: int = k.keycode
+	if ui.credits_running():
+		if key in [KEY_ENTER, KEY_KP_ENTER, KEY_E, KEY_ESCAPE]:
+			ui.skip_credits()
+		return
 	if settings.handle_key(key):
 		return
 	if board != null and board.handle_key(key):
@@ -497,9 +512,23 @@ func _on_line(id: String, speaker: String, _expression: String, attrs: Dictionar
 	_stats["lines"] += 1
 	_choices.clear()
 	if not _cut_cfg.is_empty():
-		_cut_lines[id] = true
+		_cut_lines[id] = text
 		_apply_cut()
-	ui.show_line(String(attrs.get("display_name", speaker)), text)
+	# Meta outputs: the runtime replaces them with stand-ins unless the player allowed them
+	# (attrs.target). The prototype changes the real window title when allowed and draws the
+	# other two inside the game either way.
+	var target: String = String(attrs.get("target", ""))
+	var requested: String = String(attrs.get("requested_target", target))
+	var kind := ""
+	if target == "fake_os_dialog" or target == "os_dialog":
+		kind = "os"
+	elif requested == "window_title":
+		kind = "title"
+		if target == "window_title":
+			DisplayServer.window_set_title(text)
+	elif target == "journal_note" or target == "desktop_file":
+		kind = "note"
+	ui.show_line(String(attrs.get("display_name", speaker)), text, kind)
 	# Some voices have no body on screen; a soft waveform stands in for them.
 	ui.set_voice(speaker in _voice_speakers)
 
@@ -578,12 +607,17 @@ func _apply_cut() -> void:
 	if bool(pick.get("none", false)):
 		ui.set_cut(null)  # no picture from here on
 		return
+	ui.set_cut_text("", {})
 	var texture: String = String(pick.get("texture", ""))
 	for f in pick.get("frames", []):
 		_cut_anim.append(art.frame(texture, String(f)))
 	_cut_anim_fps = float(pick.get("fps", 2.0))
 	_cut_anim_t = 0.0
 	ui.set_cut(_cut_anim[0] if not _cut_anim.is_empty() else art.frame(texture, String(pick.get("frame", ""))))
+	# "text": {rect, size, color, fill} writes the text of the entry's own line on the picture
+	# (a headline that changes with the player's choices), in the picture's pixels.
+	if pick.has("text"):
+		ui.set_cut_text(String(_cut_lines.get(String(pick.get("from_line", "")), "")), pick["text"])
 
 
 ## "frames": [names] with "fps" turns a cut into a short loop (a counter ticking over).

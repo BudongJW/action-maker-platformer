@@ -23,6 +23,7 @@
     {"do": "follow", "escort": "lamp_walk", "gap": -40, "secs": 5.5},
     {"do": "hub", "text": ""},
     {"do": "board", "keys": ["RIGHT", "DOWN", "RIGHT", "DOWN"], "key_secs": 0.6},
+    {"do": "credits", "id": "demo_credits", "secs": 3},
     {"do": "title", "text": "End of reel", "sub": "", "secs": 2},
     {"do": "end"}
   ]

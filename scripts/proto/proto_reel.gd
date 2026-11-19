@@ -20,6 +20,7 @@
 ##   follow {escort, gap, secs}     walks beside a level escort (`gap` pixels behind it) for secs
 ##   warp {x, y}, track {track}, wait {secs}, cue {id, secs}, scare {id, secs}
 ##   board {keys: ["RIGHT", "DOWN", ...], key_secs}   opens the deduction board and presses keys
+##   credits {id, secs}             rolls a document as end credits
 ##   end                            stops every sound and quits (ends the movie)
 class_name ProtoReel
 extends Node
@@ -144,6 +145,8 @@ func tick(delta: float) -> void:
 			if _t >= secs:
 				game.player.bot_axis = 0.0
 				_next()
+		"credits":
+			pass  # roll_credits calls _next when the roll is over
 		"board":
 			_key_left -= delta
 			if _key_left <= 0.0:
@@ -239,6 +242,12 @@ func _next() -> void:
 			game.ui.play_cue(game.runner.play_cue(String(_step.get("id", ""))))
 		"scare":
 			game.director.trigger(String(_step.get("id", "")))
+		"credits":
+			var doc := game.runner.get_doc(String(_step.get("id", "")))
+			if doc.is_empty():
+				_next()
+			else:
+				game.ui.roll_credits(doc, float(_step.get("secs", 20.0)), _next)
 		"board":
 			game.board.open()
 			_keys = _step.get("keys", []).duplicate()

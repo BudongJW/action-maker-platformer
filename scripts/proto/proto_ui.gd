@@ -44,6 +44,26 @@ var _captions_on := true
 var _caption_clock := 0.0
 var _bubble_left := 0.0
 var _toast_left := 0.0
+# Stand-ins for the meta outputs when the player has not allowed them (or they are not built):
+# a system window drawn inside the game, a title bar along the top, and a journal note.
+var _os: PanelContainer
+var _os_title: Label
+var _os_text: Label
+var _os_ok: Label
+var _note_head: Label
+var _title_bar: Label
+var _note: PanelContainer
+var _note_text: Label
+# Text drawn on a cut picture (a headline on a news page), in the picture's own pixels.
+var _cut_fill: ColorRect
+var _cut_text: Label
+var _cut_text_spec: Dictionary = {}
+# End credits: a document scrolled up the screen.
+var _credits: Control
+var _credits_box: VBoxContainer
+var _credits_t := 0.0
+var _credits_secs := 0.0
+var _credits_done: Callable = Callable()
 
 
 func _ready() -> void:
@@ -114,8 +134,20 @@ func _ready() -> void:
 	_hub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_prompt = _anchored_label(0.3, 0.7, 0.62, 0.68, 20)
 	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_build_meta()
+	_cut_fill = ColorRect.new()
+	_cut_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_cut.add_child(_cut_fill)
+	_cut_text = _label(12, Color.BLACK)
+	_cut_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_cut_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_cut_text.remove_meta("base_size")  # sized from the picture, not by the text size setting
+	_cut.add_child(_cut_text)
+	_cut_fill.visible = false
+	_cut_text.visible = false
 	# Last, so a document covers the HUD and captions while it is open.
 	_build_doc()
+	_build_credits()
 
 
 ## Draws the camera viewfinder over the world (REC and standby frames, 320x180 art).
@@ -172,6 +204,8 @@ func set_cut(tex: Texture2D) -> void:
 	_cut.texture = tex
 	_cut.visible = tex != null
 	_cut_back.visible = tex != null
+	if tex == null:
+		set_cut_text("", {})
 	# The workroom text would sit on top of the picture during a hub dialogue.
 	_hub.visible = tex == null and _hub.text != ""
 
@@ -201,7 +235,50 @@ func apply_skin(art: ProtoArt) -> void:
 		_doc.add_theme_stylebox_override("panel", sb)
 
 
-func show_line(speaker: String, text: String) -> void:
+## Writes `text` on the cut picture: spec {rect: [x, y, w, h], size, color, fill} in the picture's
+## pixels (320x180 art); the box is filled first so the text covers whatever the art drew there.
+## An empty spec or text removes it.
+func set_cut_text(text: String, spec: Dictionary) -> void:
+	_cut_text_spec = spec if text != "" and spec.has("rect") else {}
+	_cut_text.text = ProtoUI.keep_words(text)
+	_cut_text.add_theme_color_override("font_color", Color.html(String(spec.get("color", "101014"))))
+	_cut_fill.color = Color.html(String(spec.get("fill", "00000000")))
+	_cut_fill.visible = not _cut_text_spec.is_empty() and spec.has("fill")
+	_cut_text.visible = not _cut_text_spec.is_empty()
+	_place_cut_text()
+
+
+func _place_cut_text() -> void:
+	if _cut_text_spec.is_empty() or _cut.texture == null:
+		return
+	var tex_size := _cut.texture.get_size()
+	var k := minf(_cut.size.x / tex_size.x, _cut.size.y / tex_size.y)
+	var origin := (_cut.size - tex_size * k) / 2.0
+	var r: Array = _cut_text_spec["rect"]
+	var pos := origin + Vector2(float(r[0]), float(r[1])) * k
+	var box := Vector2(float(r[2]), float(r[3])) * k
+	_cut_fill.position = pos
+	_cut_fill.size = box
+	_cut_text.position = pos
+	_cut_text.size = box
+	_cut_text.add_theme_font_size_override("font_size", maxi(8, int(round(float(_cut_text_spec.get("size", 8)) * k))))
+
+
+## kind "" is the dialogue window; "os" a system window drawn in the game, "title" a title bar along
+## the top, "note" a journal note (the stand-ins for the meta outputs).
+func show_line(speaker: String, text: String, kind: String = "") -> void:
+	_os.visible = kind == "os"
+	_title_bar.visible = kind == "title"
+	_note.visible = kind == "note"
+	if kind != "":
+		_window.visible = false
+		_os_ok.text = "[ " + tr("ui.dialog.ok") + " ]"
+		_note_head.text = tr("ui.journal.added")
+		_os_title.text = speaker
+		_os_text.text = ProtoUI.keep_words(text)
+		_title_bar.text = "  " + text
+		_note_text.text = ProtoUI.keep_words(text)
+		return
 	_window.visible = true
 	_name.text = speaker
 	_name.visible = speaker != ""
@@ -212,6 +289,7 @@ func show_line(speaker: String, text: String) -> void:
 
 ## Lists the options; `selected` is highlighted (arrow keys move it, Enter picks it).
 func show_choices(options: Array, selected: int = 0) -> void:
+	_hide_meta()
 	_window.visible = true
 	_hint.text = "[Up/Down] [Enter]  [1-4]"
 	_clear_choices()
@@ -320,6 +398,138 @@ func _build_doc() -> void:
 
 func hide_window() -> void:
 	_window.visible = false
+	_hide_meta()
+
+
+func _hide_meta() -> void:
+	_os.visible = false
+	_title_bar.visible = false
+	_note.visible = false
+
+
+func _build_meta() -> void:
+	_os = PanelContainer.new()
+	_os.anchor_left = 0.3
+	_os.anchor_right = 0.7
+	_os.anchor_top = 0.38
+	_os.anchor_bottom = 0.38
+	_os.grow_vertical = Control.GROW_DIRECTION_BOTH
+	var frame := StyleBoxFlat.new()
+	frame.bg_color = Color(0.8, 0.8, 0.82)
+	frame.border_color = Color(0.2, 0.22, 0.3)
+	frame.set_border_width_all(2)
+	_os.add_theme_stylebox_override("panel", frame)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 0)
+	_os.add_child(col)
+	_os_title = _label(15, Color.WHITE)
+	var bar := StyleBoxFlat.new()
+	bar.bg_color = Color(0.16, 0.2, 0.42)
+	bar.set_content_margin_all(5)
+	_os_title.add_theme_stylebox_override("normal", bar)
+	col.add_child(_os_title)
+	var body := MarginContainer.new()
+	for side in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
+		body.add_theme_constant_override(side, 16)
+	col.add_child(body)
+	var inner := VBoxContainer.new()
+	inner.add_theme_constant_override("separation", 12)
+	body.add_child(inner)
+	_os_text = _label(18, Color(0.05, 0.05, 0.08))
+	_os_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	inner.add_child(_os_text)
+	_os_ok = _label(16, Color(0.05, 0.05, 0.08))
+	var ok := _os_ok
+	ok.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	inner.add_child(ok)
+	_os.visible = false
+	add_child(_os)
+	_title_bar = _anchored_label(0.0, 1.0, 0.0, 0.045, 16)
+	var title_box := StyleBoxFlat.new()
+	title_box.bg_color = Color(0.12, 0.12, 0.15, 0.95)
+	_title_bar.add_theme_stylebox_override("normal", title_box)
+	_title_bar.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_title_bar.visible = false
+	_note = PanelContainer.new()
+	_note.anchor_left = 0.62
+	_note.anchor_right = 0.95
+	_note.anchor_top = 0.62
+	_note.anchor_bottom = 0.62
+	_note.grow_vertical = Control.GROW_DIRECTION_BOTH
+	var paper := StyleBoxFlat.new()
+	paper.bg_color = Color(0.93, 0.91, 0.8)
+	paper.set_content_margin_all(16)
+	_note.add_theme_stylebox_override("panel", paper)
+	var note_col := VBoxContainer.new()
+	note_col.add_theme_constant_override("separation", 8)
+	_note.add_child(note_col)
+	_note_head = _label(14, Color(0.4, 0.36, 0.3))
+	note_col.add_child(_note_head)
+	_note_text = _label(18, Color(0.12, 0.1, 0.08))
+	_note_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note_col.add_child(_note_text)
+	_note.visible = false
+	add_child(_note)
+
+
+## End credits: the document's title and paragraphs scroll up over `secs`, then `done` runs.
+## Enter or Esc skips to the end (skip_credits).
+func roll_credits(doc: Dictionary, secs: float, done: Callable) -> void:
+	for c in _credits_box.get_children():
+		_credits_box.remove_child(c)
+		c.queue_free()
+	var title := _label(30, Color(0.92, 0.9, 0.84))
+	title.text = ProtoUI.keep_words(String(doc.get("title", "")))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_credits_box.add_child(title)
+	for para in doc.get("paragraphs", []):
+		var line := _label(19, Color(0.78, 0.8, 0.84))
+		line.text = ProtoUI.keep_words(String(para))
+		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_credits_box.add_child(line)
+	_rescale(_credits_box)
+	_credits_t = 0.0
+	_credits_secs = maxf(secs, 1.0)
+	_credits_done = done
+	_credits.visible = true
+	_place_credits()
+
+
+func credits_running() -> bool:
+	return _credits.visible
+
+
+func skip_credits() -> void:
+	_credits_t = _credits_secs
+
+
+func _build_credits() -> void:
+	_credits = Control.new()
+	_credits.anchor_right = 1.0
+	_credits.anchor_bottom = 1.0
+	_credits.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_credits.clip_contents = true
+	var back := ColorRect.new()
+	back.anchor_right = 1.0
+	back.anchor_bottom = 1.0
+	back.color = Color(0.02, 0.02, 0.03)
+	_credits.add_child(back)
+	_credits_box = VBoxContainer.new()
+	_credits_box.add_theme_constant_override("separation", 22)
+	_credits.add_child(_credits_box)
+	_credits.visible = false
+	add_child(_credits)
+
+
+func _place_credits() -> void:
+	var view := _credits.size
+	_credits_box.size = Vector2(view.x * 0.7, 0)
+	_credits_box.position.x = view.x * 0.15
+	var height := _credits_box.get_combined_minimum_size().y
+	var u := clampf(_credits_t / _credits_secs, 0.0, 1.0)
+	_credits_box.position.y = lerpf(view.y, -height, u)
 
 
 ## Plays subtitle cue lines ({text, attrs.at, attrs.dur, attrs.display_name}).
@@ -362,6 +572,17 @@ func flash(alpha: float) -> void:
 
 func _process(delta: float) -> void:
 	_flash.color.a = maxf(0.0, _flash.color.a - delta * 8.0)
+	if _cut_text.visible:
+		_place_cut_text()
+	if _credits.visible:
+		_credits_t += delta
+		_place_credits()
+		if _credits_t >= _credits_secs:
+			_credits.visible = false
+			var then := _credits_done
+			_credits_done = Callable()
+			if then.is_valid():
+				then.call()
 	_caption_clock += delta
 	if _wave.visible:
 		_wave_time += delta

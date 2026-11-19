@@ -50,12 +50,17 @@ The demo is placeholder English text with no game story. The prototype code cont
 | `chaser` | Pursuer that starts after the listed scares in LINEAR and triggers `catch_scare` when it reaches the player. With `start_flag` it starts once per loop when that flag turns on (no dialogue running), `start_offset` pixels from the player (default -360); `stop_flag` sends it away. It holds still while a scare is on screen (from onset to end), so a player startled by one is not caught for it |
 | `escorts` | `[{id, path: [[x, y], ...], speed, max_gap, requires, sprite: {sheet, frame, scale}, ribbon: {color, width}, done_flag}]`: something that moves along `path` while the requirements hold and the player keeps within `max_gap` pixels of it (it waits otherwise, and while dialogue runs). The path is drawn as a ribbon. At the end it sets `done_flag` |
 | `end_flag`, `report_flags` | Flag that ends the slice; flags printed by the bot |
-| `end_docs` | `[{doc, requires}]`: when the end flag turns on, the first document whose flags hold is shown before the end (an ending's card, credits) |
+| `end_docs` | `[{doc, requires}]`: when the end flag turns on, the first document whose flags hold is shown before the end (an ending's card) |
+| `credits` | `{doc, secs}`: after the end documents, the document's title and paragraphs scroll up the screen as end credits (Enter or Esc skips). The words come from the story, not the code |
 | `bot_route` | Optional `{from, to, x}` windows the bot walks to (smoke test); a window can also set `track`, `ff` (tape speed) and `requires`, and `follow` (an escort id) instead of `x`. The last matching window wins |
 | `bot_prefer` | Choice line ids the bot takes whenever they are offered and enabled (for example the route to one ending); otherwise its usual rule applies |
 | `bot_ff`, `bot_max_frames`, `bot_loops`, `bot_patrol` | Bot tape speed (default 20), frame limit, loop limit, and `[x_min, x_max]` for wandering outside route windows |
 | `art` | Optional pixel art (next section) |
 | `audio` | Optional sound ("Audio block" below) |
+
+## Meta outputs
+
+Lines with a meta target (`os_dialog`, `window_title`, `desktop_file`; see `docs/script-format.md` 6.3) are shown with stand-ins drawn inside the game: a system window with an OK button, a title bar along the top of the screen, and a journal note in the lower right. The runtime picks the stand-in when the player has not allowed meta effects (`sys.meta_os`); when they have, the prototype also changes the real window title and still draws the other two inside the game. The stand-ins' own labels come from `assets/original/ui/strings.csv` (`ui.dialog.ok`, `ui.journal.added`).
 
 ## Art block
 
@@ -67,7 +72,7 @@ Paths are relative to the repository root. `build_prototype.py` copies every `.p
 | `base_palette`, `palettes` | The `.pal` the art is drawn with and the per-track palettes (`linear`, `hifi`, optional `mix`). Art drawn with the base palette is recoloured with `shaders/palette_swap.gdshader` when the track changes |
 | `backdrop` | `texture` (320x180) scrolled behind the level with `parallax` |
 | `hub_backdrop` | Full-screen picture for the workroom between loops |
-| `cuts` | `{dialogue_id: {"texture", "frame"}}`: a picture shown while that dialogue plays (a care home, a 1979 recording, a long take), fitted above the dialogue window on a dark background. Optional `when: [{from_line, requires, texture, frame}]` changes the picture halfway: the last entry whose line has been shown and whose flags hold wins, checked on every line (a close-up after the wide shot; the same shot once the camera is switched off). An entry (or the cut itself) with `none: true` shows no picture; `frames: [names]` with `fps` loops several frames of the texture (a counter ticking over) |
+| `cuts` | `{dialogue_id: {"texture", "frame"}}`: a picture shown while that dialogue plays (a care home, a 1979 recording, a long take), fitted above the dialogue window on a dark background. Optional `when: [{from_line, requires, texture, frame}]` changes the picture halfway: the last entry whose line has been shown and whose flags hold wins, checked on every line (a close-up after the wide shot; the same shot once the camera is switched off). An entry (or the cut itself) with `none: true` shows no picture; `frames: [names]` with `fps` loops several frames of the texture (a counter ticking over); `text: {rect: [x, y, w, h], size, color, fill}` writes the text of the entry's own `from_line` on the picture, in the picture's pixels (`fill` first covers whatever the art drew there, for example placeholder lines where a headline goes) |
 | `tiles` | `sheet` plus frames for `solid`, `hifi_only`, `linear_only`, `water` (`[top, fill]` or one frame) and `ladder`. Extra entries name tiles for single shapes; an entry can be `{"sheet", "frames"}` to take tiles from another sheet |
 | `props` | Decoration: `{"frame", "at": [x, ground_y]}` or a tile block `{"block", "w", "h", "at"}` (frames `<block>_<col>_<row>`); optional `sheet`, `repeat` and `step` (copies side by side), `track` (`hifi` / `linear`), `flag` / `unless_flag` (shown only while a flag is on / off, for example a lantern before and after it is hung; a prop with both `track` and a flag still hides on the other track), `scale` (around the bottom-left point, for small items), `recolour: false` (keeps the art's own colours under the track palettes) |
 | `player`, `npcs`, `chaser` | Animated sprites: `{"sheet", "fps", "anims": {"idle": [frames], ...}}`. The player uses `idle`, `walk`, `jump`, `climb` and `caught`; the chaser `idle` and `lunge` |
@@ -95,7 +100,7 @@ Paths are relative to the repository root and are copied into the build like the
 
 ## Reel (demo videos)
 
-`-- --reel <file.json>` plays a scripted sequence of scenes instead of the game: title cards, the workroom, tape scenes at a given time, track switches, walking (or walking beside an escort), dialogues with their choices, documents, subtitle cues, scares and the deduction board. All visible words come from the reel file and the story; the step list is documented at the top of `scripts/proto/proto_reel.gd`. `prototype/demo/reel.json` is a short example for the demo story.
+`-- --reel <file.json>` plays a scripted sequence of scenes instead of the game: title cards, the workroom, tape scenes at a given time, track switches, walking (or walking beside an escort), dialogues with their choices, documents, subtitle cues, scares, the deduction board and end credits. All visible words come from the reel file and the story; the step list is documented at the top of `scripts/proto/proto_reel.gd`. `prototype/demo/reel.json` is a short example for the demo story.
 
 ```
 python3 tools/build_prototype.py --story demo --reel prototype/demo/reel.json            # headless check

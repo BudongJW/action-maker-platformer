@@ -154,7 +154,7 @@ git ls-files private
 ## 8. 다음 작업 (추천 순서)
 
 1. **플레이테스트(직접).** `python3 tools/build_prototype.py --run`으로 처음부터 엔딩까지. 스케어 로그(`ScareDirector.log_path`)를 남기면 강도 모델 보정에 씁니다.
-2. **엔딩 화면 마무리:** 크레딧 화면, 메타 연출의 게임 안 대체 화면(가짜 시스템 창·상단 캡션·저널 쪽지. 지금은 대화창 한 줄), 엔딩 컷 위에 런타임 글자 얹기, 엔딩 선택 직전 자동 저장.
+2. **저장과 불러오기:** 프로토타입에는 아직 저장이 없습니다. 타이틀 화면(이어하기·처음부터, UI 문구는 `strings.csv`에 이미 있음), 루프 사이 자동 저장, 엔딩 선택 직전 저장. 런타임에는 세이브 직렬화(`StoryFlags`)가 이미 있습니다. (크레딧, 메타 연출의 게임 안 화면, 장면 그림 위 글자는 끝났습니다.)
 3. **카메라를 끈 뒤 VHS 질감 끄기**(셰이더), **MIX 두 레이어 겹침 셰이더.**
 4. **ACTION GAME MAKER G 연결 확인:** 오토로드로 `StoryRunner`·`ScareDirector`·`TrackMixer` 등록, Custom Action Plugin(`AGMPluginAction`/`AGMPluginCondition`)으로 대화 시작·조건 연결, 내보내기 빌드에 `compiled/*.json`과 스케어·레벨 설정이 들어가는지.
 5. **소리 듣기와 라우드니스:** 사운드는 아직 아무도 들어 보지 않았습니다. 게임 안 녹화로 LUFS를 잽니다.
