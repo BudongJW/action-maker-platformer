@@ -33,6 +33,7 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 ```
 .
 ├── .claude/skills/          # Claude Code slash commands for pixel art (/pixel-sprite, /pixel-scene, /pixel-review, ...), Korean
+├── CLAUDE.md                # Rules and pointers for Claude Code sessions, Korean
 ├── LICENSE                  # GPL-3.0 full text (code only)
 ├── LICENSE-EXCEPTION.md     # GPL-3.0 section 7 additional permission (ACTION GAME MAKER G runtime)
 ├── CREDITS.md               # Source for in-game credits (required notices + third-party assets/add-ons)
@@ -43,6 +44,7 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 │   └── third_party/         # Redistributable third-party assets (one folder per source + LICENSE); 25 CC0 reference packs, indexed in its README
 ├── assets_private/          # Non-redistributable assets (git-ignored; only its README is tracked)
 ├── docs/
+│   ├── handoff.md           # Where the work stands and how to continue it locally (setup, commands, rules, next steps), Korean
 │   ├── script-format.md     # Character script format spec (.dlg), Korean
 │   ├── design-references.md # Art references: RPG Maker graphic specs, horror visual references, palettes, Korean
 │   ├── pixel-technique.md   # Pixel technique notes: hands, faces, hair, outlines, Korean
