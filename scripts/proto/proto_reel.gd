@@ -5,7 +5,9 @@
 ## this script only drives the game. It takes over from the start screen: triggers, the hub queue
 ## and the end flag are switched off while it runs.
 ##
-## {"line_secs": 1.4, "per_char": 0.06, "max_line_secs": 5.5, "choice_secs": 1.6, "steps": [...]}
+## {"line_secs": 0.6, "per_char": 0.06, "min_line_secs": 1.5, "max_line_secs": 5.0, "silence_secs": 2.0,
+##  "steps": [...]} — those are the defaults (ProtoUI.reading_secs); "choice_secs" fixes the time a
+## choice menu stays up, otherwise it follows the length of the options.
 ## Steps ({"do": kind, ...}):
 ##   title {text, sub, secs}        black card with two lines of text (fades in and out; before the
 ##                                  first scene the screen behind it stays black)
@@ -105,12 +107,21 @@ func _card_label(size_px: int, top: float) -> Label:
 func _on_line(_id: String, _speaker: String, _expression: String, _attrs: Dictionary, text: String) -> void:
 	_lines += 1
 	_choice_left = -1.0
-	var secs := float(_cfg.get("line_secs", 1.4)) + text.length() * float(_cfg.get("per_char", 0.06))
-	_line_left = clampf(secs, float(_cfg.get("min_line_secs", 1.8)), float(_cfg.get("max_line_secs", 5.5)))
+	_line_left = ProtoUI.reading_secs(text, float(_cfg.get("line_secs", 0.6)), float(_cfg.get("per_char", 0.06)),
+		float(_cfg.get("min_line_secs", 1.5)), float(_cfg.get("max_line_secs", 5.0)),
+		float(_cfg.get("silence_secs", 2.0)))
 
 
-func _on_choices(_options: Array) -> void:
-	_choice_left = float(_cfg.get("choice_secs", 1.6))
+## Choices stay up long enough to read every visible option: `choice_secs` if the reel sets it,
+## otherwise 1 s plus 0.05 s per character of the options, 2 to 5 s.
+func _on_choices(options: Array) -> void:
+	if _cfg.has("choice_secs"):
+		_choice_left = float(_cfg["choice_secs"])
+		return
+	var chars := 0
+	for o in options:
+		chars += String(o.get("text", "")).length() if o is Dictionary else 0
+	_choice_left = clampf(1.0 + chars * 0.05, 2.0, 5.0)
 
 
 ## Called by the game every frame while the reel runs.

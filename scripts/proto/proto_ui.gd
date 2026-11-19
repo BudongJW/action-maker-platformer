@@ -603,9 +603,23 @@ func play_cue(lines: Array) -> void:
 	_caption_clock = 0.0
 
 
-func bubble(text: String, seconds: float = 3.0) -> void:
+## Seconds a line of `text` needs on screen. Netflix's Korean subtitle guide reads adults at
+## 12 characters a second, counting spaces and punctuation as half; Korean dialogue here comes to
+## about 0.83 of the raw length, so 0.06 s per raw character keeps lines of any length under that
+## speed. A line that is only an ellipsis (a silence) gets `silence` seconds.
+static func reading_secs(text: String, base := 0.6, per_char := 0.06, lo := 1.5, hi := 5.0,
+		silence := 2.0) -> float:
+	var t := text.strip_edges()
+	if t.trim_prefix("(").trim_suffix(")").replace("…", "").replace(".", "").strip_edges().is_empty():
+		return silence
+	return clampf(base + t.length() * per_char, lo, hi)
+
+
+## A short line over a character (barks). Without `seconds` it stays as long as it takes to read,
+## between 2 and 4.5 seconds.
+func bubble(text: String, seconds: float = -1.0) -> void:
 	_bubble.text = text
-	_bubble_left = seconds
+	_bubble_left = seconds if seconds > 0.0 else ProtoUI.reading_secs(text, 0.6, 0.06, 2.0, 4.5)
 
 
 func toast(text: String, seconds: float = 2.0) -> void:

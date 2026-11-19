@@ -1,9 +1,4 @@
 {
-  "line_secs": 0.8,
-  "per_char": 0.045,
-  "min_line_secs": 1.4,
-  "max_line_secs": 3.5,
-  "choice_secs": 1.0,
   "steps": [
     {"do": "flags", "set": {"save.hifi_unlocked": true}},
     {"do": "title", "text": "Prototype reel", "sub": "Generic demo story, not game content", "secs": 2.5},
