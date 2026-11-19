@@ -22,7 +22,10 @@ const LEVEL := "res://assets/original/story/proto_level.json"
 const FONT_NAMES := ["Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo",
 	"NanumGothic", "WenQuanYi Zen Hei", "Noto Sans CJK JP", "sans-serif"]
 
-enum Phase { HUB, TAPE, END }
+enum Phase { HUB, TAPE, END, TITLE }
+
+const SAVE_PATH := "user://proto_save.json"
+const SAVE_FORMAT := 1
 
 var runner: StoryRunner
 var director: ScareDirector
@@ -89,6 +92,11 @@ var _cut_anim: Array = []  # frames of an animated cut
 var _cut_anim_fps := 2.0
 var _cut_anim_t := 0.0
 var _bot_actions := {}  # workroom action keys the bot has used
+var _save_path := SAVE_PATH  # "" keeps the save in memory (bot runs, reels)
+var _memory_save: Dictionary = {}
+var _bot_reloaded := false
+var _title_options: Array = []
+var _title_selected := 0
 var _selected := 0
 var _after_doc: Callable = Callable()
 
@@ -209,15 +217,13 @@ func _ready() -> void:
 		ff = float(data.get("bot_ff", 20.0))
 		_max_frames = int(data.get("bot_max_frames", _max_frames))
 		_bot_loops = int(data.get("bot_loops", _bot_loops))
-	# A start notice (content warning, settings) can be shown as a document before anything else.
-	var start_docs: Array = data.get("hub", {}).get("start_docs", [])
-	if not start_docs.is_empty() and not runner.get_doc(String(start_docs[0])).is_empty():
-		_show_hub_art(true)
-		audio.enter_hub()
-		_show_doc(String(start_docs[0]), func(): _enter_hub(true))
-	else:
-		_enter_hub(true)
 	var args := OS.get_cmdline_user_args()
+	if bot or "--reel" in args:
+		# Bot runs and reels keep their save in memory, like meta.*: the player's save stays as it is.
+		_save_path = ""
+		_begin_game()
+	else:
+		_show_title()
 	var at := args.find("--reel")
 	if at >= 0 and at + 1 < args.size():
 		reel = ProtoReel.new()
@@ -225,6 +231,117 @@ func _ready() -> void:
 		if not reel.start(self, args[at + 1]):
 			reel.queue_free()
 			reel = null
+
+
+# --- Title, saves ----------------------------------------------------------------------
+
+
+## The title screen: Continue (when there is a save), New Game, Options, Quit. Its title text comes
+## from the level ("title": {"text", "sub"}); the menu words from the UI strings.
+func _show_title() -> void:
+	phase = Phase.TITLE
+	player.frozen = true
+	_show_hub_art(true)
+	audio.enter_hub()
+	ui.set_hub("")
+	_title_options = (["continue"] if not _read_save().is_empty() else []) + ["new_game", "options", "quit"]
+	_title_selected = 0
+	_draw_title()
+
+
+func _draw_title() -> void:
+	var cfg: Dictionary = data.get("title", {})
+	var labels: Array = _title_options.map(func(o): return tr("ui.title." + o))
+	ui.show_title(String(cfg.get("text", "")), String(cfg.get("sub", "")), labels, _title_selected)
+
+
+func _title_key(key: int) -> void:
+	if key in [KEY_UP, KEY_DOWN]:
+		_title_selected = wrapi(_title_selected + (-1 if key == KEY_UP else 1), 0, _title_options.size())
+		_draw_title()
+	elif key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
+		match String(_title_options[_title_selected]):
+			"continue":
+				ui.hide_title()
+				_continue_game()
+			"new_game":
+				ui.hide_title()
+				runner.new_game()
+				_begin_game()
+			"options":
+				settings.open()
+			"quit":
+				get_tree().quit(0)
+
+
+## A new game: the start document (content warning) if there is one, then the workroom.
+func _begin_game() -> void:
+	var start_docs: Array = data.get("hub", {}).get("start_docs", [])
+	if not start_docs.is_empty() and not runner.get_doc(String(start_docs[0])).is_empty():
+		phase = Phase.HUB
+		_show_hub_art(true)
+		audio.enter_hub()
+		_show_doc(String(start_docs[0]), func(): _enter_hub(true))
+	else:
+		_enter_hub(true)
+
+
+func _continue_game() -> void:
+	var state := _read_save()
+	if state.is_empty() or not _restore(state):
+		runner.new_game()
+		_begin_game()
+		return
+	_log("continue")
+	_enter_hub(false)
+
+
+## Saves at the start of every workroom visit (before its dialogues run), so Continue comes back to
+## the last workroom: between tapes, and before the choice that ends the game.
+func _autosave() -> void:
+	var state := {"format": SAVE_FORMAT, "story": runner.serialize_save(),
+		"track": ["hifi", "linear", "mix"][int(mixer.get_track())]}
+	if _save_path == "":
+		_memory_save = JSON.parse_string(JSON.stringify(state))  # the same round trip as a file
+		return
+	var f := FileAccess.open(_save_path, FileAccess.WRITE)
+	if f == null:
+		push_warning("ProtoGame: cannot write %s" % _save_path)
+		return
+	f.store_string(JSON.stringify(state))
+
+
+func _read_save() -> Dictionary:
+	if _save_path == "":
+		return _memory_save
+	if not FileAccess.file_exists(_save_path):
+		return {}
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_save_path))
+	if typeof(parsed) != TYPE_DICTIONARY or int(parsed.get("format", 0)) != SAVE_FORMAT:
+		push_warning("ProtoGame: ignoring unreadable save %s" % _save_path)
+		return {}
+	return parsed
+
+
+func _restore(state: Dictionary) -> bool:
+	if not runner.restore_save(state.get("story", {})):
+		return false
+	mixer.set_track(_track_named(String(state.get("track", "linear"))))
+	return true
+
+
+## The bot loads its own save once (at the second workroom visit) and checks that the story state
+## comes back unchanged, so the smoke test covers saving and loading.
+func _bot_reload_check() -> bool:
+	if not bot or _bot_reloaded or _stats["loops"] < 1 or _memory_save.is_empty():
+		return false
+	_bot_reloaded = true
+	var before := JSON.stringify(runner.serialize_save())
+	runner.new_game()
+	if not _restore(_memory_save) or JSON.stringify(runner.serialize_save()) != before:
+		push_error("ProtoGame: the story state changed in a save and load")
+	_log("save round trip")
+	return true
 
 
 # --- Phases --------------------------------------------------------------------------
@@ -236,6 +353,10 @@ func _enter_hub(first: bool) -> void:
 	ui.set_darkness(0.0)
 	_show_hub_art(true)
 	audio.enter_hub()
+	_autosave()
+	if _bot_reload_check():
+		_enter_hub(false)
+		return
 	var hub: Dictionary = data.get("hub", {})
 	_hub_queue = (hub.get("start", []) if first else []) + hub.get("between", [])
 	_run_hub_queue()
@@ -399,7 +520,7 @@ func _end_card() -> void:
 
 
 func _end_text() -> void:
-	ui.set_hub("END OF SLICE")
+	ui.set_hub("END OF SLICE\n[Enter] title")
 	if bot:
 		_finish_bot("complete")
 
@@ -438,7 +559,7 @@ func _process(delta: float) -> void:
 		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)) and not reel_on:
 			_end_loop()
 	var tc := _update_camera()
-	if reel_on:
+	if reel_on or phase == Phase.TITLE:
 		ui.set_hud("")
 	else:
 		_update_hud(tc)
@@ -458,6 +579,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			ui.skip_credits()
 		return
 	if settings.handle_key(key):
+		return
+	if phase == Phase.TITLE:
+		_title_key(key)
+		return
+	if phase == Phase.END and not ui.doc_open() and key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
+		get_tree().reload_current_scene()  # back to the title; Continue returns to the last workroom
 		return
 	if board != null and board.handle_key(key):
 		return

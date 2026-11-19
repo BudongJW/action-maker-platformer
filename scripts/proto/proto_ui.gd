@@ -58,6 +58,11 @@ var _note_text: Label
 var _cut_fill: ColorRect
 var _cut_text: Label
 var _cut_text_spec: Dictionary = {}
+# Title screen: the game's title (from level data) and a menu (UI strings).
+var _title: VBoxContainer
+var _title_text: Label
+var _title_sub: Label
+var _title_menu: VBoxContainer
 # End credits: a document scrolled up the screen.
 var _credits: Control
 var _credits_box: VBoxContainer
@@ -147,6 +152,7 @@ func _ready() -> void:
 	_cut_text.visible = false
 	# Last, so a document covers the HUD and captions while it is open.
 	_build_doc()
+	_build_title()
 	_build_credits()
 
 
@@ -470,6 +476,59 @@ func _build_meta() -> void:
 	note_col.add_child(_note_text)
 	_note.visible = false
 	add_child(_note)
+
+
+## Title screen: `title` and `sub` over the menu `options` (already translated), `selected` marked.
+func show_title(title: String, sub: String, options: Array, selected: int) -> void:
+	_title_text.text = title
+	_title_text.visible = title != ""
+	_title_sub.text = sub
+	_title_sub.visible = sub != ""
+	for c in _title_menu.get_children():
+		_title_menu.remove_child(c)
+		c.queue_free()
+	for i in options.size():
+		var on := i == selected
+		var row := _label(24, Color(0.95, 0.92, 0.8) if on else Color(0.62, 0.66, 0.72))
+		row.text = ("> " if on else "  ") + String(options[i])
+		row.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		row.add_theme_color_override("font_outline_color", Color.BLACK)
+		row.add_theme_constant_override("outline_size", 4)
+		_title_menu.add_child(row)
+	_title.visible = true
+
+
+func hide_title() -> void:
+	_title.visible = false
+
+
+func _build_title() -> void:
+	_title = VBoxContainer.new()
+	_title.anchor_left = 0.1
+	_title.anchor_right = 0.9
+	_title.anchor_top = 0.22
+	_title.anchor_bottom = 0.9
+	_title.add_theme_constant_override("separation", 14)
+	_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_title_text = _label(48, Color(0.95, 0.93, 0.86))
+	_title_sub = _label(20, Color(0.72, 0.75, 0.8))
+	for l in [_title_text, _title_sub]:
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.add_theme_color_override("font_outline_color", Color.BLACK)
+		l.add_theme_constant_override("outline_size", 6)
+		_title.add_child(l)
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 40)
+	_title.add_child(gap)
+	_title_menu = VBoxContainer.new()
+	_title_menu.add_theme_constant_override("separation", 10)
+	_title.add_child(_title_menu)
+	var hint := _label(16, Color(0.75, 0.92, 1.0))
+	hint.text = "[Up/Down] [Enter]"
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title.add_child(hint)
+	_title.visible = false
+	add_child(_title)
 
 
 ## End credits: the document's title and paragraphs scroll up over `secs`, then `done` runs.

@@ -19,6 +19,7 @@ The demo is placeholder English text with no game story. The prototype code cont
 
 | Key | Action |
 |---|---|
+| Up / Down, Enter | Title screen: Continue (only when there is a save), New Game, Options, Quit. After the end credits, Enter goes back to the title |
 | A / D or arrows | Move |
 | Space | Jump |
 | W / S | Climb a ladder |
@@ -49,6 +50,7 @@ The demo is placeholder English text with no game story. The prototype code cont
 | `rules` | `{"all": [flags], "set": flag}`: turns a flag on once all the others are on (for example six lanterns hung) |
 | `chaser` | Pursuer that starts after the listed scares in LINEAR and triggers `catch_scare` when it reaches the player. With `start_flag` it starts once per loop when that flag turns on (no dialogue running), `start_offset` pixels from the player (default -360); `stop_flag` sends it away. It holds still while a scare is on screen (from onset to end), so a player startled by one is not caught for it |
 | `escorts` | `[{id, path: [[x, y], ...], speed, max_gap, requires, sprite: {sheet, frame, scale}, ribbon: {color, width}, done_flag}]`: something that moves along `path` while the requirements hold and the player keeps within `max_gap` pixels of it (it waits otherwise, and while dialogue runs). The path is drawn as a ribbon. At the end it sets `done_flag` |
+| `title` | `{text, sub}`: the title screen's two lines (the menu words come from the UI strings `ui.title.*`) |
 | `end_flag`, `report_flags` | Flag that ends the slice; flags printed by the bot |
 | `end_docs` | `[{doc, requires}]`: when the end flag turns on, the first document whose flags hold is shown before the end (an ending's card) |
 | `credits` | `{doc, secs}`: after the end documents, the document's title and paragraphs scroll up the screen as end credits (Enter or Esc skips). The words come from the story, not the code |
@@ -57,6 +59,12 @@ The demo is placeholder English text with no game story. The prototype code cont
 | `bot_ff`, `bot_max_frames`, `bot_loops`, `bot_patrol` | Bot tape speed (default 20), frame limit, loop limit, and `[x_min, x_max]` for wandering outside route windows |
 | `art` | Optional pixel art (next section) |
 | `audio` | Optional sound ("Audio block" below) |
+
+## Saves
+
+The game saves at the start of every workroom visit, before the workroom's dialogues run: between tapes, and before any choice that ends the game, so Continue after an ending comes back to the workroom just before it. The save holds the story state (`StoryRunner.serialize_save()`: loop and save flags, seen marks and collected documents, one-time choices, the loop count) and the track, in `user://proto_save.json` (Godot's user folder for the project "Story prototype"; delete the file to start over). `meta.*` flags (endings seen) stay in `user://meta.dat`, apart from the save.
+
+Bot runs and reels skip the title and keep their save in memory, so they never touch the player's file. The bot loads its own save once, at its second workroom visit, and the smoke test fails if the story state does not come back unchanged.
 
 ## Meta outputs
 

@@ -147,14 +147,14 @@ git ls-files private
 
 - **Godot을 직접 돌릴 때:** 새로 빌드한 `build/prototype`은 먼저 가져오기를 해야 `class_name`이 등록됩니다. `--smoke`나 `--reel`은 알아서 하고, 직접 돌릴 때는 `"$GODOT_BIN" --headless --path build/prototype --import`를 한 번 실행합니다.
 - **봇을 직접 돌릴 때는 `--fixed-fps 60`을 붙입니다.** 없으면 실제 시간으로 돌아 매우 느립니다.
-- **메타 플래그(본 엔딩, 2회차):** 평소 플레이는 `user://meta.dat`에 저장합니다. 봇과 릴은 메모리에만 둡니다. 2회차 상태를 지우려면 Godot 사용자 폴더의 `app_userdata/Story prototype/meta.dat`을 지웁니다(Windows `%APPDATA%\Godot\`, macOS `~/Library/Application Support/Godot/`, Linux `~/.local/share/godot/`).
+- **저장과 메타 플래그:** 평소 플레이는 작업실에 들어올 때마다 `user://proto_save.json`에 자동 저장하고(타이틀의 '이어하기'), 본 엔딩·2회차는 `user://meta.dat`에 둡니다. 봇과 릴은 둘 다 메모리에만 둡니다. 처음부터 다시 하려면 Godot 사용자 폴더의 `app_userdata/Story prototype/`에서 두 파일을 지웁니다(Windows `%APPDATA%\Godot\`, macOS `~/Library/Application Support/Godot/`, Linux `~/.local/share/godot/`).
 - **스케어 지연은 무작위**라 데모 봇 결과(보드 카드 수 등)가 실행마다 조금 다를 수 있습니다. 판정은 끝까지 갔는지와 오류 0건입니다.
 - **영상 녹화**는 고정 프레임이라 실제 시간과 관계없이 같은 결과가 나옵니다. 1~4장 릴은 약 10분 걸립니다.
 
 ## 8. 다음 작업 (추천 순서)
 
 1. **플레이테스트(직접).** `python3 tools/build_prototype.py --run`으로 처음부터 엔딩까지. 스케어 로그(`ScareDirector.log_path`)를 남기면 강도 모델 보정에 씁니다.
-2. **저장과 불러오기:** 프로토타입에는 아직 저장이 없습니다. 타이틀 화면(이어하기·처음부터, UI 문구는 `strings.csv`에 이미 있음), 루프 사이 자동 저장, 엔딩 선택 직전 저장. 런타임에는 세이브 직렬화(`StoryFlags`)가 이미 있습니다. (크레딧, 메타 연출의 게임 안 화면, 장면 그림 위 글자는 끝났습니다.)
+2. **일시정지 메뉴:** 지금 Esc는 설정 화면만 엽니다. 게임 중 '타이틀로'(UI 문구 `ui.pause.*`는 이미 있음)와, 새 게임이 저장을 덮어쓰기 전에 묻는 확인. (타이틀 화면, 작업실 자동 저장, 이어하기, 크레딧, 메타 연출 화면은 끝났습니다.)
 3. **카메라를 끈 뒤 VHS 질감 끄기**(셰이더), **MIX 두 레이어 겹침 셰이더.**
 4. **ACTION GAME MAKER G 연결 확인:** 오토로드로 `StoryRunner`·`ScareDirector`·`TrackMixer` 등록, Custom Action Plugin(`AGMPluginAction`/`AGMPluginCondition`)으로 대화 시작·조건 연결, 내보내기 빌드에 `compiled/*.json`과 스케어·레벨 설정이 들어가는지.
 5. **소리 듣기와 라우드니스:** 사운드는 아직 아무도 들어 보지 않았습니다. 게임 안 녹화로 LUFS를 잽니다.

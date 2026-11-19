@@ -700,5 +700,9 @@
   "credits": {
     "doc": "demo_credits",
     "secs": 4
+  },
+  "title": {
+    "text": "Prototype demo",
+    "sub": "Generic placeholder content, not the game's story"
   }
 }
