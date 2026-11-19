@@ -11,7 +11,7 @@
 | PR | [BudongJW/action-maker-platformer#4](https://github.com/BudongJW/action-maker-platformer/pull/4) 열림. main과 충돌 없음, CI 모두 통과. **병합은 직접 요청할 때만** |
 | 스토리 런타임 | `scripts/story/` 완성, Godot 4.7 헤드리스 테스트 246개 통과 |
 | 프로토타입 | 비공개 팩으로 시작부터 진엔딩까지 봇이 끝까지 진행(약 77,000프레임, 오류 0). 공개 데모 콘텐츠로는 CI가 같은 기능을 검사 |
-| 비공개 스토리 팩 | v0.21 (`미방송분_스토리팩_v0.21.zip`). 원고·설계·레벨·릴·콘티·자문 자료·조사 노트 전부 |
+| 비공개 스토리 팩 | v0.22 (`미방송분_스토리팩_v0.22.zip`). 원고·설계·레벨·릴·콘티·자문 자료·조사 노트 전부 |
 | 데모 영상 | `미방송분_프로토타입_데모_v2.mp4`(9:43, 프롤로그~엔딩). 비공개 자료라 저장소에 없음 |
 | ACTION GAME MAKER G | 아직 연결하지 않음(8절) |
 
@@ -33,10 +33,10 @@ git checkout claude/inspiring-galileo-f9ez1u
 
 ### 2.2 비공개 스토리 팩
 
-받은 `미방송분_스토리팩_v0.21.zip`을 저장소의 `private/` 폴더에 풉니다. `private/`는 통째로 git에서 빠져 있고, 여기에 추적 파일이 생기면 CI(`Private story files are not tracked`)가 실패합니다.
+받은 `미방송분_스토리팩_v0.22.zip`을(또는 더 새 판을) 저장소의 `private/` 폴더에 풉니다. `private/`는 통째로 git에서 빠져 있고, 여기에 추적 파일이 생기면 CI(`Private story files are not tracked`)가 실패합니다.
 
 ```bash
-unzip -o 미방송분_스토리팩_v0.21.zip -d private
+unzip -o 미방송분_스토리팩_v0.22.zip -d private
 ```
 
 팩이 없으면 프로토타입은 공개 데모 콘텐츠(`prototype/demo/`)로 돌아갑니다.
