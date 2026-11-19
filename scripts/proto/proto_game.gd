@@ -72,6 +72,10 @@ var _notice_state: Dictionary = {}
 var _notice_ready := false
 ## A document collected and on screen: its notice waits until it is closed.
 var _doc_notice := ""
+## The first-run pages (brightness, content notice), also opened from the options.
+var first_run: ProtoFirstRun
+## The content notice was just shown by the first run: the first new game skips the start doc.
+var _first_run_shown := false
 var _chaser: Node2D
 var _chaser_sprite: AnimatedSprite2D
 var _chaser_on := false
@@ -236,6 +240,15 @@ func _ready() -> void:
 	settings.apply_window = settings.persist
 	ui.add_child(settings)
 	settings.setup(font, ui.window_style(), ui.choice_style(), ui.cursor_texture())
+	first_run = ProtoFirstRun.new()
+	first_run.settings = settings
+	first_run.input = input
+	first_run.runner = runner
+	var start_docs: Array = data.get("hub", {}).get("start_docs", [])
+	first_run.notice_doc = String(start_docs[0]) if not start_docs.is_empty() else ""
+	ui.add_child(first_run)
+	first_run.setup(font, ui.window_style(), ui.choice_style())
+	settings.open_page.connect(_open_settings_page)
 	fx = ProtoFX.new()
 	fx.ui = ui
 	fx.art = art
@@ -282,6 +295,8 @@ func _ready() -> void:
 		# Bot runs and reels keep their save in memory, like meta.*: the player's save stays as it is.
 		_save_path = ""
 		_begin_game()
+	elif settings.persist and int(settings.values["first_run_done"]) == 0:
+		_start_first_run()
 	else:
 		_show_title()
 	var at := args.find("--reel")
@@ -298,6 +313,33 @@ func _ready() -> void:
 
 ## The title screen: Continue (when there is a save), New Game, Options, Quit. Its title text comes
 ## from the level ("title": {"text", "sub"}); the menu words from the UI strings.
+## The very first launch: brightness, then the content notice with the scare choices, then the
+## title. (A language page comes first once there are translations.)
+func _start_first_run() -> void:
+	phase = Phase.TITLE
+	player.frozen = true
+	first_run.last_row = "start"
+	first_run.finished.connect(_on_first_run_done, CONNECT_ONE_SHOT)
+	first_run.start(["brightness", "notice"])
+
+
+func _on_first_run_done() -> void:
+	settings.set_value("first_run_done", 1)
+	_first_run_shown = true
+	_show_title()
+
+
+## A page opened from the options (brightness, content notice); the options come back after it.
+func _open_settings_page(page_name: String) -> void:
+	first_run.last_row = "back"
+	first_run.finished.connect(_back_from_page, CONNECT_ONE_SHOT)
+	first_run.start(["brightness" if page_name == "brightness" else "notice"])
+
+
+func _back_from_page() -> void:
+	settings.back_from_page()
+
+
 func _show_title() -> void:
 	phase = Phase.TITLE
 	player.frozen = true
@@ -399,7 +441,9 @@ func _close_pause() -> void:
 ## A new game: the start document (content warning) if there is one, then the workroom.
 func _begin_game() -> void:
 	var start_docs: Array = data.get("hub", {}).get("start_docs", [])
-	if not start_docs.is_empty() and not runner.get_doc(String(start_docs[0])).is_empty():
+	var skip_notice := _first_run_shown  # it was on screen a moment ago
+	_first_run_shown = false
+	if not skip_notice and not start_docs.is_empty() and not runner.get_doc(String(start_docs[0])).is_empty():
 		phase = Phase.HUB
 		_show_hub_art(true)
 		audio.enter_hub()
@@ -668,7 +712,7 @@ func _process(delta: float) -> void:
 	if reel_on:
 		reel.tick(delta)
 	if settings.is_open() or (board != null and board.is_open()) or _paused or journal.is_open() \
-			or backlog.is_open() or _journal_reading:
+			or backlog.is_open() or _journal_reading or first_run.is_open():
 		# The settings screen and the board pause the tape, the player and the scare clock.
 		player.frozen = true
 		return
@@ -731,6 +775,8 @@ func _command(cmds: Array, key: InputEventKey = null) -> void:
 	if ui.credits_running():
 		if cmds.has("accept") or cmds.has("cancel"):
 			ui.skip_credits()
+		return
+	if first_run.handle(cmds):
 		return
 	if settings.handle(cmds):
 		return
@@ -822,6 +868,10 @@ func _input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton or event is InputEventMouseMotion) or reel != null:
 		return
 	input.commands(event)  # notes that the player is on keyboard and mouse
+	if first_run.is_open():
+		if first_run.mouse(event):
+			get_viewport().set_input_as_handled()
+		return
 	if settings.mouse(event):
 		get_viewport().set_input_as_handled()
 		return
@@ -1589,6 +1639,23 @@ func _read_from_journal(doc_id: String) -> void:
 		journal.visible = true)
 
 
+## Opens the row of `tab` that opens `page`, sends `cmds` to the page and checks the settings
+## come back.
+func _bot_settings_page(tab: String, page_name: String, cmds: Array) -> void:
+	settings._show_tab(settings.tab_index(tab))
+	var items: Array = settings._tabs[settings.tab_index(tab)]["items"]
+	for i in items.size():
+		if String(items[i].get("open", "")) == page_name:
+			settings._selected = i
+	settings.command("accept")
+	if not first_run.is_open():
+		push_error("settings: the %s row did not open its page" % page_name)
+	for cmd in cmds:
+		first_run.command(cmd)
+	if first_run.is_open() or not settings.is_open():
+		push_error("settings: the %s page did not come back to the settings" % page_name)
+
+
 ## The bot's walk through the journal (every tab, read one document full size) and the log.
 func _bot_journal() -> void:
 	_bot_tried_journal = true
@@ -1751,6 +1818,10 @@ func _bot_step(delta: float) -> void:
 			settings.command(cmd)
 		if settings.current_tab() != settings.tab_index("controls"):
 			push_error("settings: the tab bar did not reach the controls tab")
+		# The two pages the options open: brightness (up, back to its value) and the content notice.
+		_bot_settings_page("display", "brightness", ["menu_right", "menu_left", "accept"])
+		_bot_settings_page("access", "content", ["menu_down", "menu_right", "menu_left", "menu_down", "accept"])
+		settings._show_tab(settings.tab_index("controls"))
 		# The controls screen: open it, start rebinding the first action and cancel, go back.
 		for i in settings.remap_row_index():
 			settings.command("menu_down")

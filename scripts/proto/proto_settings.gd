@@ -13,6 +13,9 @@ class_name ProtoSettings
 extends Control
 
 signal closed
+## A row that opens a page of its own ("brightness", "content"): the game shows it and calls
+## back_from_page() when it closes.
+signal open_page(page_name: String)
 
 const STRINGS := "res://assets/original/ui/strings.csv"
 const SAVE_PATH := "user://proto_settings.cfg"
@@ -37,12 +40,14 @@ var persist := true
 ## The window mode is applied only for the player's own runs (not the bot or a reel).
 var apply_window := false
 var values := {
-	"fullscreen": 0, "vhs_strength": 2, "screen_shake": 1,
+	"fullscreen": 0, "brightness": 5, "vhs_strength": 2, "screen_shake": 1,
 	"master_volume": 10, "ambience_volume": 8, "sfx_volume": 8,
 	"text_size": 1, "subtitles": 1, "text_bg": 2, "speaker_names": 1, "advance": 0,
 	"advance_speed": 1,
 	"scare_mode": 0, "photosafe": 0, "chase_assist": 0, "meta_os": 0,
 	"ff_hold": 0,
+	# Not a row: set once the first-run pages (brightness, content notice) have been through.
+	"first_run_done": 0,
 }
 
 ## [{"label": tab name key, "items": [item, ...]}]. An item is {"key", "label", "hint"?} with
@@ -81,6 +86,7 @@ func setup(font: Font, panel: StyleBox, row_style: StyleBox, cursor: Texture2D) 
 	_tabs = [
 		{"label": "ui.options.tab_display", "items": [
 			{"key": "fullscreen", "label": "ui.options.window_mode", "choices": ["ui.options.windowed", "ui.options.fullscreen"]},
+			{"key": "brightness", "label": "ui.options.brightness", "range": 10, "open": "brightness", "hint": "ui.options.brightness_hint"},
 			{"key": "vhs_strength", "label": "ui.options.vhs_strength", "choices": ["ui.options.off", "ui.options.soft", "ui.options.default"], "hint": "ui.options.vhs_hint"},
 			{"key": "screen_shake", "label": "ui.options.screen_shake", "choices": off_on},
 			back,
@@ -105,6 +111,7 @@ func setup(font: Font, panel: StyleBox, row_style: StyleBox, cursor: Texture2D) 
 			{"key": "photosafe", "label": "ui.options.reduce_flashing", "choices": off_on, "hint": "ui.options.reduce_flashing_hint"},
 			{"key": "chase_assist", "label": "ui.options.chase_assist", "choices": off_on, "hint": "ui.options.chase_assist_hint"},
 			{"key": "meta_os", "label": "ui.options.meta_effects", "choices": off_on, "hint": "ui.options.meta_effects_hint"},
+			{"key": "", "label": "ui.options.content_notice", "open": "content", "hint": "ui.options.content_notice_hint"},
 			back,
 		]},
 		{"label": "ui.options.tab_controls", "items": [
@@ -184,6 +191,14 @@ func close() -> void:
 	if persist:
 		_save_values()
 	closed.emit()
+
+
+## A page opened from a row has closed: the settings come back where they were.
+func back_from_page() -> void:
+	visible = true
+	if persist:
+		_save_values()
+	_refresh()
 
 
 func tab_count() -> int:
@@ -302,9 +317,14 @@ func _activate() -> void:
 		_selected = 0
 		return
 	var item: Dictionary = _items[_selected]
-	if String(item.get("open", "")) == "remap" and input != null:
+	var page := String(item.get("open", ""))
+	if page == "remap" and input != null:
 		_mode = "remap"
 		_remap_selected = 0
+	elif page != "" and page != "remap":
+		# The page takes the screen; back_from_page() brings the settings back.
+		visible = false
+		open_page.emit(page)
 	elif String(item["key"]) == "":
 		close()
 	else:
@@ -397,6 +417,7 @@ func apply_all() -> void:
 		fx.shake = int(values["screen_shake"]) == 1
 	if screen != null:
 		screen.set_strength(int(values["vhs_strength"]))
+		screen.set_brightness(int(values["brightness"]))
 	if runner != null:
 		runner.flags.set_meta_os(int(values["meta_os"]) == 1)
 	if apply_window and DisplayServer.get_name() != "headless":

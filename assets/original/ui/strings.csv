@@ -168,3 +168,15 @@ ui.notice.track,{track} 트랙을 쓸 수 있습니다,{track} is now available
 ui.notice.rec,녹화했습니다,Recorded
 ui.system.saving,저장 중,Saving
 ui.options.saving_hint,오른쪽 아래에 테이프 감기는 표시가 보이면 저장하는 중입니다. 그동안 게임을 끄지 마세요.,"While the turning reel shows at the bottom right, the game is saving. Don't quit until it is gone."
+ui.first.brightness_title,밝기 맞추기,Brightness
+ui.first.brightness_hint,가운데 네모가 겨우 보이고 오른쪽 네모는 보이지 않을 만큼 밝기를 맞추세요.,Adjust until the middle square is barely visible and the right one cannot be seen.
+ui.first.mark_clear,잘 보임,Clearly visible
+ui.first.mark_faint,겨우 보임,Barely visible
+ui.first.mark_hidden,안 보임,Not visible
+ui.first.brightness_controls,"{menu_left}{menu_right} 밝기, {accept} 다음","{menu_left}{menu_right}: brightness, {accept}: next"
+ui.first.notice_title,시작하기 전에,Before You Start
+ui.first.notice_controls,"{menu_up}{menu_down} 항목, {menu_left}{menu_right} 값, {tab_prev}{tab_next} 안내문 넘기기, {accept} 정하기","{menu_up}{menu_down}: item, {menu_left}{menu_right}: value, {tab_prev}{tab_next}: scroll, {accept}: select"
+ui.first.start,시작,Start
+ui.options.brightness_hint,좌·우로 바꿉니다. 정하기를 누르면 밝기 맞추기 화면이 열립니다.,Left/Right changes it. Select opens the brightness screen.
+ui.options.content_notice,콘텐츠 안내,Content Notice
+ui.options.content_notice_hint,처음 시작할 때 본 안내를 다시 봅니다. 놀래는 연출과 깜박임도 여기서 바꿀 수 있습니다.,Read the notice shown at the first start again. Scares and flashing can be changed there too.

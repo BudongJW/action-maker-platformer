@@ -9,6 +9,9 @@
 ## flashing the grain stands still and the tracking band and the scanlines are gone. The player's
 ## "VHS texture" setting (set_strength) turns it off or halves it.
 ##
+## Last comes the brightness setting (shaders/brightness.gdshader, set_brightness): a gamma curve
+## over the whole picture, still under the UI.
+##
 ## MIX (shaders/track_mix.gdshader) needs the art's "linear" and "hifi" palettes. The world is
 ## drawn a second time into a SubViewport that shares the World2D: canvas cull masks keep the
 ## HI-FI-only nodes out of the main view and the LINEAR-only nodes out of the second one, and
@@ -27,6 +30,9 @@ const VIEW := Vector2(1280, 720)
 const MAX_SCANLINE := 0.08
 const VHS_SHADER := "res://shaders/vhs.gdshader"
 const MIX_SHADER := "res://shaders/track_mix.gdshader"
+const BRIGHTNESS_SHADER := "res://shaders/brightness.gdshader"
+## Brightness setting 0..10 (5 = as drawn) to gamma: 0.6 .. 1.4.
+const GAMMA_STEP := 0.08
 ## Shader defaults of the uniforms the strength setting scales (shaders/vhs.gdshader).
 const VHS_DEFAULTS := {"chroma": 0.5, "noise": 0.04, "band": 0.6}
 
@@ -48,6 +54,9 @@ var _strength := 2
 ## On as far as the story is concerned (the camera has not been switched off).
 var _story_vhs := false
 var _clock := 0.0
+var _gamma: ColorRect
+var _gamma_mat: ShaderMaterial
+var _gamma_on := false
 
 
 func _ready() -> void:
@@ -59,6 +68,14 @@ func _ready() -> void:
 	copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
 	add_child(copy)
 	_vhs = _full_rect()
+	var copy_again := BackBufferCopy.new()
+	copy_again.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
+	add_child(copy_again)
+	_gamma = _full_rect()
+	if ResourceLoader.exists(BRIGHTNESS_SHADER):
+		_gamma_mat = ShaderMaterial.new()
+		_gamma_mat.shader = load(BRIGHTNESS_SHADER)
+		_gamma.material = _gamma_mat
 	visible = false
 	RenderingServer.frame_pre_draw.connect(_sync_views)
 
@@ -137,7 +154,7 @@ func set_vhs(on: bool) -> void:
 		return
 	_vhs_on = on
 	_vhs.visible = on
-	visible = _vhs_on or _mix_on
+	_update_visible()
 
 
 ## Reduced flashing: the grain stands still, and the tracking band and the scanlines are gone.
@@ -174,8 +191,27 @@ func set_mix(on: bool) -> void:
 	_mix.visible = on
 	_hifi_view.render_target_update_mode = SubViewport.UPDATE_ALWAYS if on else SubViewport.UPDATE_DISABLED
 	get_viewport().canvas_cull_mask = ALL_LAYERS & ~LAYER_HIFI if on else ALL_LAYERS
-	visible = _vhs_on or _mix_on
+	_update_visible()
 	_sync_views()
+
+
+## The brightness setting, 0..10; 5 leaves the picture as drawn (and the pass off).
+func set_brightness(level: int) -> void:
+	var gamma := gamma_for(level)
+	_gamma_on = _gamma_mat != null and not is_equal_approx(gamma, 1.0)
+	if _gamma_mat != null:
+		_gamma_mat.set_shader_parameter("gamma", gamma)
+	_gamma.visible = _gamma_on
+	_update_visible()
+
+
+## The gamma the brightness pass uses for a setting (the calibration marks use it too).
+static func gamma_for(level: int) -> float:
+	return 1.0 + (clampi(level, 0, 10) - 5) * GAMMA_STEP
+
+
+func _update_visible() -> void:
+	visible = _vhs_on or _mix_on or _gamma_on
 
 
 func _process(delta: float) -> void:
