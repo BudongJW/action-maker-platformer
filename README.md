@@ -62,7 +62,7 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 ├── private/                 # Private story pack, git-ignored (see "Story content stays out of this repository")
 ├── tests/
 │   └── godot/               # GDScript runtime tests and fixtures
-├── tools/                   # Compiler, pixel-art and sound renderers, repository checks, test runners (GPL-3.0)
+├── tools/                   # Compiler, pixel-art and sound renderers, repository checks, test runners; check_all.py (every CI check), get_godot.py (fetch Godot 4.7), pack_private.py (zip the private pack) (GPL-3.0)
 ├── reports/                 # Research reports (Korean)
 └── research_notes/          # Research notes (Korean)
 ```

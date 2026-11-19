@@ -9,7 +9,7 @@ TEST_SCRIPTS.
 Usage:
     python3 tools/run_godot_tests.py [--godot PATH] [--require-godot] [--keep]
 
-Godot is found via --godot, $GODOT_BIN, or `godot` on PATH. If it is not found the tests
+Godot is found via --godot, $GODOT_BIN, tools/godot/ (python3 tools/get_godot.py), or `godot` on PATH. If it is not found the tests
 are skipped (exit 0) unless --require-godot is given.
 """
 
@@ -31,6 +31,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
+import get_godot  # noqa: E402
 import storyc  # noqa: E402
 
 SPEC = REPO / "docs" / "script-format.md"
@@ -112,7 +113,7 @@ def build_project(root: Path) -> None:
 
 
 def find_godot(explicit: str | None) -> str | None:
-    for candidate in (explicit, os.environ.get("GODOT_BIN"), shutil.which("godot")):
+    for candidate in (explicit, os.environ.get("GODOT_BIN"), get_godot.local_godot(), shutil.which("godot")):
         if candidate and Path(candidate).is_file():
             return candidate
     return None

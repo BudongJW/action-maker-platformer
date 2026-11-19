@@ -14,4 +14,4 @@
 
 ## 검사
 
-푸시 전: `docs/handoff.md` 4절의 명령. 비공개 팩을 고쳤으면 `python3 tools/storyc.py --root private`와 `python3 tools/build_prototype.py --story private --smoke --require-godot`도. Godot 4.7-stable 경로는 `GODOT_BIN`.
+푸시 전: `python3 tools/check_all.py`(CI와 같은 11단계). 비공개 팩을 고쳤으면 `python3 tools/check_all.py --private`. Godot 4.7이 없으면 `python3 tools/get_godot.py`(도구들이 `tools/godot/`에서 알아서 찾음). 비공개 팩을 넘길 때는 `python3 tools/pack_private.py --out <zip>`(한글 파일 이름이 Windows에서도 깨지지 않음).
