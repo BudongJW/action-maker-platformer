@@ -6,7 +6,7 @@
 ## 0. 빠른 시작 (처음 한 번)
 
 1. 저장소를 받고 작업 브랜치로 바꿉니다(2.1절).
-2. 비공개 스토리 팩 `미방송분_스토리팩_v0.24.zip`을 저장소의 `private/`에 풉니다(2.2절).
+2. 비공개 스토리 팩 `미방송분_스토리팩_v0.25.zip`을 저장소의 `private/`에 풉니다(2.2절).
 3. Godot 4.7을 받습니다. 받은 Godot은 도구들이 알아서 찾으므로 경로를 설정할 필요가 없습니다.
 
    ```bash
@@ -35,7 +35,7 @@ Windows에서는 `python3` 대신 `py`를 씁니다(예: `py tools\get_godot.py`
 | PR | [BudongJW/action-maker-platformer#4](https://github.com/BudongJW/action-maker-platformer/pull/4) 열림. main과 충돌 없음, CI 모두 통과. **병합은 직접 요청할 때만** |
 | 스토리 런타임 | `scripts/story/` 완성, Godot 4.7 헤드리스 테스트 246개 통과 |
 | 프로토타입 | 타이틀 → 시작 경고 → 프롤로그~5장 → 마감 날 선택 → 엔딩 → 크레딧까지 한 번에 진행. 작업실마다 자동 저장, 이어하기, 일시정지 메뉴. 테이프 화면의 VHS 질감(카메라를 끄면 사라짐)과 MIX 두 화면 겹침. 비공개 팩으로 봇이 진엔딩까지 감(약 79,700프레임, 오류 0). 공개 데모 콘텐츠로 CI가 같은 기능을 검사 |
-| 비공개 스토리 팩 | v0.24 (`미방송분_스토리팩_v0.24.zip`). 원고·설계·레벨·릴·콘티·자문 자료·조사 노트 전부 |
+| 비공개 스토리 팩 | v0.25 (`미방송분_스토리팩_v0.25.zip`). 원고·설계·레벨·릴·콘티·자문 자료·조사 노트 전부 |
 | 데모 영상 | `미방송분_프로토타입_데모_v2.mp4`(9:43, 프롤로그~엔딩) 등. 비공개 자료라 저장소에 없음(9절) |
 | ACTION GAME MAKER G | 아직 연결하지 않음(8절) |
 
@@ -57,18 +57,18 @@ git checkout claude/inspiring-galileo-f9ez1u
 
 ### 2.2 비공개 스토리 팩
 
-받은 `미방송분_스토리팩_v0.24.zip`(또는 더 새 판)을 저장소의 `private/` 폴더에 풉니다. `private/`는 통째로 git에서 빠져 있고, 여기에 추적 파일이 생기면 CI(`Private story files are not tracked`)가 실패합니다.
+받은 `미방송분_스토리팩_v0.25.zip`(또는 더 새 판)을 저장소의 `private/` 폴더에 풉니다. `private/`는 통째로 git에서 빠져 있고, 여기에 추적 파일이 생기면 CI(`Private story files are not tracked`)가 실패합니다.
 
 macOS·Linux:
 
 ```bash
-unzip -o 미방송분_스토리팩_v0.24.zip -d private
+unzip -o 미방송분_스토리팩_v0.25.zip -d private
 ```
 
 Windows PowerShell:
 
 ```powershell
-Expand-Archive -Force 미방송분_스토리팩_v0.24.zip private
+Expand-Archive -Force 미방송분_스토리팩_v0.25.zip private
 ```
 
 팩이 없으면 프로토타입은 공개 데모 콘텐츠(`prototype/demo/`)로 돌아갑니다.
@@ -82,7 +82,7 @@ Expand-Archive -Force 미방송분_스토리팩_v0.24.zip private
 | git | — | 저장소, `check_all.py`의 비공개 경로 검사 |
 | ffmpeg | 아무 최신판 | 데모 영상을 mp4로 바꿀 때만(`--movie x.mp4`) |
 | xvfb-run | — | 화면 없는 Linux 서버에서 영상을 녹화할 때만. 데스크톱에서는 필요 없음 |
-| Node + Playwright | — | 비공개 콘티를 PDF로 뽑을 때만(`private/콘티/src/pdf.js`) |
+| Node + Playwright 또는 Edge | — | 비공개 콘티를 PDF로 뽑을 때만(`private/콘티/src/pdf.js`, 또는 Windows에서 Edge 헤드리스 인쇄. 명령은 비공개 인수인계 1절) |
 
 Godot을 찾는 순서: `--godot` → `GODOT_BIN` → `tools/godot/`(get_godot.py로 받은 것) → PATH의 `godot`.
 
@@ -128,6 +128,7 @@ CI(`.github/workflows/content-license-checks.yml`)와 같은 11단계를 차례�
 | `README.md` | 저장소 구조, 라이선스(코드 GPL-3.0, 콘텐츠 All rights reserved), Story runtime 절 |
 | `docs/script-format.md` | `.dlg` 원고 형식과 `storyc` 명세 |
 | `docs/scare-director.md` | 스케어 디렉터·트랙 믹서·스케어 검사 |
+| `docs/ui-ux.md` | UI/UX 설계: 있는 것과 없는 것, 우선순위(P0~P2), 화면 배치, 디자인 팩 v0.3에 그릴 UI, 구현 순서, 접근성 기본 점검표 |
 | `docs/resource-needs.md` | 게임에 아직 필요한 것(그림·소리·글·엔진) |
 | `prototype/README.md` | 프로토타입 키, 레벨 파일 형식(트리거·허브·보드·동행·장면 그림·끝 문서·크레딧 등), 저장, 메타 연출, 릴, 봇 |
 | `scripts/story/` | 스토리 런타임(`StoryRunner` 등) |
@@ -141,17 +142,30 @@ CI(`.github/workflows/content-license-checks.yml`)와 같은 11단계를 차례�
 - **Godot을 직접 돌릴 때:** 새로 빌드한 `build/prototype`은 먼저 가져오기를 해야 `class_name`이 등록됩니다. `--run`·`--smoke`·`--reel`은 알아서 하고, 직접 돌릴 때는 `<Godot 경로> --headless --path build/prototype --import`를 한 번 실행합니다.
 - **봇을 직접 돌릴 때는 `--fixed-fps 60`을 붙입니다.** 없으면 실제 시간으로 돌아 매우 느립니다.
 - **Windows:** 도구는 `py tools\…`로 돌립니다. `get_godot.py`는 콘솔 출력이 보이는 `_console.exe`를 고릅니다. Windows의 Python 3.14는 zlib-ng를 써서 같은 그림도 PNG 바이트가 달라지므로, `pixelart.py`는 바이트가 아니라 풀어낸 픽셀을 비교합니다(그림이 같으면 파일을 다시 쓰지 않음). Godot 출력은 UTF-8로 읽습니다(한국어 Windows의 cp949로 읽으면 깨짐). 2026-11-19 Windows 11·Python 3.14에서 `check_all.py --private` 14단계 통과를 확인했습니다.
-- **화면 효과(`scripts/proto/proto_screen.gd`):** VHS 질감과 MIX 두 화면은 UI 아래 층(layer 5)에서 화면을 읽는 셰이더입니다. 헤드리스 실행(봇, CI의 릴 검사)은 셰이더를 실제로 그리지 않으므로, 모양을 바꿨다면 `--reel … --movie <폴더>\f.png`로 PNG 프레임을 뽑아 직접 봅니다.
+- **화면 효과(`scripts/proto/proto_screen.gd`):** VHS 질감과 MIX 두 화면은 UI 아래 층(layer 5)에서 화면을 읽는 셰이더입니다. 헤드리스 실행(봇, CI의 릴 검사)은 셰이더를 실제로 그리지 않으므로, 모양을 바꿨다면 `--reel … --movie <폴더>\f.png`로 PNG 프레임을 뽑아 직접 봅니다. 주사선 대비는 광과민 기준 때문에 8%를 넘지 않게 묶었고, 광과민 보호를 켜면 주사선·트래킹 띠가 꺼지고 그레인이 멈춥니다. 장면 그림(`art.cuts`, UI 층)에는 VHS 질감이 들어가지 않습니다(테이프 속 장면 그림은 뷰파인더가 그림에 그려져 있음).
+- **라우드니스 재기:** 릴을 `.avi`로 녹화하면 소리가 PCM으로 들어갑니다. `ffmpeg -i <파일>.avi -vn -af ebur128=peak=true -f null -`의 끝 요약(`I:`, `Peak:`)을 봅니다. 순간 라우드니스를 시간별로 보려면 `-v verbose`와 `ebur128=framelog=verbose`.
 - **저장과 메타 플래그:** 평소 플레이는 작업실에 들어올 때마다 `user://proto_save.json`에 자동 저장하고(타이틀의 '이어하기'), 본 엔딩·2회차는 `user://meta.dat`에 둡니다. 봇과 릴은 둘 다 메모리에만 둡니다. 처음부터 다시 하려면 Godot 사용자 폴더의 `app_userdata/Story prototype/`에서 두 파일을 지웁니다(Windows `%APPDATA%\Godot\`, macOS `~/Library/Application Support/Godot/`, Linux `~/.local/share/godot/`).
 - **스케어 지연은 무작위**라 데모 봇 결과(보드 카드 수 등)가 실행마다 조금 다를 수 있습니다. 판정은 끝까지 갔는지와 오류 0건입니다.
 - **영상 녹화**는 고정 프레임이라 실제 시간과 관계없이 같은 결과가 나옵니다. 1~4장 릴은 약 10분 걸립니다.
+- **읽는 시간:** 릴의 대사 넘김은 0.6 s + 0.06 s × 글자(1.5~5 s, `…`만 있는 줄 2 s), 선택지는 보이는 선택지 글자 수에 비례(2~5 s), 바크 말풍선도 같은 식(2~4.5 s)입니다(`ProtoUI.reading_secs`). 넷플릭스 한국어 자막의 성인 초당 12자에 맞춘 값이고, 릴 파일에 `line_secs` 등을 적으면 그 값을 씁니다. 예전 값(0.8 + 0.045 s)보다 녹화가 약 10% 길어집니다.
 
 ## 8. 다음 작업 (추천 순서)
 
 1. **플레이테스트(직접).** `python3 tools/build_prototype.py --run`으로 처음부터 엔딩까지. 스케어 로그(`ScareDirector.log_path`)를 남기면 강도 모델 보정에 씁니다. VHS 질감의 세기(주사선·색 번짐·그레인·트래킹 띠)와 MIX 체커가 읽히는지도 이때 봅니다. 세기는 레벨 `art.vhs` 값으로 바꿉니다(`prototype/README.md`).
-2. **스토리 쪽:** 무속 자문 질문지 v1.2, 설정집 v0.6·콘티 v1.3 맞추기(비공개 인수인계 6절).
-3. **ACTION GAME MAKER G 연결 확인:** 오토로드로 `StoryRunner`·`ScareDirector`·`TrackMixer` 등록, Custom Action Plugin(`AGMPluginAction`/`AGMPluginCondition`)으로 대화 시작·조건 연결, 내보내기 빌드에 `compiled/*.json`과 스케어·레벨 설정이 들어가는지. 셰이더 셋(`shaders/`)이 AGM G에서도 도는지.
-4. **소리 듣기와 라우드니스:** 사운드는 아직 아무도 들어 보지 않았습니다. 게임 안 녹화로 LUFS를 잽니다.
+2. **UI/UX 기본기(P0):** `docs/ui-ux.md` 6절 순서대로. ~~입력 정리(InputMap, 게임패드, 마우스, 키 다시 지정)~~(2026-11-19 들어감, `prototype/README.md` 「Controls」) → 기본 글자 크기와 자막 배경, 설정 탭 → 데크 패널(개발용 상태 줄 대체) → 저널과 대사 기록 → 알림·저장 표시 → 첫 실행 흐름. 그림은 디자인 팩 v0.3 목록(4절)이 올 때까지 지금 패널로 먼저 만든다. 외부 플레이테스트 전에 끝낸다.
+3. **스토리 쪽:** 무속 자문 질문지 v1.2와 설정집 v0.6·콘티 v1.3은 팩 v0.25에서 끝났습니다. 다음은 자문 요청 보내기(자문자 결정 필요), 에필로그 원고 v0.2, 제작계획서 다시 짜기(비공개 인수인계 6절).
+4. **ACTION GAME MAKER G 연결 확인:** 오토로드로 `StoryRunner`·`ScareDirector`·`TrackMixer` 등록, Custom Action Plugin(`AGMPluginAction`/`AGMPluginCondition`)으로 대화 시작·조건 연결, 내보내기 빌드에 `compiled/*.json`과 스케어·레벨 설정이 들어가는지. 셰이더 셋(`shaders/`)이 AGM G에서도 도는지.
+5. **소리 듣기와 라우드니스:** 사운드는 아직 아무도 귀로 들어 보지 않았습니다. 2026-11-19에 비공개 릴 셋을 녹화해 처음 쟀습니다.
+
+   | 릴 | 길이 | 통합 | 순간 최대 | 트루 피크 |
+   |---|---|---|---|---|
+   | 1~4장(`demo_v1`) | 5:25 | −31.2 LUFS | −15.8 LUFS | −6.6 dBTP |
+   | 5장(`ch5_v1`) | 2:15 | −30.8 LUFS | −13.8 LUFS(JS8) | −11.4 dBTP |
+   | 엔딩(`endings_v1`) | 2:14 | −30.2 LUFS | −15.7 LUFS | −13.5 dBTP |
+
+   - **고친 것:** 처음 잰 5장은 −12.5 LUFS, 트루 피크 +0.2 dBTP였습니다. 소리 파일이 없는 스케어(JS5~JS9, F3, F4)에 프로토타입이 만드는 임시 잡음이 정규화되지 않아, 같은 `level_lu`의 파일 스팅어보다 약 12 LU 컸습니다. 잡음 피크를 0.9에서 0.2로 낮춰 파일 스팅어(+20 LU에서 순간 −11~−16 LUFS)와 맞췄습니다(`scripts/proto/proto_fx.gd`).
+   - **남은 판단:** 지금 통합값은 음성이 없어 바탕 소리만 잰 값이고, 목표(−24 LUFS ±2, 설정집 점검 목록)보다 약 7 LU 낮습니다. 목표를 대사 기준으로 잡을지는 음성 녹음 범위를 정한 뒤 결정합니다. 스팅어 파일은 샘플 피크 −1 dBFS로 정규화돼 있어 트루 피크는 최대 +0.8 dBTP(`st_js1_first_answer`)이지만, 지금 `level_lu`로는 게임 안에서 모두 −2.7 dBTP 이하입니다. `level_lu`를 19 넘게 올리려면 파일을 트루 피크 기준으로 다시 정규화해야 합니다.
+   - 다음은 귀로 듣기(스케어 소리, 바탕 소리 이음새, 트랙 전환의 크로스페이드).
 
 (타이틀 화면, 작업실 자동 저장, 이어하기, 일시정지 메뉴, 크레딧, 메타 연출 화면, VHS 질감, MIX 두 화면은 끝났습니다.)
 
@@ -163,7 +177,7 @@ CI(`.github/workflows/content-license-checks.yml`)와 같은 11단계를 차례�
 
 | 파일 | 내용 |
 |---|---|
-| `미방송분_스토리팩_v0.24.zip` | 비공개 팩 전체(이것만 있으면 스토리 작업을 이어 갈 수 있음) |
+| `미방송분_스토리팩_v0.25.zip` | 비공개 팩 전체(이것만 있으면 스토리 작업을 이어 갈 수 있음) |
 | `미방송분_프로토타입_데모_v2.mp4` | 프롤로그~엔딩 데모 영상(9:43) |
 | `미방송분_5장_데모_v1.mp4`, `미방송분_엔딩_데모_v1.mp4`, `미방송분_엔딩화면_확인.mp4` | 장·엔딩별 데모 영상 |
 
