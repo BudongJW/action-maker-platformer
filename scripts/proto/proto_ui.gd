@@ -44,6 +44,17 @@ var next_hint := "[Enter]"
 var choice_hint := "[Up/Down] [Enter]  [1-4]"
 var _text_scale := 1.0
 var _captions_on := true
+## Speaker names on the name tag and before captions (the "speaker names" setting).
+var show_names := true
+## Opacity of the box behind captions and bubbles (the "caption background" setting).
+var _text_bg := 0.75
+var _text_box: StyleBoxFlat
+var _caption_raw := ""
+## Widest part of the screen a caption or a bubble may take.
+const CAPTION_WIDTH := 0.8
+const BUBBLE_WIDTH := 0.4
+## Where a bubble's top edge sits: below the viewfinder's top edge and the development status lines.
+const BUBBLE_TOP := 0.24
 var _caption_clock := 0.0
 var _bubble_left := 0.0
 var _toast_left := 0.0
@@ -89,6 +100,7 @@ func _ready() -> void:
 	# Below the dialogue window, so the window covers it like the rest of the viewfinder.
 	_timecode = _anchored_label(0.835, 0.955, 0.875, 0.935, 22)
 	_timecode.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_timecode.remove_meta("base_size")  # part of the camera art: the text size setting leaves it
 	var tc_box := StyleBoxFlat.new()
 	tc_box.bg_color = Color(0.05, 0.04, 0.07, 1.0)
 	_timecode.add_theme_stylebox_override("normal", tc_box)
@@ -111,12 +123,12 @@ func _ready() -> void:
 	_window.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	var box := VBoxContainer.new()
 	_window.add_child(box)
-	_name = _label(18, Color(0.95, 0.85, 0.55))
-	_text = _label(20, Color.WHITE)
+	_name = _label(26, Color(0.95, 0.85, 0.55))
+	_text = _label(30, Color.WHITE)
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_name.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_choice_box = VBoxContainer.new()
-	_hint = _label(16, Color(0.75, 0.92, 1.0))
+	_hint = _label(20, Color(0.75, 0.92, 1.0))
 	box.add_child(_name)
 	box.add_child(_text)
 	box.add_child(_choice_box)
@@ -132,16 +144,24 @@ func _ready() -> void:
 	_wave.visible = false
 	_wave.draw.connect(_draw_wave)
 	add_child(_wave)
-	_caption = _anchored_label(0.1, 0.9, 0.86, 0.93, 20)
-	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_bubble = _anchored_label(0.3, 0.7, 0.18, 0.26, 18)
-	_bubble.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# Captions and bubbles sit on a dark box as wide as their text (docs/ui-ux.md P0-2). The
+	# caption's bottom edge and the bubble's top edge are placed in _process.
+	_text_box = StyleBoxFlat.new()
+	_text_box.bg_color = Color(0.02, 0.02, 0.03, _text_bg)
+	_text_box.content_margin_left = 14
+	_text_box.content_margin_right = 14
+	_text_box.content_margin_top = 4
+	_text_box.content_margin_bottom = 6
+	_caption = _boxed_label(30, Control.GROW_DIRECTION_BEGIN)
+	_bubble = _boxed_label(28, Control.GROW_DIRECTION_END)
+	_bubble.anchor_top = BUBBLE_TOP
+	_bubble.anchor_bottom = BUBBLE_TOP
 	_hud = _anchored_label(0.01, 0.6, 0.01, 0.08, 16)
-	_toast = _anchored_label(0.6, 0.99, 0.01, 0.08, 16)
+	_toast = _anchored_label(0.6, 0.99, 0.01, 0.08, 20)
 	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_hub = _anchored_label(0.1, 0.9, 0.35, 0.6, 22)
+	_hub = _anchored_label(0.1, 0.9, 0.35, 0.6, 26)
 	_hub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_prompt = _anchored_label(0.3, 0.7, 0.62, 0.68, 20)
+	_prompt = _anchored_label(0.25, 0.75, 0.62, 0.68, 26)
 	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_build_meta()
 	_cut_fill = ColorRect.new()
@@ -291,8 +311,8 @@ func show_line(speaker: String, text: String, kind: String = "") -> void:
 		return
 	_window.visible = true
 	_name.text = speaker
-	_name.visible = speaker != ""
-	_text.text = text
+	_name.visible = speaker != "" and show_names
+	_text.text = ProtoUI.keep_words(text)
 	_clear_choices()
 	_hint.text = next_hint
 
@@ -314,10 +334,13 @@ func show_choices(options: Array, selected: int = 0) -> void:
 		mark.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 		mark.texture = _cursor if on else null
 		line.add_child(mark)
-		var label := _label(18, Color(0.75, 0.92, 1.0) if o["enabled"] else Color(0.5, 0.55, 0.6))
-		label.text = "%d. %s%s" % [i + 1, o["text"], "" if o["enabled"] else " (x)"]
+		var label := _label(26, Color(0.75, 0.92, 1.0) if o["enabled"] else Color(0.5, 0.55, 0.6))
+		label.text = ProtoUI.keep_words("%d. %s%s" % [i + 1, o["text"], "" if o["enabled"] else " (x)"])
 		if on and _cursor == null:
 			label.text = "> " + label.text
+		# A long choice wraps between words inside the window instead of running past it.
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		line.add_child(label)
 		row.add_child(line)
 		_choice_box.add_child(row)
@@ -392,11 +415,11 @@ func _build_doc() -> void:
 	box.add_theme_constant_override("separation", 14)
 	_doc.add_child(box)
 	var ink := Color(0.1, 0.1, 0.13)
-	_doc_title = _label(24, ink)
+	_doc_title = _label(30, ink)
 	_doc_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_doc_body = _label(19, ink)
+	_doc_body = _label(24, ink)
 	_doc_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	var hint := _label(15, Color(0.35, 0.35, 0.4))
+	var hint := _label(18, Color(0.35, 0.35, 0.4))
 	hint.text = "[Enter]"
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	box.add_child(_doc_title)
@@ -432,7 +455,7 @@ func _build_meta() -> void:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 0)
 	_os.add_child(col)
-	_os_title = _label(15, Color.WHITE)
+	_os_title = _label(18, Color.WHITE)
 	var bar := StyleBoxFlat.new()
 	bar.bg_color = Color(0.16, 0.2, 0.42)
 	bar.set_content_margin_all(5)
@@ -445,16 +468,16 @@ func _build_meta() -> void:
 	var inner := VBoxContainer.new()
 	inner.add_theme_constant_override("separation", 12)
 	body.add_child(inner)
-	_os_text = _label(18, Color(0.05, 0.05, 0.08))
+	_os_text = _label(22, Color(0.05, 0.05, 0.08))
 	_os_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	inner.add_child(_os_text)
-	_os_ok = _label(16, Color(0.05, 0.05, 0.08))
+	_os_ok = _label(20, Color(0.05, 0.05, 0.08))
 	var ok := _os_ok
 	ok.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	inner.add_child(ok)
 	_os.visible = false
 	add_child(_os)
-	_title_bar = _anchored_label(0.0, 1.0, 0.0, 0.045, 16)
+	_title_bar = _anchored_label(0.0, 1.0, 0.0, 0.05, 20)
 	var title_box := StyleBoxFlat.new()
 	title_box.bg_color = Color(0.12, 0.12, 0.15, 0.95)
 	_title_bar.add_theme_stylebox_override("normal", title_box)
@@ -473,9 +496,9 @@ func _build_meta() -> void:
 	var note_col := VBoxContainer.new()
 	note_col.add_theme_constant_override("separation", 8)
 	_note.add_child(note_col)
-	_note_head = _label(14, Color(0.4, 0.36, 0.3))
+	_note_head = _label(16, Color(0.4, 0.36, 0.3))
 	note_col.add_child(_note_head)
-	_note_text = _label(18, Color(0.12, 0.1, 0.08))
+	_note_text = _label(22, Color(0.12, 0.1, 0.08))
 	_note_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note_col.add_child(_note_text)
 	_note.visible = false
@@ -495,7 +518,7 @@ func show_title(title: String, sub: String, options: Array, selected: int, dim: 
 		c.queue_free()
 	for i in options.size():
 		var on := i == selected
-		var row := _label(24, Color(0.95, 0.92, 0.8) if on else Color(0.62, 0.66, 0.72))
+		var row := _label(28, Color(0.95, 0.92, 0.8) if on else Color(0.62, 0.66, 0.72))
 		row.text = ("> " if on else "  ") + String(options[i])
 		row.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		row.add_theme_color_override("font_outline_color", Color.BLACK)
@@ -542,7 +565,7 @@ func _build_title() -> void:
 	_title.add_theme_constant_override("separation", 14)
 	_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_title_text = _label(48, Color(0.95, 0.93, 0.86))
-	_title_sub = _label(20, Color(0.72, 0.75, 0.8))
+	_title_sub = _label(24, Color(0.72, 0.75, 0.8))
 	for l in [_title_text, _title_sub]:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.add_theme_color_override("font_outline_color", Color.BLACK)
@@ -554,7 +577,7 @@ func _build_title() -> void:
 	_title_menu = VBoxContainer.new()
 	_title_menu.add_theme_constant_override("separation", 10)
 	_title.add_child(_title_menu)
-	var hint := _label(16, Color(0.75, 0.92, 1.0))
+	var hint := _label(20, Color(0.75, 0.92, 1.0))
 	hint.text = "[Up/Down] [Enter]"
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_title.add_child(hint)
@@ -568,13 +591,13 @@ func roll_credits(doc: Dictionary, secs: float, done: Callable) -> void:
 	for c in _credits_box.get_children():
 		_credits_box.remove_child(c)
 		c.queue_free()
-	var title := _label(30, Color(0.92, 0.9, 0.84))
+	var title := _label(34, Color(0.92, 0.9, 0.84))
 	title.text = ProtoUI.keep_words(String(doc.get("title", "")))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_credits_box.add_child(title)
 	for para in doc.get("paragraphs", []):
-		var line := _label(19, Color(0.78, 0.8, 0.84))
+		var line := _label(24, Color(0.78, 0.8, 0.84))
 		line.text = ProtoUI.keep_words(String(para))
 		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -643,8 +666,16 @@ static func reading_secs(text: String, base := 0.6, per_char := 0.06, lo := 1.5,
 ## A short line over a character (barks). Without `seconds` it stays as long as it takes to read,
 ## between 2 and 4.5 seconds.
 func bubble(text: String, seconds: float = -1.0) -> void:
-	_bubble.text = text
+	_set_boxed(_bubble, ProtoUI.keep_words(text), BUBBLE_WIDTH)
 	_bubble_left = seconds if seconds > 0.0 else ProtoUI.reading_secs(text, 0.6, 0.06, 2.0, 4.5)
+
+
+func bubble_text() -> String:
+	return _bubble.text
+
+
+func caption_text() -> String:
+	return _caption.text
 
 
 func toast(text: String, seconds: float = 2.0) -> void:
@@ -701,15 +732,16 @@ func _process(delta: float) -> void:
 		var at: float = float(line["attrs"].get("at", 0.0))
 		var dur: float = float(line["attrs"].get("dur", 2.0))
 		if _caption_clock >= at and _caption_clock < at + dur:
-			var who: String = String(line["attrs"].get("display_name", ""))
+			var who: String = String(line["attrs"].get("display_name", "")) if show_names else ""
 			shown.append((who + ": " if who != "" else "") + String(line.get("text", "")))
-	_caption.text = "\n".join(shown) if _captions_on else ""
-	# Captions sit above the dialogue window while it is open, so the two never overlap.
-	_caption.anchor_top = 0.60 if _window.visible else 0.86
-	_caption.anchor_bottom = 0.68 if _window.visible else 0.93
+	var caption := "\n".join(shown) if _captions_on else ""
+	if caption != _caption_raw:
+		_caption_raw = caption
+		_set_boxed(_caption, ProtoUI.keep_words(caption), CAPTION_WIDTH)
+	_place_over_window()
 	_bubble_left -= delta
-	if _bubble_left <= 0.0:
-		_bubble.text = ""
+	if _bubble_left <= 0.0 and _bubble.text != "":
+		_set_boxed(_bubble, "", BUBBLE_WIDTH)
 	_toast_left -= delta
 	if _toast_left <= 0.0:
 		_toast.text = ""
@@ -759,10 +791,75 @@ func _full_rect(color: Color) -> ColorRect:
 func set_text_scale(scale: float) -> void:
 	_text_scale = scale
 	_rescale(self)
+	if _text_box != null:
+		_set_boxed(_caption, _caption.text, CAPTION_WIDTH)
+		_set_boxed(_bubble, _bubble.text, BUBBLE_WIDTH)
 
 
 func set_captions(on: bool) -> void:
 	_captions_on = on
+
+
+## Opacity of the box behind captions and bubbles, 0 to 1 (the outline stays at 0).
+func set_text_background(alpha: float) -> void:
+	_text_bg = alpha
+	if _text_box != null:
+		_text_box.bg_color = Color(0.02, 0.02, 0.03, alpha)
+
+
+## Sets a caption or a bubble. The box is as wide as the longest line, at most `width` of the
+## screen, and longer text wraps between words inside it; an empty text hides the box.
+func _set_boxed(l: Label, text: String, width: float) -> void:
+	l.text = text
+	l.visible = text != ""
+	if text == "":
+		return
+	var f: Font = font if font != null else ThemeDB.fallback_font
+	var px := l.get_theme_font_size("font_size")
+	var widest := 0.0
+	for part in text.split("\n"):
+		widest = maxf(widest, f.get_string_size(part, HORIZONTAL_ALIGNMENT_LEFT, -1, px).x)
+	var pad := _text_box.content_margin_left + _text_box.content_margin_right
+	# A little room for the outline, so the last letter does not wrap on its own.
+	l.custom_minimum_size.x = minf(ceilf(widest) + pad + 8.0, _view_size().x * width)
+
+
+## Captions sit above the dialogue window while it is open (and above the voice waveform, which
+## sits on the window), so nothing overlaps; otherwise near the bottom, clear of the timecode.
+func _place_over_window() -> void:
+	var view := _view_size()
+	var bottom := view.y * 0.86
+	if _window.visible:
+		var top := _window.get_global_rect().position.y
+		_wave.anchor_bottom = (top - 4.0) / view.y
+		_wave.anchor_top = _wave.anchor_bottom - 0.07
+		bottom = top - 8.0
+		if _wave.visible:
+			bottom = _wave.anchor_top * view.y - 6.0
+	_caption.anchor_top = bottom / view.y
+	_caption.anchor_bottom = _caption.anchor_top
+	# A bubble gives way upward to a caption that has climbed over a tall window (four choices).
+	var bubble_top := view.y * BUBBLE_TOP
+	if _bubble.visible and _caption.visible:
+		bubble_top = minf(bubble_top, bottom - _caption.size.y - 6.0 - _bubble.size.y)
+	_bubble.anchor_top = maxf(bubble_top, view.y * 0.02) / view.y
+	_bubble.anchor_bottom = _bubble.anchor_top
+
+
+func _view_size() -> Vector2:
+	var vp := get_viewport()
+	return vp.get_visible_rect().size if vp != null else Vector2(1280, 720)
+
+
+func _boxed_label(size_px: int, grow: Control.GrowDirection) -> Label:
+	var l := _anchored_label(0.5, 0.5, 0.0, 0.0, size_px)
+	l.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	l.grow_vertical = grow
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.add_theme_stylebox_override("normal", _text_box)
+	l.visible = false
+	return l
 
 
 ## The skin's panels, shared with the settings screen.

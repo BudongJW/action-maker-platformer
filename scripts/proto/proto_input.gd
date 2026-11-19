@@ -34,6 +34,9 @@ const ACTIONS := [
 	["menu_down", "", [KEY_DOWN], [JOY_BUTTON_DPAD_DOWN], [[JOY_AXIS_LEFT_Y, 1]], false],
 	["menu_left", "", [KEY_LEFT], [JOY_BUTTON_DPAD_LEFT], [[JOY_AXIS_LEFT_X, -1]], false],
 	["menu_right", "", [KEY_RIGHT], [JOY_BUTTON_DPAD_RIGHT], [[JOY_AXIS_LEFT_X, 1]], false],
+	# Tabs of the settings screen (the shoulders are track buttons only while the game runs).
+	["tab_prev", "", [KEY_PAGEUP], [JOY_BUTTON_LEFT_SHOULDER], [], false],
+	["tab_next", "", [KEY_TAB, KEY_PAGEDOWN], [JOY_BUTTON_RIGHT_SHOULDER], [], false],
 	# The workroom's own action (the level's "hub.actions" also keep their letter keys).
 	["workroom_action", "", [KEY_D], [JOY_BUTTON_Y], [], false],
 	["choose_1", "", [KEY_1], [], [], false],

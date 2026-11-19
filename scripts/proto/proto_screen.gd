@@ -6,7 +6,8 @@
 ## "off_flag", or else the viewfinder's. "vhs": {"enabled": false} turns it off; "scanlines",
 ## "chroma", "chroma_blur", "noise" and "band" tune it (shader uniforms of the same names);
 ## "scanlines" is capped at 0.08, the contrast photosensitivity guidance allows. With reduced
-## flashing the grain stands still and the tracking band and the scanlines are gone.
+## flashing the grain stands still and the tracking band and the scanlines are gone. The player's
+## "VHS texture" setting (set_strength) turns it off or halves it.
 ##
 ## MIX (shaders/track_mix.gdshader) needs the art's "linear" and "hifi" palettes. The world is
 ## drawn a second time into a SubViewport that shares the World2D: canvas cull masks keep the
@@ -26,6 +27,8 @@ const VIEW := Vector2(1280, 720)
 const MAX_SCANLINE := 0.08
 const VHS_SHADER := "res://shaders/vhs.gdshader"
 const MIX_SHADER := "res://shaders/track_mix.gdshader"
+## Shader defaults of the uniforms the strength setting scales (shaders/vhs.gdshader).
+const VHS_DEFAULTS := {"chroma": 0.5, "noise": 0.04, "band": 0.6}
 
 ## The flag that switches the camera off for good ("" if nothing does).
 var vhs_off_flag := ""
@@ -38,6 +41,12 @@ var _vhs_on := false
 var _mix_on := false
 var _still := false
 var _scanline := MAX_SCANLINE
+## The level's own values of VHS_DEFAULTS' uniforms, before the strength setting.
+var _base: Dictionary = VHS_DEFAULTS.duplicate()
+## 0 off, 1 soft (half), 2 as the level sets it.
+var _strength := 2
+## On as far as the story is concerned (the camera has not been switched off).
+var _story_vhs := false
 var _clock := 0.0
 
 
@@ -73,10 +82,12 @@ func setup(art: ProtoArt, level: ProtoLevel, mixer: TrackMixer) -> void:
 		_vhs_mat.set_shader_parameter("view_size", VIEW)
 		_vhs_mat.set_shader_parameter("lines", ProtoArt.SCREEN.y)
 		_scanline = clampf(float(vhs.get("scanlines", MAX_SCANLINE)), 0.0, MAX_SCANLINE)
-		_vhs_mat.set_shader_parameter("scanline", _scanline)
 		for key in ["chroma", "chroma_blur", "noise", "band"]:
 			if vhs.has(key):
 				_vhs_mat.set_shader_parameter(key, float(vhs[key]))
+				if _base.has(key):
+					_base[key] = float(vhs[key])
+		_apply_strength()
 		_vhs.material = _vhs_mat
 		vhs_off_flag = String(vhs.get("off_flag", art.cfg.get("viewfinder", {}).get("off_flag", "")))
 		set_vhs(true)
@@ -120,7 +131,8 @@ func mix_available() -> bool:
 
 
 func set_vhs(on: bool) -> void:
-	on = on and _vhs_mat != null
+	_story_vhs = on
+	on = on and _vhs_mat != null and _strength > 0
 	if on == _vhs_on:
 		return
 	_vhs_on = on
@@ -134,7 +146,24 @@ func set_still(still: bool) -> void:
 		return
 	_still = still
 	_vhs_mat.set_shader_parameter("moving", 0.0 if still else 1.0)
-	_vhs_mat.set_shader_parameter("scanline", 0.0 if still else _scanline)
+	_apply_strength()
+
+
+## The player's setting: 0 turns the texture off, 1 halves the scanlines, colour bleed, grain and
+## tracking band, 2 leaves them as the level sets them.
+func set_strength(level: int) -> void:
+	_strength = clampi(level, 0, 2)
+	_apply_strength()
+	set_vhs(_story_vhs)
+
+
+func _apply_strength() -> void:
+	if _vhs_mat == null:
+		return
+	var k := 0.5 if _strength == 1 else 1.0
+	_vhs_mat.set_shader_parameter("scanline", 0.0 if _still else _scanline * k)
+	for key in _base:
+		_vhs_mat.set_shader_parameter(key, float(_base[key]) * k)
 
 
 func set_mix(on: bool) -> void:

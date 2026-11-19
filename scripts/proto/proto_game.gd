@@ -54,6 +54,8 @@ var _play_after := false
 var _done: Dictionary = {}
 var _events: Dictionary = {}
 var _choices: Array = []
+## Seconds until auto-advance moves past the line on screen (-1: not counting).
+var _auto_left := -1.0
 var _chaser: Node2D
 var _chaser_sprite: AnimatedSprite2D
 var _chaser_on := false
@@ -196,7 +198,10 @@ func _ready() -> void:
 	settings.ui = ui
 	settings.runner = runner
 	settings.input = input
-	settings.persist = not bot
+	# Bot runs and reels use the default settings and leave the player's file alone.
+	var reel_run := "--reel" in OS.get_cmdline_user_args()
+	settings.persist = not bot and not reel_run
+	settings.apply_window = settings.persist
 	ui.add_child(settings)
 	settings.setup(font, ui.window_style(), ui.choice_style(), ui.cursor_texture())
 	fx = ProtoFX.new()
@@ -222,6 +227,10 @@ func _ready() -> void:
 	add_child(screen)
 	screen.setup(art, level, mixer)
 	mixer.track_changed.connect(func(track: int): screen.set_mix(track == TrackMixer.Track.MIX))
+	# Screen shake and the VHS strength need these two, made after the settings screen.
+	settings.fx = fx
+	settings.screen = screen
+	settings.apply_all()
 
 	runner.dialogue_started.connect(_on_dialogue_started)
 	runner.line_started.connect(_on_line)
@@ -617,11 +626,15 @@ func _process(delta: float) -> void:
 		return
 	director.tick(delta)
 	_animate_cut(delta)
+	if not bot and not reel_on:
+		_auto_advance(delta)
 	if phase == Phase.TAPE:
 		var talking := runner.is_running() or ui.doc_open()
 		player.frozen = talking or _catching
 		# Fast-forward pauses while a scare is pending or relaxing: the director runs in real
 		# time, so a sped-up tape would push the next scare past its moment.
+		if settings.ff_hold() and not bot and not reel_on:
+			ff = 4.0 if Input.is_action_pressed("ff") else 1.0
 		var speed := 1.0 if director.is_busy() or director.is_relaxing() else ff
 		mixer.tick(0.0 if talking else delta * speed * _tape_scale())
 		_keep_in_level()
@@ -727,7 +740,7 @@ func _command(cmds: Array, key: InputEventKey = null) -> void:
 		_set_track(TrackMixer.Track.MIX)
 	elif cmds.has("rec"):
 		player.recording = not player.recording
-	elif cmds.has("ff"):
+	elif cmds.has("ff") and not settings.ff_hold():
 		ff = 1.0 if ff > 1.0 else 4.0
 	elif cmds.has("debug_scare_mode"):
 		settings.set_value("scare_mode", (int(director.mode) + 1) % 3)
@@ -819,12 +832,28 @@ func _on_line(id: String, speaker: String, _expression: String, attrs: Dictionar
 	elif target == "journal_note" or target == "desktop_file":
 		kind = "note"
 	ui.show_line(String(attrs.get("display_name", speaker)), text, kind)
+	# Auto-advance (a setting) waits as long as the line takes to read; up to 12 seconds, since a
+	# dialogue window line can be three times as long as a caption.
+	_auto_left = ProtoUI.reading_secs(text, 0.6, 0.06, 1.5, 12.0) * settings.advance_factor() \
+		if settings.auto_advance() else -1.0
 	# Some voices have no body on screen; a soft waveform stands in for them.
 	ui.set_voice(speaker in _voice_speakers)
 
 
+## Auto-advance: once the line has been on screen long enough, the next one. Never past choices
+## or an open document, and the clock stops while a menu is open (_process returns before this).
+func _auto_advance(delta: float) -> void:
+	if _auto_left <= 0.0 or not runner.is_running() or not _choices.is_empty() or ui.doc_open():
+		return
+	_auto_left -= delta
+	if _auto_left <= 0.0:
+		_auto_left = -1.0
+		runner.advance()
+
+
 func _on_choices(options: Array) -> void:
 	_choices = options
+	_auto_left = -1.0  # choices always wait for the player
 	_selected = 0
 	for i in options.size():
 		if options[i]["enabled"]:
@@ -922,6 +951,7 @@ func _animate_cut(delta: float) -> void:
 
 
 func _on_dialogue_finished(_id: String) -> void:
+	_auto_left = -1.0
 	_cut_cfg = {}
 	_cut_anim.clear()
 	ui.set_cut(null)
@@ -1201,7 +1231,7 @@ func _update_chaser(delta: float) -> void:
 	if not linear or runner.is_running() or _scare_on != "":
 		return
 	var target := player.global_position + Vector2(-18, -56)
-	var speed: float = float(data.get("chaser", {}).get("speed", 150.0))
+	var speed: float = float(data.get("chaser", {}).get("speed", 150.0)) * settings.chase_speed_factor()
 	if _chaser_sprite != null:
 		_chaser_sprite.flip_h = target.x < _chaser.position.x
 	_chaser.position.x = move_toward(_chaser.position.x, target.x, speed * delta)
@@ -1477,8 +1507,15 @@ func _bot_step(delta: float) -> void:
 		# Exercise the settings screen once: move, change a value and change it back, close.
 		_bot_tried_settings = true
 		settings.open()
-		for cmd in ["menu_down", "menu_down", "menu_right", "menu_left"]:
+		# Every tab: move down, change a value and change it back, next tab (back to the first).
+		for t in settings.tab_count():
+			for cmd in ["menu_down", "menu_right", "menu_left", "tab_next"]:
+				settings.command(cmd)
+		# The tab bar: up from the first row, left to the last tab (controls), down into it.
+		for cmd in ["menu_up", "menu_left", "menu_down"]:
 			settings.command(cmd)
+		if settings.current_tab() != settings.tab_index("controls"):
+			push_error("settings: the tab bar did not reach the controls tab")
 		# The controls screen: open it, start rebinding the first action and cancel, go back.
 		for i in settings.remap_row_index():
 			settings.command("menu_down")

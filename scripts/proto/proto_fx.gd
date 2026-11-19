@@ -17,6 +17,8 @@ const SFX_BUS := "Stinger"
 
 var ui: ProtoUI
 var camera: Camera2D
+## Camera shake on scares (the "screen shake" setting).
+var shake := true
 var art: ProtoArt
 var audio: ProtoAudio
 var _stinger: AudioStreamPlayer
@@ -84,7 +86,7 @@ func onset(id: String, info: Dictionary) -> void:
 	_stinger.play()
 	if bool(info.get("flash", false)) and ui != null:
 		ui.flash(0.6)
-	_shake_amount = float(info.get("shake", 0.0)) * 18.0
+	_shake_amount = float(info.get("shake", 0.0)) * 18.0 if shake else 0.0
 	_shake_left = 0.4 if _shake_amount > 0.0 else 0.0
 	if art != null and art.enabled():
 		_spawn_art(art.cfg.get("scares", {}).get(id, {}), body / 1000.0)

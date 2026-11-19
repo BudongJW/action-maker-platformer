@@ -152,7 +152,7 @@ CI(`.github/workflows/content-license-checks.yml`)와 같은 11단계를 차례�
 ## 8. 다음 작업 (추천 순서)
 
 1. **플레이테스트(직접).** `python3 tools/build_prototype.py --run`으로 처음부터 엔딩까지. 스케어 로그(`ScareDirector.log_path`)를 남기면 강도 모델 보정에 씁니다. VHS 질감의 세기(주사선·색 번짐·그레인·트래킹 띠)와 MIX 체커가 읽히는지도 이때 봅니다. 세기는 레벨 `art.vhs` 값으로 바꿉니다(`prototype/README.md`).
-2. **UI/UX 기본기(P0):** `docs/ui-ux.md` 6절 순서대로. ~~입력 정리(InputMap, 게임패드, 마우스, 키 다시 지정)~~(2026-11-19 들어감, `prototype/README.md` 「Controls」) → 기본 글자 크기와 자막 배경, 설정 탭 → 데크 패널(개발용 상태 줄 대체) → 저널과 대사 기록 → 알림·저장 표시 → 첫 실행 흐름. 그림은 디자인 팩 v0.3 목록(4절)이 올 때까지 지금 패널로 먼저 만든다. 외부 플레이테스트 전에 끝낸다.
+2. **UI/UX 기본기(P0):** `docs/ui-ux.md` 6절 순서대로. ~~입력 정리(InputMap, 게임패드, 마우스, 키 다시 지정)~~(2026-11-19 들어감, `prototype/README.md` 「Controls」) → ~~기본 글자 크기와 자막 배경, 설정 탭~~(2026-11-19 들어감, `docs/ui-ux.md` P0-2·P0-8 메모) → 데크 패널(개발용 상태 줄 대체) → 저널과 대사 기록 → 알림·저장 표시 → 첫 실행 흐름. 그림은 디자인 팩 v0.3 목록(4절)이 올 때까지 지금 패널로 먼저 만든다. 외부 플레이테스트 전에 끝낸다.
 3. **스토리 쪽:** 무속 자문 질문지 v1.2와 설정집 v0.6·콘티 v1.3은 팩 v0.25에서 끝났습니다. 다음은 자문 요청 보내기(자문자 결정 필요), 에필로그 원고 v0.2, 제작계획서 다시 짜기(비공개 인수인계 6절).
 4. **ACTION GAME MAKER G 연결 확인:** 오토로드로 `StoryRunner`·`ScareDirector`·`TrackMixer` 등록, Custom Action Plugin(`AGMPluginAction`/`AGMPluginCondition`)으로 대화 시작·조건 연결, 내보내기 빌드에 `compiled/*.json`과 스케어·레벨 설정이 들어가는지. 셰이더 셋(`shaders/`)이 AGM G에서도 도는지.
 5. **소리 듣기와 라우드니스:** 사운드는 아직 아무도 귀로 들어 보지 않았습니다. 2026-11-19에 비공개 릴 셋을 녹화해 처음 쟀습니다.
