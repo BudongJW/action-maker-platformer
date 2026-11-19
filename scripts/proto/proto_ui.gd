@@ -53,6 +53,8 @@ var _caption_raw := ""
 ## The tape deck panel (ProtoDeck) and where it is: "off" (title, ending), "tape" or "hub"
 ## (the workroom keeps it open).
 var deck: ProtoDeck
+## Notices at the top right and the autosave mark (ProtoNotices).
+var notices: ProtoNotices
 var deck_mode := "off"
 ## Widest part of the screen a caption or a bubble may take.
 const CAPTION_WIDTH := 0.8
@@ -168,6 +170,9 @@ func _ready() -> void:
 	_hud = _anchored_label(0.01, 0.6, 0.01, 0.08, 16)
 	_toast = _anchored_label(0.6, 0.99, 0.01, 0.08, 20)
 	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	notices = ProtoNotices.new()
+	notices.font = font
+	add_child(notices)
 	_hub = _anchored_label(0.1, 0.9, 0.35, 0.6, 26)
 	_hub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_prompt = _anchored_label(0.25, 0.75, 0.62, 0.68, 26)
@@ -749,6 +754,8 @@ func _process(delta: float) -> void:
 		_set_boxed(_caption, ProtoUI.keep_words(caption), CAPTION_WIDTH)
 	_place_deck()
 	_place_over_window()
+	# Not over the title or the pause menu.
+	notices.visible = not _title.visible
 	_bubble_left -= delta
 	if _bubble_left <= 0.0 and _bubble.text != "":
 		_set_boxed(_bubble, "", BUBBLE_WIDTH)

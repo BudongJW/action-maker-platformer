@@ -161,3 +161,10 @@ ui.log.empty,아직 지나간 대사가 없습니다.,No lines yet.
 ui.log.fold,재생 {n} · {count}줄,Play {n} · {count} lines
 ui.log.chose,고른 답,Chose
 ui.log.controls,"{menu_up}{menu_down} 한 줄, {menu_left}{menu_right} 장면, {tab_prev}{tab_next} 한 쪽, {accept} 지난 재생 펼치기, {cancel} 닫기","{menu_up}{menu_down}: line, {menu_left}{menu_right}: scene, {tab_prev}{tab_next}: page, {accept}: open an earlier play, {cancel}: close"
+ui.notice.card,추리 보드에 카드: {title},On the board: {title}
+ui.notice.knot,매듭이 풀렸습니다: {title},Knot untied: {title}
+ui.notice.doc,기록철에 남김: {title},In the journal: {title}
+ui.notice.track,{track} 트랙을 쓸 수 있습니다,{track} is now available
+ui.notice.rec,녹화했습니다,Recorded
+ui.system.saving,저장 중,Saving
+ui.options.saving_hint,오른쪽 아래에 테이프 감기는 표시가 보이면 저장하는 중입니다. 그동안 게임을 끄지 마세요.,"While the turning reel shows at the bottom right, the game is saving. Don't quit until it is gone."

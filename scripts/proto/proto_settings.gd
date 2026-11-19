@@ -424,7 +424,8 @@ func _choice_count(item: Dictionary) -> int:
 
 func _refresh() -> void:
 	_title.text = tr("ui.input.title") if _mode == "remap" else tr("ui.options.title")
-	_controls.text = input.fill(tr("ui.options.controls")) if input != null else tr("ui.options.controls")
+	_controls.text = (input.fill(tr("ui.options.controls")) if input != null else tr("ui.options.controls")) \
+		+ "\n" + tr("ui.options.saving_hint")
 	_clear(_rows)
 	_clear(_tab_bar)
 	_tab_bar.visible = _mode != "remap"

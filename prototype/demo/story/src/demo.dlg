@@ -56,6 +56,7 @@ narrator: A tape is waiting in the deck.  #line:demo_i_001
 - Label it and play it  #line:demo_i_003
     set save.demo_labelled = true
 narrator: The counter starts at zero.  #line:demo_i_004
+system [to=notice]: Tape loaded.  #line:demo_i_005 #ctx:A notice at the top right instead of a dialogue line
 => END
 
 

@@ -140,7 +140,7 @@ tools/run_godot_tests.py              # 런타임 테스트 실행기 (Godot 헤
 | `@forbids <식>` | 조건식 | 참이면 시작할 수 없습니다. 여러 줄이면 하나라도 참이면 막힙니다. |
 | `@once [loop\|save\|meta]` | 층 | 해당 층에서 이미 본 대화(`seen.<층>.<id>`)면 시작할 수 없습니다. 층을 생략하면 `save`입니다. |
 | `@priority <정수>` | 기본 0 | 한 트리거에 후보 대화가 여럿일 때 높은 값부터 고릅니다(11절 `pick`). |
-| `@style <window\|bubble\|caption>` | 스타일 | 이 대화 안 모든 줄의 기본 출력 방식. 화자 레지스트리의 `style`보다 우선합니다. |
+| `@style <window\|bubble\|caption\|notice>` | 스타일 | 이 대화 안 모든 줄의 기본 출력 방식. 화자 레지스트리의 `style`보다 우선합니다. |
 
 ### 5.2 대사 줄
 
@@ -293,6 +293,7 @@ not_식  := "not" not_식 | 비교
 | `window` | 초상화 대화창 | — |
 | `bubble` | 화자 노드 머리 위 말풍선 | — |
 | `caption` | 화면 하단 자막 | — |
+| `notice` | 화면 오른쪽 위 알림 한 줄. 대화창에 띄우지 않고 대화는 바로 다음 줄로 간다(프로토타입) | — |
 | `os_dialog` | **메타.** OS 알림창(`OS.alert` 등) | 게임 화면 안에 그린 가짜 시스템 창 (`fake_os_dialog`) |
 | `window_title` | **메타.** 게임 창 제목 | 화면 상단 캡션 (`caption`) |
 | `desktop_file` | **메타.** 바탕화면에 텍스트 파일 생성 | 게임 안 저널에 쪽지로 추가 (`journal_note`) |

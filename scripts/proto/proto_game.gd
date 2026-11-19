@@ -66,6 +66,12 @@ var _menu_return := ""
 ## A document opened from the journal is on screen; closing it goes back to the journal.
 var _journal_reading := false
 var _bot_tried_journal := false
+## What the notices last saw (board cards and knots, unlocked tracks); taken silently at the
+## start of a game or after loading, so only changes make notices.
+var _notice_state: Dictionary = {}
+var _notice_ready := false
+## A document collected and on screen: its notice waits until it is closed.
+var _doc_notice := ""
 var _chaser: Node2D
 var _chaser_sprite: AnimatedSprite2D
 var _chaser_on := false
@@ -341,6 +347,8 @@ func _title_cmd(cmds: Array) -> void:
 func _start_new_game() -> void:
 	ui.hide_title()
 	runner.new_game()
+	_notice_ready = false
+	ui.notices.clear()
 	journal.reset()
 	backlog.clear()
 	_begin_game()
@@ -416,6 +424,7 @@ func _continue_game() -> void:
 func _autosave() -> void:
 	var state := {"format": SAVE_FORMAT, "story": runner.serialize_save(),
 		"track": ["hifi", "linear", "mix"][int(mixer.get_track())], "journal": journal.store()}
+	ui.notices.saving()
 	if _save_path == "":
 		_memory_save = JSON.parse_string(JSON.stringify(state))  # the same round trip as a file
 		return
@@ -443,6 +452,7 @@ func _restore(state: Dictionary) -> bool:
 		return false
 	mixer.set_track(_track_named(String(state.get("track", "linear"))))
 	journal.restore(state.get("journal", {}))
+	_notice_ready = false
 	return true
 
 
@@ -664,6 +674,9 @@ func _process(delta: float) -> void:
 		return
 	director.tick(delta)
 	_animate_cut(delta)
+	# Nothing new moves on screen while a scare is pending or playing.
+	ui.notices.held = director.is_quiet() or director.is_busy()
+	_watch_notices()
 	if not bot and not reel_on:
 		_auto_advance(delta)
 	if phase == Phase.TAPE:
@@ -795,10 +808,11 @@ func _command(cmds: Array, key: InputEventKey = null) -> void:
 		ff = 1.0 if ff > 1.0 else 4.0
 	elif cmds.has("debug_scare_mode"):
 		settings.set_value("scare_mode", (int(director.mode) + 1) % 3)
-		ui.toast("SCARES " + ["DEFAULT", "SOFT", "OFF"][int(director.mode)])
+		ui.notices.push("info", "%s: %s" % [tr("ui.options.scare_mode"),
+			tr(["ui.options.scare_default", "ui.options.scare_soft", "ui.options.scare_off"][int(director.mode)])])
 	elif cmds.has("debug_photosafe"):
 		settings.set_value("photosafe", 0 if director.photosafe else 1)
-		ui.toast("PHOTOSAFE " + ("ON" if director.photosafe else "OFF"))
+		ui.notices.push("info", "%s: %s" % [tr("ui.options.reduce_flashing"), tr("ui.options.on" if director.photosafe else "ui.options.off")])
 
 
 ## Mouse: menus and the settings screen take hover and clicks, a left click elsewhere advances
@@ -878,6 +892,14 @@ func _on_line(id: String, speaker: String, _expression: String, attrs: Dictionar
 	# other two inside the game either way.
 	var target: String = String(attrs.get("target", ""))
 	var requested: String = String(attrs.get("requested_target", target))
+	if target == "notice":
+		# [to=notice]: a notice instead of a dialogue line, and the dialogue goes straight on (a reel
+		# keeps its own pace).
+		ui.notices.push("info", text)
+		backlog.add_line(_play_count(), _tape_at(), "", text, "caption")
+		if reel == null or not reel.running:
+			runner.advance.call_deferred()
+		return
 	var kind := ""
 	if target == "fake_os_dialog" or target == "os_dialog":
 		kind = "os"
@@ -941,6 +963,9 @@ func _show_doc(doc_id: String, then: Callable = Callable()) -> void:
 
 func _close_doc() -> void:
 	ui.hide_doc()
+	if _doc_notice != "":
+		ui.notices.push("doc", tr("ui.notice.doc").format({"title": String(runner.get_doc(_doc_notice).get("title", ""))}))
+		_doc_notice = ""
 	var then := _after_doc
 	_after_doc = Callable()
 	if then.is_valid():
@@ -1147,7 +1172,9 @@ func _fire(tr: Dictionary) -> bool:
 		return true
 	if tr.has("rec_flag"):
 		runner.set_flag(String(tr["rec_flag"]), true)
-		ui.toast("REC  " + String(tr["rec_flag"]))
+		# A board card on this flag gets its own notice (_watch_notices).
+		if not _is_card_flag(String(tr["rec_flag"])):
+			ui.notices.push("rec", tr("ui.notice.rec"))
 		return true
 	if tr.has("scare"):
 		return director.trigger(String(tr["scare"]))
@@ -1248,7 +1275,8 @@ func _update_water(delta: float) -> void:
 			_last_safe = player.global_position
 			_water_rise[i] = 0.0
 			_water_barked[i] = false
-			ui.toast("RESPAWN")
+			if _debug_hud:
+				ui.toast("RESPAWN")
 
 
 func _zone_active(cfg: Dictionary) -> bool:
@@ -1264,7 +1292,8 @@ func _keep_in_level() -> void:
 	elif player.global_position.y > level.size.y + 60.0:
 		player.global_position = _last_safe
 		player.velocity = Vector2.ZERO
-		ui.toast("RESPAWN")
+		if _debug_hud:
+			ui.toast("RESPAWN")
 
 
 func _update_chaser(delta: float) -> void:
@@ -1380,7 +1409,7 @@ func _set_track(track: TrackMixer.Track, forced: bool = false) -> void:
 	if not forced:
 		var block := _track_block(track)
 		if block != "":
-			ui.toast(tr("ui.deck.held" if block == "held" else "ui.deck.locked").format({"track": ProtoDeck.NAMES[track]}))
+			ui.notices.push("track", tr("ui.deck.held" if block == "held" else "ui.deck.locked").format({"track": ProtoDeck.NAMES[track]}))
 			ui.deck.warn(track)
 			return
 	mixer.set_track(track)
@@ -1467,10 +1496,52 @@ func _tape_at() -> int:
 	return int(mixer.tape_time()) if phase == Phase.TAPE else -1
 
 
-## Collects a document and notes for the journal when it was found.
+## Collects a document and notes for the journal when it was found. Its notice shows once the
+## document (opened right after) is closed.
 func _collect_doc(doc_id: String) -> void:
 	if runner.collect_doc(doc_id):
 		journal.found(doc_id, _tape_at())
+		if phase != Phase.END:
+			_doc_notice = doc_id
+
+
+## Notices for what turned on since the last frame: a board card pinned, a knot untied, a track
+## unlocked. The first look after a new game or a load only takes stock.
+func _watch_notices() -> void:
+	var now := {}
+	if board != null:
+		for card in board.cfg.get("cards", []):
+			now["card:" + String(card.get("doc", ""))] = runner.get_flag(String(card.get("flag", ""))) == true
+		for slot in board.cfg.get("knots", {}).get("slots", []):
+			now["knot:" + String(slot.get("doc", ""))] = runner.get_flag(String(slot.get("flag", ""))) == true
+	for t in [TrackMixer.Track.HIFI, TrackMixer.Track.MIX]:
+		now["track:%d" % t] = _track_block(t) != "locked"
+	if _notice_ready:
+		for key: String in now:
+			if now[key] and not _notice_state.get(key, false):
+				_notice_for(key)
+	_notice_state = now
+	_notice_ready = true
+
+
+func _notice_for(key: String) -> void:
+	var kind := key.get_slice(":", 0)
+	var what := key.substr(kind.length() + 1)
+	match kind:
+		"card", "knot":
+			var title := String(runner.get_doc(what).get("title", ""))
+			ui.notices.push(kind, tr("ui.notice." + kind).format({"title": title}))
+		"track":
+			ui.notices.push("track", tr("ui.notice.track").format({"track": ProtoDeck.NAMES[int(what)]}))
+
+
+func _is_card_flag(flag: String) -> bool:
+	if board == null:
+		return false
+	for card in board.cfg.get("cards", []):
+		if String(card.get("flag", "")) == flag:
+			return true
+	return false
 
 
 ## A subtitle cue: on screen, and into the dialogue log.
