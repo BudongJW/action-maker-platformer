@@ -138,3 +138,6 @@ ui.options.remap_hint,키보드와 게임패드의 키를 바꿉니다.,Change t
 ui.options.hold_toggle,빨리 감기 버튼,Fast-forward Button
 ui.options.press_toggle,눌러서 켜고 끄기,Toggle
 ui.options.press_hold,누르고 있는 동안,Hold
+ui.deck.counter,재생 {n},Play {n}
+ui.deck.locked,{track} 잠김,{track} locked
+ui.deck.held,지금은 {track}로 바꿀 수 없습니다,Can't switch to {track} now

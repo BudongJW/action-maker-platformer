@@ -56,6 +56,8 @@ var _events: Dictionary = {}
 var _choices: Array = []
 ## Seconds until auto-advance moves past the line on screen (-1: not counting).
 var _auto_left := -1.0
+## The development status line at the top (`-- --debug-hud`); the deck panel replaces it.
+var _debug_hud := false
 var _chaser: Node2D
 var _chaser_sprite: AnimatedSprite2D
 var _chaser_on := false
@@ -184,6 +186,8 @@ func _ready() -> void:
 	ui.font = font
 	add_child(ui)
 	ui.apply_skin(art)
+	ui.deck.input = input
+	_debug_hud = "--debug-hud" in OS.get_cmdline_user_args()
 	TranslationServer.set_locale(String(runner.get_flag("sys.locale")))
 	if data.has("board"):
 		# Under the settings screen, so Esc settings still draw on top.
@@ -530,6 +534,7 @@ func _on_play() -> void:
 
 func _start_loop() -> void:
 	phase = Phase.TAPE
+	ui.deck.open()  # the deck shows itself as the tape starts
 	ui.set_hub("")
 	_show_hub_art(false)
 	mixer.rewind()
@@ -650,10 +655,11 @@ func _process(delta: float) -> void:
 		if mixer.tape_time() >= float(data.get("tape", {}).get("length", 7200.0)) and not reel_on:
 			_end_loop()
 	var tc := _update_camera()
-	if reel_on or phase == Phase.TITLE:
+	if reel_on or phase == Phase.TITLE or not _debug_hud:
 		ui.set_hud("")
 	else:
 		_update_hud(tc)
+	_update_deck()
 	if bot and not reel_on:
 		_bot_step(delta)
 		if _stats["frames"] > _max_frames:
@@ -1299,22 +1305,31 @@ func _hifi_unlocked() -> bool:
 	return runner.get_flag(flag) == true
 
 
-func _set_track(track: TrackMixer.Track, forced: bool = false) -> void:
+## Why the player cannot switch to `track` now: "" (they can), "locked" (the story has not unlocked
+## it yet) or "held" ("locks": [{"requires": [...], "allow": ["linear", "mix"]}] keeps the player
+## off it while the flags hold).
+func _track_block(track: TrackMixer.Track) -> String:
 	var tracks: Dictionary = data.get("tracks", {})
-	# "locks": [{"requires": [...], "allow": ["linear", "mix"]}] keeps the player off a track while
-	# the flags hold. A trigger's "set_track" is forced and ignores locks and unlocks.
+	var track_name: String = ["hifi", "linear", "mix"][int(track)]
+	for lock in tracks.get("locks", []):
+		if _requirements_met(lock) and not lock.get("allow", []).has(track_name):
+			return "held"
+	if track == TrackMixer.Track.HIFI and not _hifi_unlocked():
+		return "locked"
+	if track == TrackMixer.Track.MIX and runner.get_flag(String(tracks.get("mix_flag", "save.mix_unlocked"))) != true:
+		return "locked"
+	return ""
+
+
+## A trigger's "set_track" is forced and ignores locks and unlocks. A blocked switch says why and
+## marks the switch on the deck.
+func _set_track(track: TrackMixer.Track, forced: bool = false) -> void:
 	if not forced:
-		var track_name: String = ["hifi", "linear", "mix"][int(track)]
-		for lock in tracks.get("locks", []):
-			if _requirements_met(lock) and not lock.get("allow", []).has(track_name):
-				ui.toast(track_name.to_upper() + " LOCKED")
-				return
-	if not forced and track == TrackMixer.Track.HIFI and not _hifi_unlocked():
-		ui.toast("HI-FI locked")
-		return
-	if not forced and track == TrackMixer.Track.MIX and runner.get_flag(String(tracks.get("mix_flag", "save.mix_unlocked"))) != true:
-		ui.toast("MIX locked")
-		return
+		var block := _track_block(track)
+		if block != "":
+			ui.toast(tr("ui.deck.held" if block == "held" else "ui.deck.locked").format({"track": ProtoDeck.NAMES[track]}))
+			ui.deck.warn(track)
+			return
 	mixer.set_track(track)
 	mixer.apply_layers(level)
 	_apply_tint()
@@ -1378,7 +1393,16 @@ func _update_camera() -> String:
 	return tc
 
 
-## The debug line at the top of the screen (not shown in reel mode).
+## The deck panel: off on the title and after the ending, open in the workroom.
+func _update_deck() -> void:
+	ui.deck_mode = "off" if phase == Phase.TITLE or phase == Phase.END else ("hub" if phase == Phase.HUB else "tape")
+	var blocked := {}
+	for t in [TrackMixer.Track.HIFI, TrackMixer.Track.LINEAR, TrackMixer.Track.MIX]:
+		blocked[t] = _track_block(t)
+	ui.deck.show_state(mixer.get_track(), blocked, int(runner.get_flag("sys.loop_count")), ff)
+
+
+## The development status line at the top of the screen, with `-- --debug-hud` (never in reels).
 func _update_hud(tc: String) -> void:
 	var names := ["HI-FI", "LINEAR", "MIX"]
 	var mode := ""

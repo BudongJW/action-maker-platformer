@@ -50,6 +50,10 @@ var show_names := true
 var _text_bg := 0.75
 var _text_box: StyleBoxFlat
 var _caption_raw := ""
+## The tape deck panel (ProtoDeck) and where it is: "off" (title, ending), "tape" or "hub"
+## (the workroom keeps it open).
+var deck: ProtoDeck
+var deck_mode := "off"
 ## Widest part of the screen a caption or a bubble may take.
 const CAPTION_WIDTH := 0.8
 const BUBBLE_WIDTH := 0.4
@@ -105,6 +109,11 @@ func _ready() -> void:
 	tc_box.bg_color = Color(0.05, 0.04, 0.07, 1.0)
 	_timecode.add_theme_stylebox_override("normal", tc_box)
 	_timecode.visible = false
+	# The deck panel shares the timecode's line, also under the dialogue window (_place_deck).
+	deck = ProtoDeck.new()
+	deck.font = font
+	deck.visible = false
+	add_child(deck)
 	# A picture for one dialogue (art "cuts"): over the world and the viewfinder, fitted into
 	# the space above the dialogue window so the window never covers it.
 	_cut_back = _full_rect(Color(0.02, 0.02, 0.03, 1.0))
@@ -738,6 +747,7 @@ func _process(delta: float) -> void:
 	if caption != _caption_raw:
 		_caption_raw = caption
 		_set_boxed(_caption, ProtoUI.keep_words(caption), CAPTION_WIDTH)
+	_place_deck()
 	_place_over_window()
 	_bubble_left -= delta
 	if _bubble_left <= 0.0 and _bubble.text != "":
@@ -836,6 +846,8 @@ func _place_over_window() -> void:
 		bottom = top - 8.0
 		if _wave.visible:
 			bottom = _wave.anchor_top * view.y - 6.0
+		if deck.visible:
+			bottom = minf(bottom, deck.get_global_rect().position.y - 6.0)
 	_caption.anchor_top = bottom / view.y
 	_caption.anchor_bottom = _caption.anchor_top
 	# A bubble gives way upward to a caption that has climbed over a tall window (four choices).
@@ -844,6 +856,35 @@ func _place_over_window() -> void:
 		bubble_top = minf(bubble_top, bottom - _caption.size.y - 6.0 - _bubble.size.y)
 	_bubble.anchor_top = maxf(bubble_top, view.y * 0.02) / view.y
 	_bubble.anchor_bottom = _bubble.anchor_top
+
+
+## The deck sits on the timecode's line, left of it (in its place once the camera is off, and in the
+## workroom). While the dialogue window is open it shows only right after a change, above the
+## window's right end, so a track switched mid-dialogue still shows.
+func _place_deck() -> void:
+	var view := _view_size()
+	deck.always_open = deck_mode == "hub"
+	if deck_mode == "off" or _title.visible or _credits.visible or _doc.visible:
+		deck.visible = false
+		return
+	var x: float
+	var y: float
+	if _window.visible:
+		deck.visible = deck.recently_changed()
+		var r := _window.get_global_rect()
+		x = r.end.x
+		y = r.position.y - 8.0
+		deck.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	else:
+		deck.visible = true
+		x = _timecode.get_global_rect().position.x - 8.0 if _timecode.visible else view.x * 0.955
+		y = view.y * 0.905
+		deck.grow_vertical = Control.GROW_DIRECTION_BOTH
+	deck.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	deck.anchor_left = x / view.x
+	deck.anchor_right = deck.anchor_left
+	deck.anchor_top = y / view.y
+	deck.anchor_bottom = deck.anchor_top
 
 
 func _view_size() -> Vector2:
