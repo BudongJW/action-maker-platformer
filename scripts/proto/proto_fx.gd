@@ -7,6 +7,11 @@ class_name ProtoFX
 extends Node
 
 const MIX_RATE := 22050
+## Peak of the generated stinger noise. Stinger files are peak-normalized and measure about
+## -11 to -16 LUFS momentary at +20 LU; white noise has almost no crest, so at 0.9 it measured
+## about 0 LUFS and went over 0 dBTP in a recording. At 0.2 it lands near -13 LUFS (about -9 dBTP),
+## so a scare without a file is as loud as one with a file at the same level_lu.
+const STINGER_NOISE_PEAK := 0.2
 const BED_BUS := "Ambience"
 const SFX_BUS := "Stinger"
 
@@ -72,7 +77,7 @@ func onset(id: String, info: Dictionary) -> void:
 	else:
 		var key := "%d_%d" % [int(rise), int(body)]
 		if not _cache.has(key):
-			_cache[key] = _noise(body / 1000.0, rise, 0.1, 0.9, false)
+			_cache[key] = _noise(body / 1000.0, rise, 0.1, STINGER_NOISE_PEAK, false)
 		_stinger.stream = _cache[key]
 	# Stingers are normalized to +20 LU over dialogue; level_lu sets the gain below that.
 	_stinger.volume_db = float(info.get("level_lu", 12.0)) - 20.0

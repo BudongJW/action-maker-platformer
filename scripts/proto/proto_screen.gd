@@ -4,8 +4,9 @@
 ## VHS (shaders/vhs.gdshader) is on while the level's art has a "viewfinder" (the camera) or a
 ## "vhs" block, and goes away for good once the camera is switched off: the "vhs" block's
 ## "off_flag", or else the viewfinder's. "vhs": {"enabled": false} turns it off; "scanlines",
-## "chroma", "chroma_blur", "noise" and "band" tune it (shader uniforms of the same names). With
-## reduced flashing the grain stands still and the tracking band is gone.
+## "chroma", "chroma_blur", "noise" and "band" tune it (shader uniforms of the same names);
+## "scanlines" is capped at 0.08, the contrast photosensitivity guidance allows. With reduced
+## flashing the grain stands still and the tracking band and the scanlines are gone.
 ##
 ## MIX (shaders/track_mix.gdshader) needs the art's "linear" and "hifi" palettes. The world is
 ## drawn a second time into a SubViewport that shares the World2D: canvas cull masks keep the
@@ -21,6 +22,8 @@ const LAYER_HIFI := 1 << 1
 const LAYER_LINEAR := 1 << 2
 const ALL_LAYERS := 0xFFFFFFFF
 const VIEW := Vector2(1280, 720)
+## Scanline contrast above 10% over a fifth of the screen fails platform photosensitivity checks.
+const MAX_SCANLINE := 0.08
 const VHS_SHADER := "res://shaders/vhs.gdshader"
 const MIX_SHADER := "res://shaders/track_mix.gdshader"
 
@@ -34,6 +37,7 @@ var _hifi_view: SubViewport
 var _vhs_on := false
 var _mix_on := false
 var _still := false
+var _scanline := MAX_SCANLINE
 var _clock := 0.0
 
 
@@ -68,11 +72,11 @@ func setup(art: ProtoArt, level: ProtoLevel, mixer: TrackMixer) -> void:
 		_vhs_mat.shader = load(VHS_SHADER)
 		_vhs_mat.set_shader_parameter("view_size", VIEW)
 		_vhs_mat.set_shader_parameter("lines", ProtoArt.SCREEN.y)
-		var tuning := {"scanlines": "scanline", "chroma": "chroma", "chroma_blur": "chroma_blur",
-			"noise": "noise", "band": "band"}
-		for key in tuning:
+		_scanline = clampf(float(vhs.get("scanlines", MAX_SCANLINE)), 0.0, MAX_SCANLINE)
+		_vhs_mat.set_shader_parameter("scanline", _scanline)
+		for key in ["chroma", "chroma_blur", "noise", "band"]:
 			if vhs.has(key):
-				_vhs_mat.set_shader_parameter(tuning[key], float(vhs[key]))
+				_vhs_mat.set_shader_parameter(key, float(vhs[key]))
 		_vhs.material = _vhs_mat
 		vhs_off_flag = String(vhs.get("off_flag", art.cfg.get("viewfinder", {}).get("off_flag", "")))
 		set_vhs(true)
@@ -124,12 +128,13 @@ func set_vhs(on: bool) -> void:
 	visible = _vhs_on or _mix_on
 
 
-## Reduced flashing: the grain stands still and the tracking band is gone.
+## Reduced flashing: the grain stands still, and the tracking band and the scanlines are gone.
 func set_still(still: bool) -> void:
 	if still == _still or _vhs_mat == null:
 		return
 	_still = still
 	_vhs_mat.set_shader_parameter("moving", 0.0 if still else 1.0)
+	_vhs_mat.set_shader_parameter("scanline", 0.0 if still else _scanline)
 
 
 func set_mix(on: bool) -> void:

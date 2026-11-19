@@ -8,7 +8,8 @@
 //
 // `lines` is the number of art rows on screen (180 for 320x180 art); scanlines and grain follow
 // those rows. `clock` is set from a script (seconds) so recordings come out the same every time.
-// `moving` = 0 freezes the grain and takes the band away (reduced flashing).
+// `moving` = 0 freezes the grain and takes the band away; for reduced flashing the script also
+// sets `scanline` to 0.
 //
 // Tested in plain Godot 4.7 through the prototype (scripts/proto/proto_screen.gd). Not yet
 // tested in ACTION GAME MAKER G.
@@ -18,7 +19,9 @@ render_mode unshaded;
 uniform sampler2D screen_texture : hint_screen_texture, filter_nearest;
 uniform vec2 view_size = vec2(1280.0, 720.0);
 uniform float lines = 180.0;
-uniform float scanline : hint_range(0.0, 1.0) = 0.22;
+// How much darker the lower part of each art row gets. Keep it at 0.08 or below: scanline
+// contrast above 10% over a fifth of the screen fails platform photosensitivity checks.
+uniform float scanline : hint_range(0.0, 1.0) = 0.08;
 // How far colour trails behind brightness, and how wide it smears, in art pixels.
 uniform float chroma = 0.5;
 uniform float chroma_blur = 1.0;
