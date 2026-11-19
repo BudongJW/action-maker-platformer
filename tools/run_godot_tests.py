@@ -139,7 +139,8 @@ def main(argv: list[str] | None = None) -> int:
         for script, label in TEST_SCRIPTS:
             proc = subprocess.run(
                 [godot, "--headless", "--path", str(tmp), "-s", script],
-                capture_output=True, text=True, timeout=300,
+                # Godot prints UTF-8; the locale's code page (cp949 on Korean Windows) would fail on it.
+                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300,
             )
             output = proc.stdout + proc.stderr
             print(output)

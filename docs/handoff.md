@@ -140,7 +140,7 @@ CI(`.github/workflows/content-license-checks.yml`)와 같은 11단계를 차례�
 
 - **Godot을 직접 돌릴 때:** 새로 빌드한 `build/prototype`은 먼저 가져오기를 해야 `class_name`이 등록됩니다. `--run`·`--smoke`·`--reel`은 알아서 하고, 직접 돌릴 때는 `<Godot 경로> --headless --path build/prototype --import`를 한 번 실행합니다.
 - **봇을 직접 돌릴 때는 `--fixed-fps 60`을 붙입니다.** 없으면 실제 시간으로 돌아 매우 느립니다.
-- **Windows:** 도구는 `py tools\…`로 돌립니다. `get_godot.py`는 콘솔 출력이 보이는 `_console.exe`를 고릅니다.
+- **Windows:** 도구는 `py tools\…`로 돌립니다. `get_godot.py`는 콘솔 출력이 보이는 `_console.exe`를 고릅니다. Windows의 Python 3.14는 zlib-ng를 써서 같은 그림도 PNG 바이트가 달라지므로, `pixelart.py`는 바이트가 아니라 풀어낸 픽셀을 비교합니다(그림이 같으면 파일을 다시 쓰지 않음). Godot 출력은 UTF-8로 읽습니다(한국어 Windows의 cp949로 읽으면 깨짐). 2026-11-19 Windows 11·Python 3.14에서 `check_all.py --private` 14단계 통과를 확인했습니다.
 - **저장과 메타 플래그:** 평소 플레이는 작업실에 들어올 때마다 `user://proto_save.json`에 자동 저장하고(타이틀의 '이어하기'), 본 엔딩·2회차는 `user://meta.dat`에 둡니다. 봇과 릴은 둘 다 메모리에만 둡니다. 처음부터 다시 하려면 Godot 사용자 폴더의 `app_userdata/Story prototype/`에서 두 파일을 지웁니다(Windows `%APPDATA%\Godot\`, macOS `~/Library/Application Support/Godot/`, Linux `~/.local/share/godot/`).
 - **스케어 지연은 무작위**라 데모 봇 결과(보드 카드 수 등)가 실행마다 조금 다를 수 있습니다. 판정은 끝까지 갔는지와 오류 0건입니다.
 - **영상 녹화**는 고정 프레임이라 실제 시간과 관계없이 같은 결과가 나옵니다. 1~4장 릴은 약 10분 걸립니다.

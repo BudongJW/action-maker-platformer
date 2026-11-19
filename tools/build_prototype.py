@@ -172,13 +172,13 @@ def find_godot(explicit: str | None) -> str | None:
 
 
 def smoke(godot: str, out: Path) -> int:
-    subprocess.run([godot, "--headless", "--path", str(out), "--import"], capture_output=True, text=True, timeout=300)
+    subprocess.run([godot, "--headless", "--path", str(out), "--import"], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300)
     # --quit-after caps the frames: if the main script fails to load (a parse error), Godot would
     # otherwise run an empty scene forever and the error would never be reported.
     try:
         proc = subprocess.run([godot, "--headless", "--fixed-fps", "60", "--quit-after", str(QUIT_AFTER_FRAMES),
                                "--path", str(out), "--", "--bot"],
-                              capture_output=True, text=True, timeout=SMOKE_TIMEOUT_S)
+                              capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=SMOKE_TIMEOUT_S)
     except subprocess.TimeoutExpired as exc:
         print((exc.stdout or b"").decode("utf-8", "replace") if isinstance(exc.stdout, bytes) else (exc.stdout or ""))
         print(f"build_prototype: smoke FAILED (no result after {SMOKE_TIMEOUT_S} s)", file=sys.stderr)
@@ -206,7 +206,7 @@ def reel(godot: str, out: Path, reel_file: Path, movie: Path | None, fps: int = 
     """Plays a reel (`-- --reel`). Without `movie` it runs headless and checks for errors; with it,
     Godot's movie writer records the reel (needs a display: on a server without one, xvfb-run is
     used when present). A .mp4 movie is recorded as .avi and converted with ffmpeg."""
-    subprocess.run([godot, "--headless", "--path", str(out), "--import"], capture_output=True, text=True, timeout=300)
+    subprocess.run([godot, "--headless", "--path", str(out), "--import"], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300)
     user_args = ["--", "--reel", str(reel_file.resolve())]
     if movie is None:
         cmd = [godot, "--headless", "--fixed-fps", str(fps), "--quit-after", str(QUIT_AFTER_FRAMES), "--path", str(out)]
@@ -218,7 +218,7 @@ def reel(godot: str, out: Path, reel_file: Path, movie: Path | None, fps: int = 
         if not os.environ.get("DISPLAY") and shutil.which("xvfb-run"):
             cmd = ["xvfb-run", "-a", "-s", "-screen 0 1280x720x24"] + cmd + ["--rendering-driver", "opengl3"]
     try:
-        proc = subprocess.run(cmd + user_args, capture_output=True, text=True, timeout=SMOKE_TIMEOUT_S)
+        proc = subprocess.run(cmd + user_args, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=SMOKE_TIMEOUT_S)
     except subprocess.TimeoutExpired:
         print(f"build_prototype: reel FAILED (no result after {SMOKE_TIMEOUT_S} s)", file=sys.stderr)
         return 1
@@ -267,7 +267,7 @@ def main(argv: list[str] | None = None) -> int:
         return smoke(godot, out)
     if args.reel:
         return reel(godot, out, args.reel, args.movie)
-    subprocess.run([godot, "--path", str(out), "--import"], capture_output=True, text=True, timeout=300)
+    subprocess.run([godot, "--path", str(out), "--import"], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300)
     return subprocess.call([godot, "--path", str(out)])
 
 
