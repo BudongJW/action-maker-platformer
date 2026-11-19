@@ -154,8 +154,8 @@ git ls-files private
 ## 8. 다음 작업 (추천 순서)
 
 1. **플레이테스트(직접).** `python3 tools/build_prototype.py --run`으로 처음부터 엔딩까지. 스케어 로그(`ScareDirector.log_path`)를 남기면 강도 모델 보정에 씁니다.
-2. **일시정지 메뉴:** 지금 Esc는 설정 화면만 엽니다. 게임 중 '타이틀로'(UI 문구 `ui.pause.*`는 이미 있음)와, 새 게임이 저장을 덮어쓰기 전에 묻는 확인. (타이틀 화면, 작업실 자동 저장, 이어하기, 크레딧, 메타 연출 화면은 끝났습니다.)
-3. **카메라를 끈 뒤 VHS 질감 끄기**(셰이더), **MIX 두 레이어 겹침 셰이더.**
+2. **셰이더 둘:** 카메라를 끈 뒤 VHS 질감 끄기, MIX 두 레이어 겹침. (타이틀 화면, 작업실 자동 저장, 이어하기, 일시정지 메뉴, 크레딧, 메타 연출 화면은 끝났습니다.)
+3. **스토리 쪽:** 무속 자문 질문지 v1.2, 설정집 v0.6·콘티 v1.3 맞추기(비공개 인수인계 6절).
 4. **ACTION GAME MAKER G 연결 확인:** 오토로드로 `StoryRunner`·`ScareDirector`·`TrackMixer` 등록, Custom Action Plugin(`AGMPluginAction`/`AGMPluginCondition`)으로 대화 시작·조건 연결, 내보내기 빌드에 `compiled/*.json`과 스케어·레벨 설정이 들어가는지.
 5. **소리 듣기와 라우드니스:** 사운드는 아직 아무도 들어 보지 않았습니다. 게임 안 녹화로 LUFS를 잽니다.
 

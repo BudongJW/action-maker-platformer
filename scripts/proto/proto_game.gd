@@ -26,6 +26,7 @@ enum Phase { HUB, TAPE, END, TITLE }
 
 const SAVE_PATH := "user://proto_save.json"
 const SAVE_FORMAT := 1
+const PAUSE_OPTIONS := ["resume", "options", "to_title"]
 
 var runner: StoryRunner
 var director: ScareDirector
@@ -97,6 +98,9 @@ var _memory_save: Dictionary = {}
 var _bot_reloaded := false
 var _title_options: Array = []
 var _title_selected := 0
+var _paused := false
+var _pause_selected := 0
+var _pause_hub_text := ""
 var _selected := 0
 var _after_doc: Callable = Callable()
 
@@ -259,19 +263,73 @@ func _title_key(key: int) -> void:
 	if key in [KEY_UP, KEY_DOWN]:
 		_title_selected = wrapi(_title_selected + (-1 if key == KEY_UP else 1), 0, _title_options.size())
 		_draw_title()
+	elif key == KEY_ESCAPE and _title_options.has("confirm_yes"):
+		_show_title()
 	elif key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
 		match String(_title_options[_title_selected]):
 			"continue":
 				ui.hide_title()
 				_continue_game()
 			"new_game":
-				ui.hide_title()
-				runner.new_game()
-				_begin_game()
+				if not _read_save().is_empty():
+					# A new game overwrites the save at its first workroom visit: ask first.
+					_title_options = ["confirm_no", "confirm_yes"]
+					_title_selected = 0
+					ui.show_title("", tr("ui.title.confirm_new"), _title_options.map(func(o): return tr("ui." + o.replace("confirm_", "common."))), 0)
+					return
+				_start_new_game()
+			"confirm_yes":
+				_start_new_game()
+			"confirm_no":
+				_show_title()
 			"options":
 				settings.open()
 			"quit":
 				get_tree().quit(0)
+
+
+func _start_new_game() -> void:
+	ui.hide_title()
+	runner.new_game()
+	_begin_game()
+
+
+## The pause menu (Esc during play): Resume, Options, Back to Title. The game waits while it is open.
+func _open_pause() -> void:
+	_paused = true
+	_pause_selected = 0
+	# The workroom text and the debug line would show through the menu.
+	_pause_hub_text = ui.hub_text()
+	ui.set_hub("")
+	ui.set_hud("")
+	_draw_pause()
+
+
+func _draw_pause() -> void:
+	ui.show_title(tr("ui.pause.title"), "", PAUSE_OPTIONS.map(func(o): return tr("ui.pause." + o)), _pause_selected, true)
+
+
+func _pause_key(key: int) -> void:
+	if key in [KEY_UP, KEY_DOWN]:
+		_pause_selected = wrapi(_pause_selected + (-1 if key == KEY_UP else 1), 0, PAUSE_OPTIONS.size())
+		_draw_pause()
+	elif key == KEY_ESCAPE:
+		_close_pause()
+	elif key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
+		match String(PAUSE_OPTIONS[_pause_selected]):
+			"resume":
+				_close_pause()
+			"options":
+				settings.open()
+			"to_title":
+				# Progress since the last workroom visit is not kept (the save is made there).
+				get_tree().reload_current_scene()
+
+
+func _close_pause() -> void:
+	_paused = false
+	ui.hide_title()
+	ui.set_hub(_pause_hub_text)
 
 
 ## A new game: the start document (content warning) if there is one, then the workroom.
@@ -392,6 +450,9 @@ func _show_hub_prompt() -> void:
 		text += "\n" + tr("ui.board.open")
 	for action in _hub_actions_ready():
 		text += "\n" + tr(String(action.get("prompt", "")))
+	if _paused:
+		_pause_hub_text = text  # shown again when the pause menu closes
+		return
 	ui.set_hub(text)
 
 
@@ -533,7 +594,7 @@ func _process(delta: float) -> void:
 	var reel_on := reel != null and reel.running
 	if reel_on:
 		reel.tick(delta)
-	if settings.is_open() or (board != null and board.is_open()):
+	if settings.is_open() or (board != null and board.is_open()) or _paused:
 		# The settings screen and the board pause the tape, the player and the scare clock.
 		player.frozen = true
 		return
@@ -595,8 +656,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		if key == OS.find_keycode_from_string(String(action.get("key", ""))):
 			_hub_action(action)
 			return
+	if _paused:
+		_pause_key(key)
+		return
 	if key == KEY_ESCAPE:
-		settings.open()
+		if phase in [Phase.HUB, Phase.TAPE]:
+			_open_pause()
+		else:
+			settings.open()
 		return
 	if key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
 		if ui.doc_open():
@@ -1307,6 +1374,10 @@ func _bot_step(delta: float) -> void:
 		settings.open()
 		for key in [KEY_DOWN, KEY_DOWN, KEY_RIGHT, KEY_LEFT, KEY_ESCAPE]:
 			settings.handle_key(key)
+		# And the pause menu: open it, move down and up, resume.
+		_open_pause()
+		for key in [KEY_DOWN, KEY_UP, KEY_ENTER]:
+			_pause_key(key)
 		return
 	if _board_ready() and _bot_board_seen != _board_state():
 		# Exercise the board whenever something new is on it: every card, then the other rows.

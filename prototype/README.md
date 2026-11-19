@@ -19,7 +19,7 @@ The demo is placeholder English text with no game story. The prototype code cont
 
 | Key | Action |
 |---|---|
-| Up / Down, Enter | Title screen: Continue (only when there is a save), New Game, Options, Quit. After the end credits, Enter goes back to the title |
+| Up / Down, Enter | Title screen: Continue (only when there is a save), New Game (asks first when it would overwrite a save), Options, Quit. After the end credits, Enter goes back to the title |
 | A / D or arrows | Move |
 | Space | Jump |
 | W / S | Climb a ladder |
@@ -31,7 +31,7 @@ The demo is placeholder English text with no game story. The prototype code cont
 | M | Scare mode: default / soft (quieter, with a short prepulse) / off (no sudden onsets) |
 | P | Photosensitivity-safe scares (no flash) |
 | B | Deduction board in the workroom, once the level's `board` block allows it: Left / Right choose, Up / Down change the row (cards, knots, conclusions), B or Esc close |
-| Esc | Settings: scare mode, reduce flashing, master / ambience / effects volume, text size, subtitles, effects outside the game window. Labels come from `assets/original/ui/strings.csv` (`ui.options.*`); values are saved to `user://proto_settings.cfg` |
+| Esc | Pause menu during play: Resume, Options, Back to Title (progress since the last workroom visit is not kept). Options is the settings screen: scare mode, reduce flashing, master / ambience / effects volume, text size, subtitles, effects outside the game window. Labels come from `assets/original/ui/strings.csv` (`ui.options.*`); values are saved to `user://proto_settings.cfg` |
 
 ## Level file (`proto_level.json`)
 

@@ -59,3 +59,6 @@ ui.hub.deadline,마감 처리 [D],Close Out the Job [D]
 ui.hub.notes,메모 보기 [N],Read the Notes [N]
 ui.dialog.ok,확인,OK
 ui.journal.added,저널에 남김,Added to the Journal
+ui.title.confirm_new,저장된 진행이 지워집니다. 처음부터 시작할까요?,Your saved progress will be lost. Start a new game?
+ui.common.yes,예,Yes
+ui.common.no,아니요,No

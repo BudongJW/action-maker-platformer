@@ -60,6 +60,7 @@ var _cut_text: Label
 var _cut_text_spec: Dictionary = {}
 # Title screen: the game's title (from level data) and a menu (UI strings).
 var _title: VBoxContainer
+var _menu_dim: ColorRect
 var _title_text: Label
 var _title_sub: Label
 var _title_menu: VBoxContainer
@@ -479,7 +480,9 @@ func _build_meta() -> void:
 
 
 ## Title screen: `title` and `sub` over the menu `options` (already translated), `selected` marked.
-func show_title(title: String, sub: String, options: Array, selected: int) -> void:
+## With `dim` the game stays visible behind a dark veil (the pause menu).
+func show_title(title: String, sub: String, options: Array, selected: int, dim: bool = false) -> void:
+	_menu_dim.visible = dim
 	_title_text.text = title
 	_title_text.visible = title != ""
 	_title_sub.text = sub
@@ -500,9 +503,12 @@ func show_title(title: String, sub: String, options: Array, selected: int) -> vo
 
 func hide_title() -> void:
 	_title.visible = false
+	_menu_dim.visible = false
 
 
 func _build_title() -> void:
+	_menu_dim = _full_rect(Color(0.02, 0.02, 0.03, 0.78))
+	_menu_dim.visible = false
 	_title = VBoxContainer.new()
 	_title.anchor_left = 0.1
 	_title.anchor_right = 0.9
@@ -614,6 +620,10 @@ func set_hud(text: String) -> void:
 ## Interaction prompt (for example "hang the lantern [E]"); "" hides it.
 func set_prompt(text: String) -> void:
 	_prompt.text = text
+
+
+func hub_text() -> String:
+	return _hub.text
 
 
 func set_hub(text: String) -> void:
