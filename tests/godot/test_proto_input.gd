@@ -116,4 +116,4 @@ func test_rebind_swaps_and_saves() -> void:
 	_input.restore(saved)
 	check(_input.commands(key(KEY_Q)) == ["jump"], "restored keyboard binding")
 	check(_input.commands(axis(JOY_AXIS_TRIGGER_LEFT, 0.9)).has("rec"), "restored axis binding")
-	check(_input.rebindable().size() == 12, "twelve rebindable actions")
+	check(_input.rebindable().size() == 14, "fourteen rebindable actions")

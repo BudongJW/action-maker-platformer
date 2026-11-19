@@ -58,13 +58,13 @@ ui.board.knot_tied,아직 풀리지 않았다,Not untied yet
 ui.hub.deadline,마감 처리 {key},Close Out the Job {key}
 ui.hub.notes,메모 보기 {key},Read the Notes {key}
 ui.dialog.ok,확인,OK
-ui.journal.added,저널에 남김,Added to the Journal
+ui.journal.added,기록철에 남김,Added to the Journal
 ui.title.confirm_new,저장된 진행이 지워집니다. 처음부터 시작할까요?,Your saved progress will be lost. Start a new game?
 ui.common.yes,예,Yes
 ui.common.no,아니요,No
 ui.hub.counter,작업실 · 재생 {n},Workroom · Play {n}
 ui.hub.play,테이프를 넣는다 {accept},Play the tape {accept}
-ui.dialogue.next_hint,{accept},{accept}
+ui.dialogue.next_hint,{accept}     지난 대사 {log},{accept}     Log {log}
 ui.dialogue.choice_hint_keys,위·아래 고르기 {accept} 정하기 [1-4],"Up/Down: choose, {accept}: select, [1-4]"
 ui.dialogue.choice_hint,{menu_up}{menu_down} 고르기 {accept} 정하기,"{menu_up}{menu_down}: choose, {accept}: select"
 ui.options.remap,조작 바꾸기,Controls
@@ -141,3 +141,23 @@ ui.options.press_hold,누르고 있는 동안,Hold
 ui.deck.counter,재생 {n},Play {n}
 ui.deck.locked,{track} 잠김,{track} locked
 ui.deck.held,지금은 {track}로 바꿀 수 없습니다,Can't switch to {track} now
+ui.input.journal,기록철 열기,Open the Journal
+ui.input.log,지난 대사 보기,Dialogue Log
+ui.pause.journal,기록철,Journal
+ui.pause.log,지난 대사,Dialogue Log
+ui.hub.journal,기록철 {journal},Journal {journal}
+ui.journal.title,기록철,Journal
+ui.journal.tab_all,전체,All
+ui.journal.tab_production,제작 문서,Production
+ui.journal.tab_village,마을,Village
+ui.journal.tab_field_notes,채록,Field Notes
+ui.journal.tab_record,기록관,Archive
+ui.journal.tab_memo,메모,Notes
+ui.journal.empty,이 분류에는 아직 주운 문서가 없습니다.,Nothing found in this section yet.
+ui.journal.workroom,작업실,Workroom
+ui.journal.controls,"{menu_up}{menu_down} 문서, {tab_prev}{tab_next} 분류, {accept} 크게 보기, {cancel} 닫기","{menu_up}{menu_down}: document, {tab_prev}{tab_next}: section, {accept}: read, {cancel}: close"
+ui.log.title,지난 대사,Dialogue Log
+ui.log.empty,아직 지나간 대사가 없습니다.,No lines yet.
+ui.log.fold,재생 {n} · {count}줄,Play {n} · {count} lines
+ui.log.chose,고른 답,Chose
+ui.log.controls,"{menu_up}{menu_down} 한 줄, {menu_left}{menu_right} 장면, {tab_prev}{tab_next} 한 쪽, {accept} 지난 재생 펼치기, {cancel} 닫기","{menu_up}{menu_down}: line, {menu_left}{menu_right}: scene, {tab_prev}{tab_next}: page, {accept}: open an earlier play, {cancel}: close"

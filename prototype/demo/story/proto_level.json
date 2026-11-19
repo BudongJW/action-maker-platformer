@@ -158,6 +158,12 @@
       }
     ]
   },
+  "journal": {
+    "tabs": [
+      {"label": "ui.journal.tab_all"},
+      {"label": "ui.journal.tab_memo", "categories": ["system"]}
+    ]
+  },
   "hub": {
     "start": [
       "demo_intro"

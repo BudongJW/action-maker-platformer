@@ -904,6 +904,11 @@ func _boxed_label(size_px: int, grow: Control.GrowDirection) -> Label:
 
 
 ## The skin's panels, shared with the settings screen.
+## The document paper, shared with the journal.
+func paper_style() -> StyleBox:
+	return _doc.get_theme_stylebox("panel")
+
+
 func window_style() -> StyleBox:
 	return _window.get_theme_stylebox("panel") if _window.has_theme_stylebox_override("panel") else null
 

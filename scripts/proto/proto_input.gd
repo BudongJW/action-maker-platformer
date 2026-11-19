@@ -26,6 +26,8 @@ const ACTIONS := [
 	["rec", "ui.input.rec", [KEY_R], [], [[JOY_AXIS_TRIGGER_RIGHT, 1]], true],
 	["ff", "ui.input.ff", [KEY_F], [], [[JOY_AXIS_TRIGGER_LEFT, 1]], true],
 	["board", "ui.input.board", [KEY_B], [JOY_BUTTON_BACK], [], true],
+	["journal", "ui.input.journal", [KEY_J], [JOY_BUTTON_LEFT_STICK], [], true],
+	["log", "ui.input.log", [KEY_L], [JOY_BUTTON_RIGHT_STICK], [], true],
 	["pause", "ui.input.pause", [KEY_ESCAPE], [JOY_BUTTON_START], [], false],
 	# Fixed, so menus always work whatever the player rebinds.
 	["accept", "", [KEY_ENTER, KEY_KP_ENTER, KEY_E], [JOY_BUTTON_A], [], false],

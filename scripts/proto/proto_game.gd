@@ -27,7 +27,7 @@ enum Phase { HUB, TAPE, END, TITLE }
 
 const SAVE_PATH := "user://proto_save.json"
 const SAVE_FORMAT := 1
-const PAUSE_OPTIONS := ["resume", "options", "to_title"]
+const PAUSE_OPTIONS := ["resume", "journal", "log", "options", "to_title"]
 
 var runner: StoryRunner
 var director: ScareDirector
@@ -58,6 +58,14 @@ var _choices: Array = []
 var _auto_left := -1.0
 ## The development status line at the top (`-- --debug-hud`); the deck panel replaces it.
 var _debug_hud := false
+## The journal (found documents) and the dialogue log; "pause" when one was opened from the
+## pause menu, which comes back when it closes.
+var journal: ProtoJournal
+var backlog: ProtoLog
+var _menu_return := ""
+## A document opened from the journal is on screen; closing it goes back to the journal.
+var _journal_reading := false
+var _bot_tried_journal := false
 var _chaser: Node2D
 var _chaser_sprite: AnimatedSprite2D
 var _chaser_on := false
@@ -196,6 +204,20 @@ func _ready() -> void:
 		ui.add_child(board)
 		board.setup(data["board"], art, runner, font, ui.window_style())
 		board.closed.connect(_show_hub_prompt)
+	# The journal and the dialogue log, under the settings screen too.
+	journal = ProtoJournal.new()
+	journal.runner = runner
+	journal.input = input
+	ui.add_child(journal)
+	journal.setup(font, ui.window_style(), ui.choice_style(), ui.paper_style())
+	journal.configure(data.get("journal", {}))
+	journal.closed.connect(_on_menu_closed)
+	journal.read_doc.connect(_read_from_journal)
+	backlog = ProtoLog.new()
+	backlog.input = input
+	ui.add_child(backlog)
+	backlog.setup(font, ui.window_style(), ui.choice_style())
+	backlog.closed.connect(_on_menu_closed)
 	settings = ProtoSettings.new()
 	settings.director = director
 	settings.audio = audio
@@ -319,6 +341,8 @@ func _title_cmd(cmds: Array) -> void:
 func _start_new_game() -> void:
 	ui.hide_title()
 	runner.new_game()
+	journal.reset()
+	backlog.clear()
 	_begin_game()
 
 
@@ -347,6 +371,10 @@ func _pause_cmd(cmds: Array) -> void:
 		match String(PAUSE_OPTIONS[_pause_selected]):
 			"resume":
 				_close_pause()
+			"journal":
+				_open_journal("pause")
+			"log":
+				_open_log("pause")
 			"options":
 				settings.open()
 			"to_title":
@@ -379,6 +407,7 @@ func _continue_game() -> void:
 		_begin_game()
 		return
 	_log("continue")
+	backlog.clear()  # the log is not saved
 	_enter_hub(false)
 
 
@@ -386,7 +415,7 @@ func _continue_game() -> void:
 ## the last workroom: between tapes, and before the choice that ends the game.
 func _autosave() -> void:
 	var state := {"format": SAVE_FORMAT, "story": runner.serialize_save(),
-		"track": ["hifi", "linear", "mix"][int(mixer.get_track())]}
+		"track": ["hifi", "linear", "mix"][int(mixer.get_track())], "journal": journal.store()}
 	if _save_path == "":
 		_memory_save = JSON.parse_string(JSON.stringify(state))  # the same round trip as a file
 		return
@@ -413,6 +442,7 @@ func _restore(state: Dictionary) -> bool:
 	if not runner.restore_save(state.get("story", {})):
 		return false
 	mixer.set_track(_track_named(String(state.get("track", "linear"))))
+	journal.restore(state.get("journal", {}))
 	return true
 
 
@@ -457,7 +487,7 @@ func _run_hub_queue() -> void:
 			var doc_id: String = String(entry.get("doc", ""))
 			if doc_id == "" or runner.is_doc_collected(doc_id) or not _requirements_met(entry):
 				continue
-			runner.collect_doc(doc_id)
+			_collect_doc(doc_id)
 			_show_doc(doc_id, _run_hub_queue)
 			return
 		var id: String = String(entry)
@@ -476,6 +506,8 @@ func _show_hub_prompt() -> void:
 	var text := tr("ui.hub.counter").format({"n": int(runner.get_flag("sys.loop_count"))}) + "\n" + input.fill(tr("ui.hub.play"))
 	if _board_ready():
 		text += "\n" + input.fill(tr("ui.board.open"))
+	if journal.has_docs():
+		text += "\n" + input.fill(tr("ui.hub.journal"))
 	for action in _hub_actions_ready():
 		# {key}: the action's own letter on the keyboard, the workroom button on a gamepad.
 		var key_name := input.label("workroom_action") if input.device == "pad" else String(action.get("key", ""))
@@ -594,7 +626,7 @@ func _complete() -> void:
 	for entry in data.get("end_docs", []):
 		var doc_id: String = String(entry.get("doc", ""))
 		if _requirements_met(entry) and not runner.get_doc(doc_id).is_empty():
-			runner.collect_doc(doc_id)
+			_collect_doc(doc_id)
 			_show_doc(doc_id, _end_card)
 			return
 	_end_card()
@@ -625,7 +657,8 @@ func _process(delta: float) -> void:
 	var reel_on := reel != null and reel.running
 	if reel_on:
 		reel.tick(delta)
-	if settings.is_open() or (board != null and board.is_open()) or _paused:
+	if settings.is_open() or (board != null and board.is_open()) or _paused or journal.is_open() \
+			or backlog.is_open() or _journal_reading:
 		# The settings screen and the board pause the tape, the player and the scare clock.
 		player.frozen = true
 		return
@@ -696,6 +729,18 @@ func _command(cmds: Array, key: InputEventKey = null) -> void:
 		return
 	if board != null and board.handle(cmds):
 		return
+	if journal.handle(cmds) or backlog.handle(cmds):
+		return
+	if _journal_reading:
+		if cmds.has("accept") or cmds.has("interact") or cmds.has("cancel"):
+			_close_doc()
+		return
+	if (cmds.has("journal") or cmds.has("log")) and _menus_allowed():
+		if cmds.has("journal"):
+			_open_journal("")
+		else:
+			_open_log("")
+		return
 	if cmds.has("board") and _board_ready():
 		_open_board()
 		return
@@ -765,6 +810,11 @@ func _input(event: InputEvent) -> void:
 	input.commands(event)  # notes that the player is on keyboard and mouse
 	if settings.mouse(event):
 		get_viewport().set_input_as_handled()
+		return
+	if journal.is_open() or backlog.is_open():
+		# The wheel is left to the lists' scroll containers.
+		if journal.mouse(event) or backlog.mouse(event):
+			get_viewport().set_input_as_handled()
 		return
 	var button := event as InputEventMouseButton
 	var pos: Vector2 = (event as InputEventMouse).position
@@ -838,6 +888,7 @@ func _on_line(id: String, speaker: String, _expression: String, attrs: Dictionar
 	elif target == "journal_note" or target == "desktop_file":
 		kind = "note"
 	ui.show_line(String(attrs.get("display_name", speaker)), text, kind)
+	backlog.add_line(_play_count(), _tape_at(), String(attrs.get("display_name", speaker)), text)
 	# Auto-advance (a setting) waits as long as the line takes to read; up to 12 seconds, since a
 	# dialogue window line can be three times as long as a caption.
 	_auto_left = ProtoUI.reading_secs(text, 0.6, 0.06, 1.5, 12.0) * settings.advance_factor() \
@@ -899,12 +950,14 @@ func _close_doc() -> void:
 func _choose(index: int) -> void:
 	if index < 0 or index >= _choices.size() or not _choices[index]["enabled"]:
 		return
+	backlog.add_line(_play_count(), _tape_at(), "", String(_choices[index]["text"]), "choice")
 	_choices.clear()
 	runner.choose(index)
 
 
 func _on_dialogue_started(id: String) -> void:
 	_bot_menus.clear()
+	backlog.add_scene(_play_count(), _tape_at())
 	_stats["dialogues"] += 1
 	_log("dialogue " + id)
 	# Art "cuts": {dialogue_id: {"texture", "frame", "when"}} shows a picture while that dialogue plays.
@@ -993,7 +1046,7 @@ func _on_scare_onset(id: String, info: Dictionary) -> void:
 	fx.onset(id, info)
 	var cue: String = String(info.get("cue", ""))
 	if cue != "":
-		ui.play_cue(runner.play_cue(cue))
+		_play_cue(cue)
 
 
 func _on_scare_finished(id: String) -> void:
@@ -1099,7 +1152,7 @@ func _fire(tr: Dictionary) -> bool:
 	if tr.has("scare"):
 		return director.trigger(String(tr["scare"]))
 	if tr.has("doc"):
-		runner.collect_doc(String(tr["doc"]))
+		_collect_doc(String(tr["doc"]))
 		_show_doc(String(tr["doc"]))
 		return true
 	if tr.has("bark"):
@@ -1111,7 +1164,7 @@ func _fire(tr: Dictionary) -> bool:
 		var cues: Dictionary = tr["cue"]
 		var key := "hifi" if mixer.get_track() == TrackMixer.Track.HIFI else "linear"
 		if cues.has(key):
-			ui.play_cue(runner.play_cue(String(cues[key])))
+			_play_cue(String(cues[key]))
 			return true
 		return false
 	if tr.has("dialogue"):
@@ -1402,6 +1455,93 @@ func _update_deck() -> void:
 	ui.deck.show_state(mixer.get_track(), blocked, int(runner.get_flag("sys.loop_count")), ff)
 
 
+# --- Journal and dialogue log ---------------------------------------------------------------
+
+
+func _play_count() -> int:
+	return int(runner.get_flag("sys.loop_count"))
+
+
+## Tape seconds now, or -1 outside the tape (the workroom).
+func _tape_at() -> int:
+	return int(mixer.tape_time()) if phase == Phase.TAPE else -1
+
+
+## Collects a document and notes for the journal when it was found.
+func _collect_doc(doc_id: String) -> void:
+	if runner.collect_doc(doc_id):
+		journal.found(doc_id, _tape_at())
+
+
+## A subtitle cue: on screen, and into the dialogue log.
+func _play_cue(cue_id: String) -> void:
+	var lines := runner.play_cue(cue_id)
+	ui.play_cue(lines)
+	for line in lines:
+		backlog.add_line(_play_count(), _tape_at(), String(line["attrs"].get("display_name", "")), String(line.get("text", "")), "caption")
+
+
+## The journal and the log open during play (also mid-dialogue), not over a document or a menu.
+func _menus_allowed() -> bool:
+	return phase in [Phase.HUB, Phase.TAPE] and not ui.doc_open() and not _paused and not ui.credits_running() \
+		and not (board != null and board.is_open())
+
+
+func _open_journal(from: String) -> void:
+	_menu_return = from
+	if from == "pause":
+		ui.hide_title()
+	journal.open()
+
+
+func _open_log(from: String) -> void:
+	_menu_return = from
+	if from == "pause":
+		ui.hide_title()
+	backlog.open(_play_count())
+
+
+func _on_menu_closed() -> void:
+	if _menu_return == "pause" and _paused:
+		_draw_pause()
+	_menu_return = ""
+	if phase == Phase.HUB and ui.hub_text() != "":
+		_show_hub_prompt()
+
+
+## The journal asked to read a document full size: the journal steps aside until it is closed.
+func _read_from_journal(doc_id: String) -> void:
+	journal.visible = false
+	_journal_reading = true
+	_show_doc(doc_id, func():
+		_journal_reading = false
+		journal.visible = true)
+
+
+## The bot's walk through the journal (every tab, read one document full size) and the log.
+func _bot_journal() -> void:
+	_bot_tried_journal = true
+	_open_journal("")
+	for t in journal.tab_count():
+		for cmd in ["menu_down", "menu_up", "tab_next"]:
+			journal.command(cmd)
+	journal.command("accept")
+	if not _journal_reading or not ui.doc_open():
+		push_error("journal: accept did not open the document")
+	_close_doc()
+	if not journal.is_open():
+		push_error("journal: closing the document did not come back to the journal")
+	journal.command("cancel")
+	_open_log("")
+	if backlog.row_count() == 0 and int(_stats["lines"]) > 0:
+		push_error("log: lines were shown but the log is empty")
+	for cmd in ["menu_up", "menu_left", "menu_right", "tab_prev", "tab_next", "accept", "cancel"]:
+		backlog.command(cmd)
+	if journal.is_open() or backlog.is_open() or _journal_reading:
+		push_error("journal or log did not close")
+	_log("journal %d docs, log %d rows" % [journal.docs_in_tab(0).size(), backlog.row_count()])
+
+
 ## The development status line at the top of the screen, with `-- --debug-hud` (never in reels).
 func _update_hud(tc: String) -> void:
 	var names := ["HI-FI", "LINEAR", "MIX"]
@@ -1546,9 +1686,13 @@ func _bot_step(delta: float) -> void:
 		for cmd in ["accept", "menu_down", "accept", "cancel", "cancel", "cancel"]:
 			settings.command(cmd)
 		# And the pause menu: open it, move down and up, resume.
+		# (The journal and the dialogue log are walked once there is a document: _bot_journal.)
 		_open_pause()
 		for cmd in ["menu_down", "menu_up", "accept"]:
 			_pause_cmd([cmd])
+		return
+	if phase == Phase.HUB and not _bot_tried_journal and journal.has_docs():
+		_bot_journal()
 		return
 	if _board_ready() and _bot_board_seen != _board_state():
 		# Exercise the board whenever something new is on it: every card, then the other rows.
