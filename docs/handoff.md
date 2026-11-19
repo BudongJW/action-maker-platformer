@@ -34,7 +34,7 @@ Windows에서는 `python3` 대신 `py`를 씁니다(예: `py tools\get_godot.py`
 | 작업 브랜치 | `claude/inspiring-galileo-f9ez1u` (main에 없는 커밋은 `git log --oneline origin/main..HEAD`로 확인) |
 | PR | [BudongJW/action-maker-platformer#4](https://github.com/BudongJW/action-maker-platformer/pull/4) 열림. main과 충돌 없음, CI 모두 통과. **병합은 직접 요청할 때만** |
 | 스토리 런타임 | `scripts/story/` 완성, Godot 4.7 헤드리스 테스트 246개 통과 |
-| 프로토타입 | 타이틀 → 시작 경고 → 프롤로그~5장 → 마감 날 선택 → 엔딩 → 크레딧까지 한 번에 진행. 작업실마다 자동 저장, 이어하기, 일시정지 메뉴. 비공개 팩으로 봇이 진엔딩까지 감(약 79,700프레임, 오류 0). 공개 데모 콘텐츠로 CI가 같은 기능을 검사 |
+| 프로토타입 | 타이틀 → 시작 경고 → 프롤로그~5장 → 마감 날 선택 → 엔딩 → 크레딧까지 한 번에 진행. 작업실마다 자동 저장, 이어하기, 일시정지 메뉴. 테이프 화면의 VHS 질감(카메라를 끄면 사라짐)과 MIX 두 화면 겹침. 비공개 팩으로 봇이 진엔딩까지 감(약 79,700프레임, 오류 0). 공개 데모 콘텐츠로 CI가 같은 기능을 검사 |
 | 비공개 스토리 팩 | v0.24 (`미방송분_스토리팩_v0.24.zip`). 원고·설계·레벨·릴·콘티·자문 자료·조사 노트 전부 |
 | 데모 영상 | `미방송분_프로토타입_데모_v2.mp4`(9:43, 프롤로그~엔딩) 등. 비공개 자료라 저장소에 없음(9절) |
 | ACTION GAME MAKER G | 아직 연결하지 않음(8절) |
@@ -141,17 +141,19 @@ CI(`.github/workflows/content-license-checks.yml`)와 같은 11단계를 차례�
 - **Godot을 직접 돌릴 때:** 새로 빌드한 `build/prototype`은 먼저 가져오기를 해야 `class_name`이 등록됩니다. `--run`·`--smoke`·`--reel`은 알아서 하고, 직접 돌릴 때는 `<Godot 경로> --headless --path build/prototype --import`를 한 번 실행합니다.
 - **봇을 직접 돌릴 때는 `--fixed-fps 60`을 붙입니다.** 없으면 실제 시간으로 돌아 매우 느립니다.
 - **Windows:** 도구는 `py tools\…`로 돌립니다. `get_godot.py`는 콘솔 출력이 보이는 `_console.exe`를 고릅니다. Windows의 Python 3.14는 zlib-ng를 써서 같은 그림도 PNG 바이트가 달라지므로, `pixelart.py`는 바이트가 아니라 풀어낸 픽셀을 비교합니다(그림이 같으면 파일을 다시 쓰지 않음). Godot 출력은 UTF-8로 읽습니다(한국어 Windows의 cp949로 읽으면 깨짐). 2026-11-19 Windows 11·Python 3.14에서 `check_all.py --private` 14단계 통과를 확인했습니다.
+- **화면 효과(`scripts/proto/proto_screen.gd`):** VHS 질감과 MIX 두 화면은 UI 아래 층(layer 5)에서 화면을 읽는 셰이더입니다. 헤드리스 실행(봇, CI의 릴 검사)은 셰이더를 실제로 그리지 않으므로, 모양을 바꿨다면 `--reel … --movie <폴더>\f.png`로 PNG 프레임을 뽑아 직접 봅니다.
 - **저장과 메타 플래그:** 평소 플레이는 작업실에 들어올 때마다 `user://proto_save.json`에 자동 저장하고(타이틀의 '이어하기'), 본 엔딩·2회차는 `user://meta.dat`에 둡니다. 봇과 릴은 둘 다 메모리에만 둡니다. 처음부터 다시 하려면 Godot 사용자 폴더의 `app_userdata/Story prototype/`에서 두 파일을 지웁니다(Windows `%APPDATA%\Godot\`, macOS `~/Library/Application Support/Godot/`, Linux `~/.local/share/godot/`).
 - **스케어 지연은 무작위**라 데모 봇 결과(보드 카드 수 등)가 실행마다 조금 다를 수 있습니다. 판정은 끝까지 갔는지와 오류 0건입니다.
 - **영상 녹화**는 고정 프레임이라 실제 시간과 관계없이 같은 결과가 나옵니다. 1~4장 릴은 약 10분 걸립니다.
 
 ## 8. 다음 작업 (추천 순서)
 
-1. **플레이테스트(직접).** `python3 tools/build_prototype.py --run`으로 처음부터 엔딩까지. 스케어 로그(`ScareDirector.log_path`)를 남기면 강도 모델 보정에 씁니다.
-2. **셰이더 둘:** 카메라를 끈 뒤 VHS 질감 끄기, MIX 두 레이어 겹침. (타이틀 화면, 작업실 자동 저장, 이어하기, 일시정지 메뉴, 크레딧, 메타 연출 화면은 끝났습니다.)
-3. **스토리 쪽:** 무속 자문 질문지 v1.2, 설정집 v0.6·콘티 v1.3 맞추기(비공개 인수인계 6절).
-4. **ACTION GAME MAKER G 연결 확인:** 오토로드로 `StoryRunner`·`ScareDirector`·`TrackMixer` 등록, Custom Action Plugin(`AGMPluginAction`/`AGMPluginCondition`)으로 대화 시작·조건 연결, 내보내기 빌드에 `compiled/*.json`과 스케어·레벨 설정이 들어가는지.
-5. **소리 듣기와 라우드니스:** 사운드는 아직 아무도 들어 보지 않았습니다. 게임 안 녹화로 LUFS를 잽니다.
+1. **플레이테스트(직접).** `python3 tools/build_prototype.py --run`으로 처음부터 엔딩까지. 스케어 로그(`ScareDirector.log_path`)를 남기면 강도 모델 보정에 씁니다. VHS 질감의 세기(주사선·색 번짐·그레인·트래킹 띠)와 MIX 체커가 읽히는지도 이때 봅니다. 세기는 레벨 `art.vhs` 값으로 바꿉니다(`prototype/README.md`).
+2. **스토리 쪽:** 무속 자문 질문지 v1.2, 설정집 v0.6·콘티 v1.3 맞추기(비공개 인수인계 6절).
+3. **ACTION GAME MAKER G 연결 확인:** 오토로드로 `StoryRunner`·`ScareDirector`·`TrackMixer` 등록, Custom Action Plugin(`AGMPluginAction`/`AGMPluginCondition`)으로 대화 시작·조건 연결, 내보내기 빌드에 `compiled/*.json`과 스케어·레벨 설정이 들어가는지. 셰이더 셋(`shaders/`)이 AGM G에서도 도는지.
+4. **소리 듣기와 라우드니스:** 사운드는 아직 아무도 들어 보지 않았습니다. 게임 안 녹화로 LUFS를 잽니다.
+
+(타이틀 화면, 작업실 자동 저장, 이어하기, 일시정지 메뉴, 크레딧, 메타 연출 화면, VHS 질감, MIX 두 화면은 끝났습니다.)
 
 스토리 쪽 다음 일(원고 다음 판, 무속 자문, 방언 감수 등)은 `private/인수인계_비공개.md`에 있습니다.
 

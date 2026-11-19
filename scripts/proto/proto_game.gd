@@ -35,6 +35,7 @@ var level: ProtoLevel
 var player: ProtoPlayer
 var ui: ProtoUI
 var fx: ProtoFX
+var screen: ProtoScreen
 var art: ProtoArt
 var audio: ProtoAudio
 var settings: ProtoSettings
@@ -207,6 +208,11 @@ func _ready() -> void:
 		var wave: Dictionary = art.cfg.get("voice_wave", {})
 		_voice_speakers = wave.get("speakers", [])
 		ui.set_voice_color(Color.html(String(wave.get("color", "7fe0d0"))))
+	# VHS texture and the two-picture MIX, between the world and the UI.
+	screen = ProtoScreen.new()
+	add_child(screen)
+	screen.setup(art, level, mixer)
+	mixer.track_changed.connect(func(track: int): screen.set_mix(track == TrackMixer.Track.MIX))
 
 	runner.dialogue_started.connect(_on_dialogue_started)
 	runner.line_started.connect(_on_line)
@@ -1195,13 +1201,19 @@ func _set_track(track: TrackMixer.Track, forced: bool = false) -> void:
 
 
 ## LINEAR reads as the staged broadcast night, HI-FI as the real one by the water.
-## With art the palettes do this (art block "palettes": linear, hifi, mix) and the badge follows.
+## With art the palettes do this (art block "palettes": linear, hifi) and the badge follows. MIX
+## keeps the LINEAR colours and ProtoScreen lays the HI-FI picture over them; without that
+## (no shader), the world is drawn halfway to the HI-FI palette instead.
 func _apply_tint() -> void:
 	if art.enabled():
 		_tint.color = Color.WHITE
 		var key: String = ["hifi", "linear", "mix"][mixer.get_track()]
-		var mix_amount := 0.5 if key == "mix" and not art.cfg.get("palettes", {}).has("mix") else 1.0
-		art.set_palette("hifi" if mix_amount < 1.0 else key, mix_amount)
+		if key != "mix":
+			art.set_palette(key)
+		elif screen.mix_available():
+			art.set_palette("linear")
+		else:
+			art.set_palette("hifi", 0.5)
 		var badges: Dictionary = art.cfg.get("badges", {})
 		ui.set_badge(art.frame(String(badges.get("sheet", "")), String(badges.get(key, ""))) if badges.has(key) else null)
 		return
@@ -1234,6 +1246,9 @@ func _update_camera() -> String:
 	var off_flag: String = String(art.cfg.get("viewfinder", {}).get("off_flag", "")) if art.enabled() else ""
 	var camera_off: bool = off_flag != "" and runner.get_flag(off_flag) == true
 	ui.set_camera_off(camera_off)
+	# The tape texture goes with the camera (its own "vhs" off_flag when the art block names one).
+	screen.set_vhs(screen.vhs_off_flag == "" or runner.get_flag(screen.vhs_off_flag) != true)
+	screen.set_still(director.photosafe)
 	if camera_off:
 		player.recording = false
 	ui.set_recording(player.recording)

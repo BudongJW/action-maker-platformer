@@ -49,7 +49,7 @@
 | `art/palette/1979.pal` | 1979 (카세트 속 기억) | 세피아, 낮은 대비. "소리가 먼저, 그림은 흐릿하게" |
 | `art/palette/ui.pal` | 화면 UI | 뷰파인더, 배지, 추리 보드, 테이프 화면 |
 
-MIX(2-04)는 LINEAR와 HI-FI를 한 픽셀씩 번갈아 겹치고 HI-FI를 3px 밀어, 등불 위치와 순례가 두 겹으로 보이게 했습니다(`cuts/204_mix.png`). 게임에서는 두 화면을 셰이더로 섞습니다.
+MIX(2-04)는 LINEAR와 HI-FI를 한 픽셀씩 번갈아 겹치고 HI-FI를 3px 밀어, 등불 위치와 순례가 두 겹으로 보이게 했습니다(`cuts/204_mix.png`). 게임에서는 두 화면을 셰이더로 섞습니다(저장소의 `shaders/track_mix.gdshader`, 프로토타입 `scripts/proto/proto_screen.gd`).
 
 ## 3. 인물
 

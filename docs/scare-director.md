@@ -92,7 +92,7 @@ VHS Hi-Fi 데크에서 오디오 더빙은 리니어 트랙만 덮어쓰고 Hi-F
 |---|---|
 | 듣는 트랙 | `set_track(Track.HIFI / LINEAR / MIX)`. `bind_story()`로 연결하면 `loop.track_hifi`·`loop.track_mix` 플래그를 씀(그 트랙일 때만 참). `set_track()`은 트랙이 바뀔 때만 쓰므로, 새 루프에서 `loop.*` 플래그를 지운 뒤에는 `sync_flags()`로 다시 씀 |
 | 크로스페이드 | `gains()`(hifi, linear 진폭). MIX는 등전력(√0.5). `hifi_bus`/`linear_bus`를 지정하면 버스 볼륨에 바로 적용 |
-| 한쪽 트랙에만 있는 노드 | 그룹 `track_hifi_only`, `track_linear_only`. `apply_layers(root)`가 보이기·투명도·처리 모드를 맞춤. MIX에서는 둘 다 반투명으로 보이고 어느 쪽도 충돌하지 않음 |
+| 한쪽 트랙에만 있는 노드 | 그룹 `track_hifi_only`, `track_linear_only`. `apply_layers(root)`가 보이기·투명도·처리 모드를 맞춤. MIX에서는 둘 다 반투명(`mix_alpha`, 기본 0.5)으로 보이고 어느 쪽도 충돌하지 않음. 프로토타입은 MIX를 두 화면으로 그릴 때(`scripts/proto/proto_screen.gd`) 각 트랙 노드를 자기 화면에만 두고 `mix_alpha`를 1로 둠 |
 | 테이프 시계 | `tick(dt)`, `time_scale`(기본 10: 두 시간 테이프를 12분에), `seek()`, `rewind()`, `paused` |
 | 덧녹음 구간 | `set_segments([[시작, 끝], ...])`(테이프 초). `divergence(t)`는 구간 밖 0, 안 1, 앞뒤 `divergence_ramp` 초 동안 선형으로 변함. `segment_entered/exited` |
 | 타임라인 사건 | `add_event(테이프 초, 이름, 플래그)`. 한 바퀴에 한 번 `timeline_event`, 플래그를 참으로. `rewind()`하면 다시 무장, `seek()`로 건너뛴 사건은 발생하지 않음 |

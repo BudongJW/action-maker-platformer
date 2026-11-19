@@ -27,6 +27,8 @@ var flag_props: Array = []
 ## Water that rises in one stretch of the level ("rising_water"): [{cfg, node}].
 var water_zones: Array = []
 var _backdrop: Sprite2D
+## Copies of the backdrop drawn in other views (the MIX HI-FI view), scrolled with it.
+var _backdrop_copies: Array[Sprite2D] = []
 var _backdrop_parallax := 0.2
 var _tiles: Dictionary = {}
 
@@ -124,6 +126,21 @@ func update_backdrop(camera_x: float, camera_zoom: float) -> void:
 	var region := _backdrop.region_rect
 	region.position.x = camera_x * _backdrop_parallax * camera_zoom / _backdrop.scale.x
 	_backdrop.region_rect = region
+	for copy in _backdrop_copies:
+		copy.region_rect = region
+
+
+## Draws the backdrop in another viewport too (it sits in a CanvasLayer, which belongs to one
+## viewport, while the world itself can be shared).
+func mirror_backdrop(viewport: Viewport) -> void:
+	if _backdrop == null:
+		return
+	var layer := CanvasLayer.new()
+	layer.layer = (_backdrop.get_parent() as CanvasLayer).layer
+	var copy := _backdrop.duplicate() as Sprite2D
+	layer.add_child(copy)
+	viewport.add_child(layer)
+	_backdrop_copies.append(copy)
 
 
 static func to_rect(r: Variant) -> Rect2:

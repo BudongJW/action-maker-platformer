@@ -420,6 +420,7 @@
   "art": {
     "zoom": 3,
     "camera_offset_y": -30,
+    "vhs": {"off_flag": "save.demo_camera_off", "noise": 0.05},
     "base_palette": "assets/original/art/palette/night-school.pal",
     "palettes": {
       "linear": "assets/original/art/palette/otherworld.pal",

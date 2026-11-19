@@ -56,7 +56,7 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 │   ├── scare/               # Jump-scare scheduling (GPL-3.0)
 │   ├── tracks/              # HI-FI / LINEAR track mixer and tape clock (GPL-3.0)
 │   └── proto/               # Vertical-slice prototype (GPL-3.0)
-├── shaders/                 # Godot shaders (GPL-3.0), e.g. the palette swap
+├── shaders/                 # Godot shaders (GPL-3.0): palette swap, VHS texture, two-track MIX
 ├── prototype/
 │   └── demo/                # Generic demo content used when the private story pack is absent
 ├── private/                 # Private story pack, git-ignored (see "Story content stays out of this repository")

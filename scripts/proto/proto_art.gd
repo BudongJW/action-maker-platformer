@@ -194,6 +194,16 @@ func set_palette(palette_name: String, amount: float = 1.0) -> void:
 	world_material.set_shader_parameter("amount", amount)
 
 
+## The lookup strip of a palette in the art block's "palettes" (one pixel per base key), or null.
+func lut(palette_name: String) -> Texture2D:
+	return _luts.get(palette_name)
+
+
+## Number of keys in the base palette (the width of every lookup strip).
+func palette_size() -> int:
+	return _keys.size()
+
+
 func _build_palettes() -> void:
 	var base_path: String = String(cfg.get("base_palette", ""))
 	if base_path == "" or not ResourceLoader.exists(SHADER):
