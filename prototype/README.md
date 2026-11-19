@@ -15,23 +15,29 @@ GODOT_BIN=/path/to/Godot_v4.7-stable python3 tools/build_prototype.py --run
 
 The demo is placeholder English text with no game story. The prototype code contains no dialogue text.
 
-## Keys
+## Controls
 
-| Key | Action |
-|---|---|
-| Up / Down, Enter | Title screen: Continue (only when there is a save), New Game (asks first when it would overwrite a save), Options, Quit. After the end credits, Enter goes back to the title |
-| A / D or arrows | Move |
-| Space | Jump |
-| W / S | Climb a ladder |
-| Enter or E | Advance dialogue, close a document; in the workroom, play the tape |
-| 1-4, or Up / Down then Enter | Choose |
-| Z / X / C | LINEAR / HI-FI / MIX (HI-FI and MIX unlock through the story) |
-| R | Camera REC (records evidence inside an evidence area) |
-| F | Fast-forward the tape (x4). It pauses while a scare is pending or relaxing, because the scare director runs in real time |
-| M | Scare mode: default / soft (quieter, with a short prepulse) / off (no sudden onsets) |
-| P | Photosensitivity-safe scares (no flash) |
-| B | Deduction board in the workroom, once the level's `board` block allows it: Left / Right choose, Up / Down change the row (cards, knots, conclusions), B or Esc close |
-| Esc | Pause menu during play: Resume, Options, Back to Title (progress since the last workroom visit is not kept). Options is the settings screen: scare mode, reduce flashing, master / ambience / effects volume, text size, subtitles, effects outside the game window. Labels come from `assets/original/ui/strings.csv` (`ui.options.*`); values are saved to `user://proto_settings.cfg` |
+Every control is an input action (`scripts/proto/proto_input.gd`, `ProtoInput.ACTIONS`) with keyboard and gamepad defaults. Gamepad buttons are named by position (bottom, right, left, top), not by any maker's letters. Hints on screen name the key or button of the device used last.
+
+| Keyboard | Gamepad | Action |
+|---|---|---|
+| Up / Down, Enter | D-pad or left stick, bottom button | Title screen: Continue (only when there is a save), New Game (asks first when it would overwrite a save), Options, Quit. After the end credits, Enter goes back to the title |
+| A / D or arrows | D-pad or left stick | Move |
+| Space | Bottom button | Jump |
+| W / S | D-pad or left stick up / down | Climb a ladder |
+| Enter or E | Bottom button (menus, dialogue), left button (examine) | Advance dialogue, close a document; in the workroom, play the tape; in the tape, examine where a prompt shows |
+| 1-4, or Up / Down then Enter | D-pad up / down, bottom button | Choose |
+| Z / X / C | Left shoulder / right shoulder / top button | LINEAR / HI-FI / MIX (HI-FI and MIX unlock through the story) |
+| R | Right trigger | Camera REC (records evidence inside an evidence area) |
+| F | Left trigger | Fast-forward the tape (x4). It pauses while a scare is pending or relaxing, because the scare director runs in real time |
+| M / P | — | Development shortcuts: scare mode (default / soft / off), photosensitivity-safe scares |
+| B | Select | Deduction board in the workroom, once the level's `board` block allows it: Left / Right choose, Up / Down change the row (cards, knots, conclusions), B, Select, Esc or the right button closes |
+| The level's letter (`hub.actions[].key`) or D | Top button | A workroom action (its prompt string uses `{key}` for the key name) |
+| Esc | Start | Pause menu during play: Resume, Options, Back to Title (progress since the last workroom visit is not kept). Options is the settings screen: scare mode, reduce flashing, master / ambience / effects volume, text size, subtitles, effects outside the game window, and **Controls** |
+
+- **Mouse:** hovering a menu item, a settings row or a choice selects it; a left click picks it, advances dialogue, closes a document or plays the tape in the workroom; a right click goes back (cancel).
+- **Controls screen:** pick an action, then press a key, a gamepad button or push a stick or trigger. If another action used it, the two swap. Esc or a mouse click cancels; Esc cannot be bound. "Reset to defaults" restores every binding. Menu keys (Enter, Esc, arrows, the bottom and right buttons) are fixed so menus always work. Bindings are saved in the `[input]` section of `user://proto_settings.cfg`.
+- **UI strings:** labels come from `assets/original/ui/strings.csv` (`ui.options.*`, `ui.input.*`, `ui.pad.*`). A string can name a key with an action in braces (`{board}`, `{accept}`, `{interact}`), filled in as `[B]` or `[Select]` for the current device.
 
 ## Level file (`proto_level.json`)
 

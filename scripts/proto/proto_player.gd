@@ -79,9 +79,10 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		_animate(0.0, 0.0)
 		return
-	var axis := bot_axis if bot else _axis(KEY_A, KEY_D, KEY_LEFT, KEY_RIGHT)
-	var vertical := 0.0 if bot else _axis(KEY_W, KEY_S, KEY_UP, KEY_DOWN)
-	var jump := bot_jump if bot else (Input.is_key_pressed(KEY_SPACE))
+	# Input actions from ProtoInput (keyboard, d-pad or left stick).
+	var axis := bot_axis if bot else _axis("move_left", "move_right")
+	var vertical := 0.0 if bot else _axis("move_up", "move_down")
+	var jump := bot_jump if bot else (InputMap.has_action("jump") and Input.is_action_pressed("jump"))
 	bot_jump = false
 	var on_ladder := level != null and level.on_ladder(global_position + Vector2(0, -20))
 	if on_ladder and vertical != 0.0:
@@ -125,10 +126,8 @@ func _animate(axis: float, vertical: float) -> void:
 		_sprite.flip_h = axis < 0.0
 
 
-func _axis(neg_a: Key, pos_a: Key, neg_b: Key, pos_b: Key) -> float:
-	var v := 0.0
-	if Input.is_key_pressed(neg_a) or Input.is_key_pressed(neg_b):
-		v -= 1.0
-	if Input.is_key_pressed(pos_a) or Input.is_key_pressed(pos_b):
-		v += 1.0
-	return v
+## -1..1 from two actions; a stick past its dead zone counts as fully pressed (pixel movement).
+func _axis(negative: String, positive: String) -> float:
+	if not InputMap.has_action(negative) or not InputMap.has_action(positive):
+		return 0.0
+	return signf(Input.get_axis(negative, positive))

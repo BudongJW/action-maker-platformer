@@ -39,6 +39,9 @@ var _wave: Control
 var _wave_color := Color(0.5, 0.88, 0.82)
 var _wave_time := 0.0
 var _captions: Array = []
+## Key hints under a line and under choices; the game fills them for the current input device.
+var next_hint := "[Enter]"
+var choice_hint := "[Up/Down] [Enter]  [1-4]"
 var _text_scale := 1.0
 var _captions_on := true
 var _caption_clock := 0.0
@@ -291,14 +294,14 @@ func show_line(speaker: String, text: String, kind: String = "") -> void:
 	_name.visible = speaker != ""
 	_text.text = text
 	_clear_choices()
-	_hint.text = "[Enter]"
+	_hint.text = next_hint
 
 
 ## Lists the options; `selected` is highlighted (arrow keys move it, Enter picks it).
 func show_choices(options: Array, selected: int = 0) -> void:
 	_hide_meta()
 	_window.visible = true
-	_hint.text = "[Up/Down] [Enter]  [1-4]"
+	_hint.text = choice_hint
 	_clear_choices()
 	for i in options.size():
 		var o: Dictionary = options[i]
@@ -499,6 +502,28 @@ func show_title(title: String, sub: String, options: Array, selected: int, dim: 
 		row.add_theme_constant_override("outline_size", 4)
 		_title_menu.add_child(row)
 	_title.visible = true
+
+
+## Index of the title or pause menu item under a screen position, or -1.
+func menu_item_at(pos: Vector2) -> int:
+	if not _title.visible:
+		return -1
+	var rows := _title_menu.get_children()
+	for i in rows.size():
+		if (rows[i] as Control).get_global_rect().has_point(pos):
+			return i
+	return -1
+
+
+## Index of the choice under a screen position, or -1.
+func choice_at(pos: Vector2) -> int:
+	if not _window.visible:
+		return -1
+	var rows := _choice_box.get_children()
+	for i in rows.size():
+		if (rows[i] as Control).get_global_rect().has_point(pos):
+			return i
+	return -1
 
 
 func hide_title() -> void:

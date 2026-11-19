@@ -38,6 +38,8 @@ const CONCLUSION_STEP := 32.0
 enum Row { CARDS, KNOTS, CONCLUSIONS }
 
 var runner: StoryRunner
+## Names keys and buttons in the controls hint (set by the game).
+var input: ProtoInput
 var cfg: Dictionary = {}
 var _selected := 0
 var _row: int = Row.CARDS
@@ -108,22 +110,22 @@ func close() -> void:
 	closed.emit()
 
 
-## Left/Right choose in the row, Up/Down change the row; B or Esc closes. Returns true if used.
-func handle_key(key: int) -> bool:
+## Input actions (ProtoInput): menu_left/menu_right choose in the row, menu_up/menu_down change the
+## row, board or cancel closes. Returns true if the board is open (it takes every input).
+func handle(cmds: Array) -> bool:
 	if not visible:
 		return false
 	var rows := _rows()
-	match key:
-		KEY_ESCAPE, KEY_B:
-			close()
-			return true
-		KEY_UP, KEY_DOWN:
-			var i := rows.find(_row)
-			_row = rows[(i + (1 if key == KEY_DOWN else rows.size() - 1)) % rows.size()]
-		KEY_LEFT:
-			_set_index(maxi(0, _index() - 1))
-		KEY_RIGHT:
-			_set_index(mini(_row_size(_row) - 1, _index() + 1))
+	if cmds.has("cancel") or cmds.has("board"):
+		close()
+		return true
+	if cmds.has("menu_up") or cmds.has("menu_down"):
+		var i := rows.find(_row)
+		_row = rows[(i + (1 if cmds.has("menu_down") else rows.size() - 1)) % rows.size()]
+	elif cmds.has("menu_left"):
+		_set_index(maxi(0, _index() - 1))
+	elif cmds.has("menu_right"):
+		_set_index(mini(_row_size(_row) - 1, _index() + 1))
 	_refresh()
 	return true
 
@@ -212,7 +214,7 @@ func _refresh() -> void:
 		heading += "      " + tr("ui.board.knots") + "   %d / %d" % [knot_count(), _slots("knots").size()]
 	var title := _label(heading, 16, ACCENT)
 	_place(title, HEADER)
-	var hint := _label(tr("ui.board.controls"), 14, Color(0.62, 0.64, 0.7))
+	var hint := _label(input.fill(tr("ui.board.controls")) if input != null else tr("ui.board.controls"), 14, Color(0.62, 0.64, 0.7))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_place(hint, HEADER)
 	# Five slots show a window of cards around the selection; arrows say there is more.

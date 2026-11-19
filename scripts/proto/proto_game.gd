@@ -7,10 +7,11 @@
 ## optional "art" block swaps the graybox for pixel art (ProtoArt).
 ## Build and run with tools/build_prototype.py. Pass `-- --bot` to let it play itself (CI).
 ##
-## Keys: A/D or arrows move, Space jump, W/S climb, Enter/E advance or play, 1-4 choose,
-## Z LINEAR, X HI-FI, C MIX, R camera REC, F fast-forward, M scare mode (default / soft / off),
-## P photosensitivity-safe scares, Up/Down move the choice cursor, Esc settings, B the deduction
-## board in the workroom (when the level has a "board" block). `-- --reel <file.json>` plays a
+## Controls are input actions (ProtoInput: keyboard, gamepad, rebindable; mouse for dialogue,
+## choices and menus). Default keys: A/D or arrows move, Space jump, W/S climb, Enter/E advance or
+## play, 1-4 choose, Z LINEAR, X HI-FI, C MIX, R camera REC, F fast-forward, M scare mode
+## (default / soft / off), P photosensitivity-safe scares, Up/Down move the choice cursor, Esc
+## pause, B the deduction board in the workroom (when the level has a "board" block). `-- --reel <file.json>` plays a
 ## scripted sequence of scenes instead (ProtoReel, for demo videos).
 class_name ProtoGame
 extends Node2D
@@ -36,6 +37,7 @@ var player: ProtoPlayer
 var ui: ProtoUI
 var fx: ProtoFX
 var screen: ProtoScreen
+var input: ProtoInput
 var art: ProtoArt
 var audio: ProtoAudio
 var settings: ProtoSettings
@@ -171,6 +173,11 @@ func _ready() -> void:
 			player.set_art(art.make_sprite(spec))
 		player.set_camera_zoom(art.zoom(), float(art.cfg.get("camera_offset_y", -60.0)))
 
+	input = ProtoInput.new()
+	add_child(input)
+	input.device_changed.connect(func(_d): _refresh_hints())
+	# Before the first hint is drawn (the UI strings load with the settings screen below).
+	call_deferred("_refresh_hints")
 	ui = ProtoUI.new()
 	ui.font = font
 	add_child(ui)
@@ -179,6 +186,7 @@ func _ready() -> void:
 	if data.has("board"):
 		# Under the settings screen, so Esc settings still draw on top.
 		board = ProtoBoard.new()
+		board.input = input
 		ui.add_child(board)
 		board.setup(data["board"], art, runner, font, ui.window_style())
 		board.closed.connect(_show_hub_prompt)
@@ -187,6 +195,7 @@ func _ready() -> void:
 	settings.audio = audio
 	settings.ui = ui
 	settings.runner = runner
+	settings.input = input
 	settings.persist = not bot
 	ui.add_child(settings)
 	settings.setup(font, ui.window_style(), ui.choice_style(), ui.cursor_texture())
@@ -265,13 +274,13 @@ func _draw_title() -> void:
 	ui.show_title(String(cfg.get("text", "")), String(cfg.get("sub", "")), labels, _title_selected)
 
 
-func _title_key(key: int) -> void:
-	if key in [KEY_UP, KEY_DOWN]:
-		_title_selected = wrapi(_title_selected + (-1 if key == KEY_UP else 1), 0, _title_options.size())
+func _title_cmd(cmds: Array) -> void:
+	if cmds.has("menu_up") or cmds.has("menu_down"):
+		_title_selected = wrapi(_title_selected + (-1 if cmds.has("menu_up") else 1), 0, _title_options.size())
 		_draw_title()
-	elif key == KEY_ESCAPE and _title_options.has("confirm_yes"):
+	elif cmds.has("cancel") and _title_options.has("confirm_yes"):
 		_show_title()
-	elif key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
+	elif cmds.has("accept"):
 		match String(_title_options[_title_selected]):
 			"continue":
 				ui.hide_title()
@@ -315,13 +324,13 @@ func _draw_pause() -> void:
 	ui.show_title(tr("ui.pause.title"), "", PAUSE_OPTIONS.map(func(o): return tr("ui.pause." + o)), _pause_selected, true)
 
 
-func _pause_key(key: int) -> void:
-	if key in [KEY_UP, KEY_DOWN]:
-		_pause_selected = wrapi(_pause_selected + (-1 if key == KEY_UP else 1), 0, PAUSE_OPTIONS.size())
+func _pause_cmd(cmds: Array) -> void:
+	if cmds.has("menu_up") or cmds.has("menu_down"):
+		_pause_selected = wrapi(_pause_selected + (-1 if cmds.has("menu_up") else 1), 0, PAUSE_OPTIONS.size())
 		_draw_pause()
-	elif key == KEY_ESCAPE:
+	elif cmds.has("cancel") or cmds.has("pause"):
 		_close_pause()
-	elif key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
+	elif cmds.has("accept"):
 		match String(PAUSE_OPTIONS[_pause_selected]):
 			"resume":
 				_close_pause()
@@ -451,11 +460,13 @@ func _run_hub_queue() -> void:
 
 
 func _show_hub_prompt() -> void:
-	var text := "WORKROOM  -  PLAY %d\n[Enter] play the tape" % int(runner.get_flag("sys.loop_count"))
+	var text := tr("ui.hub.counter").format({"n": int(runner.get_flag("sys.loop_count"))}) + "\n" + input.fill(tr("ui.hub.play"))
 	if _board_ready():
-		text += "\n" + tr("ui.board.open")
+		text += "\n" + input.fill(tr("ui.board.open"))
 	for action in _hub_actions_ready():
-		text += "\n" + tr(String(action.get("prompt", "")))
+		# {key}: the action's own letter on the keyboard, the workroom button on a gamepad.
+		var key_name := input.label("workroom_action") if input.device == "pad" else String(action.get("key", ""))
+		text += "\n" + input.fill(tr(String(action.get("prompt", "")))).replace("{key}", "[%s]" % key_name)
 	if _paused:
 		_pause_hub_text = text  # shown again when the pause menu closes
 		return
@@ -637,72 +648,151 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	var k := event as InputEventKey
-	if k == null or not k.pressed or k.echo:
+	if event is InputEventMouse:
 		return
-	var key: int = k.keycode
+	var cmds := input.commands(event)
+	# The controls screen waiting for a new binding needs every key and button, even unbound ones.
+	if settings.is_open() and (not cmds.is_empty() or event is InputEventKey or event is InputEventJoypadButton):
+		settings.handle(cmds, event)
+		return
+	if cmds.is_empty():
+		return
+	_command(cmds, event as InputEventKey)
+
+
+## One press of one or more input actions (see ProtoInput.ACTIONS). `key` is the key event when the
+## press came from the keyboard, for the workroom actions' own letter keys.
+func _command(cmds: Array, key: InputEventKey = null) -> void:
 	if ui.credits_running():
-		if key in [KEY_ENTER, KEY_KP_ENTER, KEY_E, KEY_ESCAPE]:
+		if cmds.has("accept") or cmds.has("cancel"):
 			ui.skip_credits()
 		return
-	if settings.handle_key(key):
+	if settings.handle(cmds):
 		return
 	if phase == Phase.TITLE:
-		_title_key(key)
+		_title_cmd(cmds)
 		return
-	if phase == Phase.END and not ui.doc_open() and key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
+	if phase == Phase.END and not ui.doc_open() and cmds.has("accept"):
 		get_tree().reload_current_scene()  # back to the title; Continue returns to the last workroom
 		return
-	if board != null and board.handle_key(key):
+	if board != null and board.handle(cmds):
 		return
-	if key == KEY_B and _board_ready():
+	if cmds.has("board") and _board_ready():
 		_open_board()
 		return
-	for action in _hub_actions_ready():
-		if key == OS.find_keycode_from_string(String(action.get("key", ""))):
+	var hub_actions := _hub_actions_ready()
+	for action in hub_actions:
+		if key != null and key.keycode == OS.find_keycode_from_string(String(action.get("key", ""))):
 			_hub_action(action)
 			return
-	if _paused:
-		_pause_key(key)
+	if cmds.has("workroom_action") and not hub_actions.is_empty():
+		_hub_action(hub_actions[0])
 		return
-	if key == KEY_ESCAPE:
+	if _paused:
+		_pause_cmd(cmds)
+		return
+	if cmds.has("pause"):
 		if phase in [Phase.HUB, Phase.TAPE]:
 			_open_pause()
 		else:
 			settings.open()
 		return
-	if key in [KEY_ENTER, KEY_KP_ENTER, KEY_E]:
+	var talking := ui.doc_open() or runner.is_running()
+	if talking and (cmds.has("accept") or cmds.has("interact")):
 		if ui.doc_open():
 			_close_doc()
-		elif runner.is_running():
-			if _choices.is_empty():
-				runner.advance()
-			else:
-				_choose(_selected)
-		elif phase == Phase.HUB and not director.is_busy():
-			_on_play()
-		elif phase == Phase.TAPE and _prompt_here != "":
-			_interact_pressed = true
-	elif key in [KEY_UP, KEY_DOWN] and not _choices.is_empty():
-		_move_selection(-1 if key == KEY_UP else 1)
-	elif key >= KEY_1 and key <= KEY_4:
-		_choose(key - KEY_1)
-	elif key == KEY_Z:
+		elif _choices.is_empty():
+			runner.advance()
+		else:
+			_choose(_selected)
+		return
+	if not talking and phase == Phase.HUB and cmds.has("accept") and not director.is_busy():
+		_on_play()
+		return
+	if not talking and phase == Phase.TAPE and cmds.has("interact") and _prompt_here != "":
+		_interact_pressed = true
+		return
+	if not _choices.is_empty() and (cmds.has("menu_up") or cmds.has("menu_down")):
+		_move_selection(-1 if cmds.has("menu_up") else 1)
+		return
+	for i in 4:
+		if cmds.has("choose_%d" % (i + 1)):
+			_choose(i)
+			return
+	if cmds.has("track_linear"):
 		_set_track(TrackMixer.Track.LINEAR)
-	elif key == KEY_X:
+	elif cmds.has("track_hifi"):
 		_set_track(TrackMixer.Track.HIFI)
-	elif key == KEY_C:
+	elif cmds.has("track_mix"):
 		_set_track(TrackMixer.Track.MIX)
-	elif key == KEY_R:
+	elif cmds.has("rec"):
 		player.recording = not player.recording
-	elif key == KEY_F:
+	elif cmds.has("ff"):
 		ff = 1.0 if ff > 1.0 else 4.0
-	elif key == KEY_M:
+	elif cmds.has("debug_scare_mode"):
 		settings.set_value("scare_mode", (int(director.mode) + 1) % 3)
 		ui.toast("SCARES " + ["DEFAULT", "SOFT", "OFF"][int(director.mode)])
-	elif key == KEY_P:
+	elif cmds.has("debug_photosafe"):
 		settings.set_value("photosafe", 0 if director.photosafe else 1)
 		ui.toast("PHOTOSAFE " + ("ON" if director.photosafe else "OFF"))
+
+
+## Mouse: menus and the settings screen take hover and clicks, a left click elsewhere advances
+## dialogue or closes a document, hovering a choice selects it and clicking it picks it, a right
+## click is cancel. Handled before the GUI so the dialogue window does not swallow the click.
+func _input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton or event is InputEventMouseMotion) or reel != null:
+		return
+	input.commands(event)  # notes that the player is on keyboard and mouse
+	if settings.mouse(event):
+		get_viewport().set_input_as_handled()
+		return
+	var button := event as InputEventMouseButton
+	var pos: Vector2 = (event as InputEventMouse).position
+	if button != null and not button.pressed:
+		return
+	if button != null and button.button_index == MOUSE_BUTTON_RIGHT:
+		_command(["cancel"])
+		get_viewport().set_input_as_handled()
+		return
+	var left := button != null and button.button_index == MOUSE_BUTTON_LEFT
+	var item := ui.menu_item_at(pos)
+	if item >= 0 and (phase == Phase.TITLE or _paused):
+		if phase == Phase.TITLE:
+			_title_selected = item
+			_draw_title()
+		else:
+			_pause_selected = item
+			_draw_pause()
+		if left:
+			_command(["accept"])
+		get_viewport().set_input_as_handled()
+		return
+	var choice := ui.choice_at(pos)
+	if choice >= 0 and not _choices.is_empty():
+		if choice != _selected:
+			_selected = choice
+			ui.show_choices(_choices, _selected)
+		if left:
+			_choose(choice)
+		get_viewport().set_input_as_handled()
+		return
+	if left and (ui.credits_running() or ui.doc_open() or runner.is_running() or phase in [Phase.HUB, Phase.END]):
+		if board != null and board.visible:
+			return
+		_command(["accept"])
+		get_viewport().set_input_as_handled()
+
+
+## Hints that name keys follow the device the player used last.
+func _refresh_hints() -> void:
+	ui.next_hint = input.fill(tr("ui.dialogue.next_hint"))
+	ui.choice_hint = input.fill(tr("ui.dialogue.choice_hint" if input.device == "pad" else "ui.dialogue.choice_hint_keys"))
+	# Redraw only what is on screen now: the workroom list, the interaction prompt.
+	if phase == Phase.HUB and ui.hub_text() != "":
+		_show_hub_prompt()
+	_prompt_shown = ""
+	_show_prompt()
 
 
 # --- Story and scares ----------------------------------------------------------------------
@@ -1035,7 +1125,7 @@ func _show_prompt() -> void:
 	if _prompt_here == _prompt_shown:
 		return
 	_prompt_shown = _prompt_here
-	ui.set_prompt(tr(_prompt_here) + "  [E]" if _prompt_here != "" else "")
+	ui.set_prompt(tr(_prompt_here) + "  " + input.fill("{interact}") if _prompt_here != "" else "")
 
 
 ## Rising water ("rising_water"): while the player stays in the zone on its track (HI-FI by default)
@@ -1387,26 +1477,31 @@ func _bot_step(delta: float) -> void:
 		# Exercise the settings screen once: move, change a value and change it back, close.
 		_bot_tried_settings = true
 		settings.open()
-		for key in [KEY_DOWN, KEY_DOWN, KEY_RIGHT, KEY_LEFT, KEY_ESCAPE]:
-			settings.handle_key(key)
+		for cmd in ["menu_down", "menu_down", "menu_right", "menu_left"]:
+			settings.command(cmd)
+		# The controls screen: open it, start rebinding the first action and cancel, go back.
+		for i in settings.remap_row_index():
+			settings.command("menu_down")
+		for cmd in ["accept", "menu_down", "accept", "cancel", "cancel", "cancel"]:
+			settings.command(cmd)
 		# And the pause menu: open it, move down and up, resume.
 		_open_pause()
-		for key in [KEY_DOWN, KEY_UP, KEY_ENTER]:
-			_pause_key(key)
+		for cmd in ["menu_down", "menu_up", "accept"]:
+			_pause_cmd([cmd])
 		return
 	if _board_ready() and _bot_board_seen != _board_state():
 		# Exercise the board whenever something new is on it: every card, then the other rows.
 		_bot_tried_board = true
 		_bot_board_seen = _board_state()
 		_open_board()
-		var keys: Array = []
+		var cmds: Array = []
 		for i in board.cfg.get("cards", []).size():
-			keys.append(KEY_RIGHT)
-		keys.append(KEY_LEFT)
+			cmds.append("menu_right")
+		cmds.append("menu_left")
 		for row in 2:
-			keys += [KEY_DOWN, KEY_RIGHT, KEY_RIGHT, KEY_LEFT]
-		for key in keys + [KEY_UP, KEY_B]:
-			board.handle_key(key)
+			cmds += ["menu_down", "menu_right", "menu_right", "menu_left"]
+		for cmd in cmds + ["menu_up", "board"]:
+			board.handle([cmd])
 		return
 	if phase == Phase.HUB:
 		for action in _hub_actions_ready():

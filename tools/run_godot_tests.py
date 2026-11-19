@@ -39,8 +39,11 @@ TEST_SCRIPTS = [
     ("res://tests/godot/test_story_runtime.gd", "story runtime"),
     ("res://tests/godot/test_scare_director.gd", "scare director"),
     ("res://tests/godot/test_track_mixer.gd", "track mixer"),
+    ("res://tests/godot/test_proto_input.gd", "prototype input"),
 ]
 SCRIPT_DIRS = ("story", "scare", "tracks")
+# Single prototype scripts that have no dependencies on the rest of the prototype.
+SCRIPT_FILES = ("proto/proto_input.gd",)
 
 # Characters used by the spec example besides hongryeon (whose registry is in the spec).
 EXTRA_CHARACTERS = {
@@ -95,6 +98,9 @@ def build_project(root: Path) -> None:
            'config_version=5\n\n[application]\n\nconfig/name="story-runtime-tests"\n')
     for name in SCRIPT_DIRS:
         shutil.copytree(REPO / "scripts" / name, root / "scripts" / name)
+    for name in SCRIPT_FILES:
+        (root / "scripts" / name).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(REPO / "scripts" / name, root / "scripts" / name)
     shutil.copytree(REPO / "tests" / "godot", root / "tests" / "godot")
 
     story = root / "assets/original/story"

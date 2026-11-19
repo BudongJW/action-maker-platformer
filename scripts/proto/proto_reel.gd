@@ -27,7 +27,7 @@
 class_name ProtoReel
 extends Node
 
-const KEYS := {"LEFT": KEY_LEFT, "RIGHT": KEY_RIGHT, "UP": KEY_UP, "DOWN": KEY_DOWN, "B": KEY_B}
+const KEYS := {"LEFT": "menu_left", "RIGHT": "menu_right", "UP": "menu_up", "DOWN": "menu_down", "B": "board"}
 
 var game: ProtoGame
 var running := false
@@ -167,7 +167,7 @@ func tick(delta: float) -> void:
 					game.ui.set_hub("")  # closing the board puts the workroom prompt back
 					_next()
 				else:
-					game.board.handle_key(int(KEYS.get(String(_keys.pop_front()), KEY_RIGHT)))
+					game.board.handle([String(KEYS.get(String(_keys.pop_front()), "menu_right"))])
 					_key_left = float(_step.get("key_secs", 0.9))
 		_:
 			if _t >= secs:
