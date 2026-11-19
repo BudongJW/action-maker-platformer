@@ -6,7 +6,7 @@
 ## 0. 빠른 시작 (처음 한 번)
 
 1. 저장소를 받고 작업 브랜치로 바꿉니다(2.1절).
-2. 비공개 스토리 팩 `미방송분_스토리팩_v0.25.zip`을 저장소의 `private/`에 풉니다(2.2절).
+2. 비공개 스토리 팩 `미방송분_스토리팩_v0.26.zip`을 저장소의 `private/`에 풉니다(2.2절).
 3. Godot 4.7을 받습니다. 받은 Godot은 도구들이 알아서 찾으므로 경로를 설정할 필요가 없습니다.
 
    ```bash
@@ -35,7 +35,7 @@ Windows에서는 `python3` 대신 `py`를 씁니다(예: `py tools\get_godot.py`
 | PR | [BudongJW/action-maker-platformer#4](https://github.com/BudongJW/action-maker-platformer/pull/4) 열림. main과 충돌 없음, CI 모두 통과. **병합은 직접 요청할 때만** |
 | 스토리 런타임 | `scripts/story/` 완성, Godot 4.7 헤드리스 테스트 246개 통과 |
 | 프로토타입 | 타이틀 → 시작 경고 → 프롤로그~5장 → 마감 날 선택 → 엔딩 → 크레딧까지 한 번에 진행. 작업실마다 자동 저장, 이어하기, 일시정지 메뉴. 테이프 화면의 VHS 질감(카메라를 끄면 사라짐)과 MIX 두 화면 겹침. 비공개 팩으로 봇이 진엔딩까지 감(약 79,700프레임, 오류 0). 공개 데모 콘텐츠로 CI가 같은 기능을 검사 |
-| 비공개 스토리 팩 | v0.25 (`미방송분_스토리팩_v0.25.zip`). 원고·설계·레벨·릴·콘티·자문 자료·조사 노트 전부 |
+| 비공개 스토리 팩 | v0.26 (`미방송분_스토리팩_v0.26.zip`). 원고·설계·레벨·릴·콘티·자문 자료·조사 노트 전부 |
 | 데모 영상 | `미방송분_프로토타입_데모_v2.mp4`(9:43, 프롤로그~엔딩) 등. 비공개 자료라 저장소에 없음(9절) |
 | ACTION GAME MAKER G | 아직 연결하지 않음(8절) |
 
@@ -57,18 +57,18 @@ git checkout claude/inspiring-galileo-f9ez1u
 
 ### 2.2 비공개 스토리 팩
 
-받은 `미방송분_스토리팩_v0.25.zip`(또는 더 새 판)을 저장소의 `private/` 폴더에 풉니다. `private/`는 통째로 git에서 빠져 있고, 여기에 추적 파일이 생기면 CI(`Private story files are not tracked`)가 실패합니다.
+받은 `미방송분_스토리팩_v0.26.zip`(또는 더 새 판)을 저장소의 `private/` 폴더에 풉니다. `private/`는 통째로 git에서 빠져 있고, 여기에 추적 파일이 생기면 CI(`Private story files are not tracked`)가 실패합니다.
 
 macOS·Linux:
 
 ```bash
-unzip -o 미방송분_스토리팩_v0.25.zip -d private
+unzip -o 미방송분_스토리팩_v0.26.zip -d private
 ```
 
 Windows PowerShell:
 
 ```powershell
-Expand-Archive -Force 미방송분_스토리팩_v0.25.zip private
+Expand-Archive -Force 미방송분_스토리팩_v0.26.zip private
 ```
 
 팩이 없으면 프로토타입은 공개 데모 콘텐츠(`prototype/demo/`)로 돌아갑니다.
@@ -177,7 +177,7 @@ CI(`.github/workflows/content-license-checks.yml`)와 같은 11단계를 차례�
 
 | 파일 | 내용 |
 |---|---|
-| `미방송분_스토리팩_v0.25.zip` | 비공개 팩 전체(이것만 있으면 스토리 작업을 이어 갈 수 있음) |
+| `미방송분_스토리팩_v0.26.zip` | 비공개 팩 전체(이것만 있으면 스토리 작업을 이어 갈 수 있음) |
 | `미방송분_프로토타입_데모_v2.mp4` | 프롤로그~엔딩 데모 영상(9:43) |
 | `미방송분_5장_데모_v1.mp4`, `미방송분_엔딩_데모_v1.mp4`, `미방송분_엔딩화면_확인.mp4` | 장·엔딩별 데모 영상 |
 
