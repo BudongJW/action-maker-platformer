@@ -1,0 +1,30 @@
+{
+  "steps": [
+    {"do": "flags", "set": {"save.hifi_unlocked": true}},
+    {"do": "title", "text": "Prototype reel", "sub": "Generic demo story, not game content", "secs": 2.5},
+    {"do": "hub", "text": ""},
+    {"do": "doc", "id": "demo_notice", "secs": 2.5},
+    {"do": "dialogue", "id": "demo_intro"},
+    {"do": "tape", "at": 300, "track": "linear", "x": 160},
+    {"do": "walk", "to": 1380, "secs": 6},
+    {"do": "dialogue", "id": "demo_rules"},
+    {"do": "track", "track": "hifi"},
+    {"do": "dialogue", "id": "demo_rules"},
+    {"do": "flags", "set": {"save.mix_unlocked": true}},
+    {"do": "track", "track": "mix"},
+    {"do": "walk", "to": 1200, "secs": 2},
+    {"do": "tape", "at": 5990, "track": "hifi", "x": 1500},
+    {"do": "wait", "secs": 1.5},
+    {"do": "dialogue", "id": "demo_dark_hifi"},
+    {"do": "flags", "set": {"save.demo_lamp": true, "save.demo_answer": 1}},
+    {"do": "tape", "at": 1000, "track": "hifi", "x": 640},
+    {"do": "follow", "escort": "lamp_walk", "gap": -40, "secs": 5.5},
+    {"do": "flags", "set": {"save.demo_camera_off": true}},
+    {"do": "wait", "secs": 1},
+    {"do": "hub", "text": ""},
+    {"do": "board", "keys": ["RIGHT", "DOWN", "RIGHT", "DOWN"], "key_secs": 0.6},
+    {"do": "credits", "id": "demo_credits", "secs": 3},
+    {"do": "title", "text": "End of reel", "sub": "", "secs": 2},
+    {"do": "end"}
+  ]
+}

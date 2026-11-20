@@ -1,0 +1,725 @@
+{
+  "format": 1,
+  "size": [
+    3200,
+    900
+  ],
+  "player_start": [
+    120,
+    780
+  ],
+  "water": {
+    "y": 850,
+    "gaps": [
+      [
+        2900,
+        3200
+      ]
+    ]
+  },
+  "solids": [
+    [
+      600,
+      690,
+      200,
+      20
+    ],
+    [
+      1100,
+      640,
+      160,
+      20
+    ],
+    [
+      1700,
+      700,
+      240,
+      20
+    ],
+    [
+      2560,
+      560,
+      220,
+      20
+    ],
+    [
+      0,
+      800,
+      2900,
+      50
+    ]
+  ],
+  "hifi_only": [
+    [
+      2000,
+      620,
+      200,
+      20
+    ],
+    [
+      2250,
+      560,
+      160,
+      20
+    ],
+    [
+      2900,
+      860,
+      300,
+      20
+    ]
+  ],
+  "linear_only": [
+    [
+      1380,
+      720,
+      180,
+      20
+    ]
+  ],
+  "ladders": [
+    [
+      2600,
+      560,
+      40,
+      240
+    ]
+  ],
+  "npcs": [
+    {
+      "x": 1500,
+      "y": 800,
+      "label": "keeper",
+      "sprite": "keeper"
+    }
+  ],
+  "labels": [
+    [
+      40,
+      640,
+      "A"
+    ],
+    [
+      1450,
+      600,
+      "B"
+    ],
+    [
+      2550,
+      500,
+      "C"
+    ]
+  ],
+  "tape": {
+    "length": 7200,
+    "time_scale": 10,
+    "segments": [
+      [
+        3492,
+        3820
+      ],
+      [
+        4745,
+        5512
+      ]
+    ],
+    "events": [
+      {
+        "at": 6000,
+        "name": "power_cut",
+        "flag": "loop.power_cut"
+      }
+    ],
+    "slow": [
+      {
+        "requires": [
+          "loop.demo_slip",
+          "!loop.demo_free"
+        ],
+        "scale": 0.5
+      }
+    ]
+  },
+  "darkness_event": "power_cut",
+  "darkness_alpha": 0.55,
+  "tracks": {
+    "hifi_flag": "save.hifi_unlocked",
+    "mix_flag": "save.mix_unlocked",
+    "locks": [
+      {
+        "requires": [
+          "loop.demo_slip",
+          "!loop.demo_free"
+        ],
+        "allow": [
+          "linear",
+          "mix"
+        ]
+      }
+    ]
+  },
+  "sound_captions": {
+    "sfx:rec_on": "[click - the camera]",
+    "scare:demo_jump": "[thud - close by]",
+    "scare:demo_dark": "[click - the lights go]",
+    "scare:demo_caught": "[splash - right behind]",
+    "scare:demo_phone": "[ring - the phone]"
+  },
+  "voices": {
+    "crowd": {"label": "Shore", "side": "left"}
+  },
+  "journal": {
+    "tabs": [
+      {"label": "ui.journal.tab_all"},
+      {"label": "ui.journal.tab_memo", "categories": ["system"]}
+    ]
+  },
+  "hub": {
+    "start": [
+      "demo_intro"
+    ],
+    "between": [
+      "demo_call",
+      {
+        "doc": "demo_notice",
+        "requires": [
+          "save.hifi_unlocked"
+        ]
+      },
+      "demo_close"
+    ],
+    "scares": {
+      "demo_call": "demo_phone"
+    },
+    "on_play": [],
+    "start_docs": [
+      "demo_notice"
+    ],
+    "actions": [
+      {
+        "key": "N",
+        "dialogue": "demo_notes",
+        "requires": [
+          "save.hifi_unlocked"
+        ],
+        "prompt": "ui.hub.notes",
+        "bot": true
+      }
+    ]
+  },
+  "board": {
+    "requires": [
+      "save.hifi_unlocked"
+    ],
+    "art": {
+      "sheet": "assets/original/mibangsong/art/fx/mbs_ui_board.png",
+      "frame": "board"
+    },
+    "cards": [
+      {
+        "flag": "save.ev_lipsync",
+        "doc": "demo_card_rec",
+        "tc": 4745
+      },
+      {
+        "flag": "save.demo_lamp",
+        "doc": "demo_card_lamp"
+      },
+      {
+        "flag": "save.demo_done",
+        "doc": "demo_card_end",
+        "tc": 6000
+      }
+    ],
+    "knots": {
+      "requires": [
+        "save.hifi_unlocked"
+      ],
+      "slots": [
+        {
+          "flag": "save.demo_lamp",
+          "doc": "demo_knot_1"
+        },
+        {
+          "flag": "save.ev_lipsync",
+          "doc": "demo_knot_2"
+        }
+      ]
+    },
+    "conclusions": {
+      "requires": [
+        "save.hifi_unlocked"
+      ],
+      "slots": [
+        {
+          "flag": "save.demo_answer",
+          "docs": [
+            "demo_answer_1"
+          ]
+        }
+      ]
+    }
+  },
+  "triggers": [
+    {
+      "id": "crowd",
+      "rect": [
+        300,
+        700,
+        300,
+        100
+      ],
+      "bark": "demo_crowd"
+    },
+    {
+      "id": "creak",
+      "rect": [
+        800,
+        700,
+        120,
+        100
+      ],
+      "loop": 1,
+      "scare": "demo_creak"
+    },
+    {
+      "id": "keeper",
+      "rect": [
+        1440,
+        700,
+        140,
+        100
+      ],
+      "dialogue": [
+        "demo_keeper"
+      ]
+    },
+    {
+      "id": "rules",
+      "rect": [
+        1300,
+        700,
+        500,
+        100
+      ],
+      "from": 3400,
+      "to": 3900,
+      "dialogue": [
+        "demo_rules"
+      ]
+    },
+    {
+      "id": "rec_lip",
+      "rect": [
+        1300,
+        700,
+        500,
+        100
+      ],
+      "from": 4745,
+      "to": 5512,
+      "track": "linear",
+      "rec_flag": "save.ev_lipsync"
+    },
+    {
+      "id": "call",
+      "rect": [
+        0,
+        0,
+        3200,
+        900
+      ],
+      "from": 5500,
+      "to": 5990,
+      "dialogue": [
+        "demo_call_linear"
+      ]
+    },
+    {
+      "id": "dark",
+      "after_event": "power_cut",
+      "dialogue": [
+        "demo_dark_hifi",
+        "demo_dark_linear"
+      ]
+    },
+    {
+      "id": "lamp_switch",
+      "rect": [
+        360,
+        700,
+        100,
+        100
+      ],
+      "requires": [
+        "!loop.lamp_on"
+      ],
+      "interact": true,
+      "prompt": "ui.prompt.examine",
+      "set_flag": "loop.lamp_on"
+    },
+    {
+      "id": "shortcut",
+      "rect": [
+        2000,
+        700,
+        60,
+        100
+      ],
+      "interact": true,
+      "prompt": "ui.prompt.open",
+      "warp": [
+        2120,
+        780
+      ]
+    },
+    {
+      "id": "demo_slip",
+      "from": 3000,
+      "to": 3100,
+      "requires": [
+        "save.hifi_unlocked"
+      ],
+      "set_track": "linear",
+      "set_flag": "loop.demo_slip"
+    },
+    {
+      "id": "demo_unslip",
+      "from": 3300,
+      "requires": [
+        "loop.demo_slip"
+      ],
+      "set_track": "hifi",
+      "set_flag": "loop.demo_free"
+    },
+    {
+      "id": "rewind",
+      "requires": [
+        "save.demo_done"
+      ],
+      "end_loop": true
+    }
+  ],
+  "chaser": {
+    "start_after": [
+      "demo_jump",
+      "demo_dark"
+    ],
+    "catch_scare": "demo_caught",
+    "speed": 160,
+    "offset": -360
+  },
+  "end_flag": "save.demo_closed",
+  "report_flags": [
+    "sys.loop_count",
+    "save.hifi_unlocked",
+    "save.ev_lipsync",
+    "save.demo_done",
+    "save.demo_lamp",
+    "save.demo_labelled",
+    "save.demo_ending",
+    "save.demo_closed",
+    "save.demo_walked"
+  ],
+  "bot_route": [
+    {
+      "from": 3400,
+      "to": 3900,
+      "x": 1550
+    },
+    {
+      "from": 4745,
+      "to": 6600,
+      "x": 1550
+    }
+  ],
+  "art": {
+    "zoom": 3,
+    "camera_offset_y": -30,
+    "vhs": {"off_flag": "save.demo_camera_off", "noise": 0.05},
+    "base_palette": "assets/original/art/palette/night-school.pal",
+    "palettes": {
+      "linear": "assets/original/art/palette/otherworld.pal",
+      "hifi": "assets/original/art/palette/dawn.pal"
+    },
+    "backdrop": {
+      "texture": "assets/original/art/backgrounds/bg_far.png",
+      "parallax": 0.15
+    },
+    "tiles": {
+      "sheet": "assets/original/art/tiles/tiles_exterior.png",
+      "solid": [
+        "ground_top",
+        "ground_fill"
+      ],
+      "hifi_only": [
+        "ground_top",
+        "ground_fill"
+      ],
+      "linear_only": [
+        "ground_top",
+        "ground_fill"
+      ]
+    },
+    "props": [
+      {
+        "block": "streetlamp",
+        "w": 1,
+        "h": 3,
+        "at": [
+          400,
+          800
+        ],
+        "flag": "loop.lamp_on"
+      },
+      {
+        "block": "fence",
+        "w": 1,
+        "h": 2,
+        "at": [
+          960,
+          800
+        ]
+      },
+      {
+        "block": "fence",
+        "w": 1,
+        "h": 2,
+        "at": [
+          440,
+          800
+        ],
+        "unless_flag": "loop.lamp_on"
+      }
+    ],
+    "player": {
+      "sheet": "assets/original/art/characters/protagonist_side.png",
+      "fps": 8,
+      "anims": {
+        "idle": [
+          "idle_0",
+          "idle_1"
+        ],
+        "walk": [
+          "walk_0",
+          "walk_1",
+          "walk_2",
+          "walk_3"
+        ],
+        "jump": [
+          "jump"
+        ],
+        "caught": [
+          "hurt"
+        ]
+      }
+    },
+    "npcs": {
+      "keeper": {
+        "sheet": "assets/original/art/characters/npc_onlookers.png",
+        "anims": {
+          "idle": [
+            "a_standing"
+          ]
+        }
+      }
+    },
+    "chaser": {
+      "sheet": "assets/original/art/characters/enemy_shadow_visitor.png",
+      "fps": 6,
+      "anims": {
+        "idle": [
+          "chase_0",
+          "chase_1"
+        ],
+        "lunge": [
+          "grab"
+        ]
+      }
+    },
+    "scares": {
+      "demo_jump": {
+        "sheet": "assets/original/art/fx/fx_static.png",
+        "frame": "static_0",
+        "anchor": "center"
+      },
+      "demo_dark": {
+        "sheet": "assets/original/art/characters/enemy_sobok_gwisin.png",
+        "frame": "reveal",
+        "anchor": "right"
+      },
+      "demo_caught": {
+        "sheet": "assets/original/art/fx/fx_static.png",
+        "frame": "static_1",
+        "anchor": "center"
+      }
+    },
+    "ui": {
+      "sheet": "assets/original/mibangsong/art/ui/mbs_ui_panels.png",
+      "scale": 3,
+      "window": {
+        "frame": "window",
+        "margin": 8,
+        "padding": 2
+      },
+      "nametag": {
+        "frame": "nametag",
+        "margin": 4,
+        "padding": 2
+      },
+      "choice": {
+        "frame": "choice_on",
+        "margin": 2,
+        "padding": 0
+      },
+      "cursor": "cursor",
+      "paper": {
+        "frame": "paper",
+        "margin": 8,
+        "padding": 12
+      }
+    },
+    "cuts": {
+      "demo_intro": {
+        "texture": "assets/original/art/backgrounds/bg_harbor.png",
+        "when": [
+          {
+            "from_line": "demo_i_004",
+            "texture": "assets/original/art/backgrounds/bg_sea.png"
+          }
+        ]
+      },
+      "demo_close": {
+        "texture": "assets/original/art/fx/fx_static.png",
+        "frames": [
+          "static_0",
+          "static_1"
+        ],
+        "fps": 4,
+        "when": [
+          {
+            "from_line": "demo_cl_004",
+            "texture": "assets/original/art/backgrounds/bg_harbor.png",
+            "text": {
+              "rect": [
+                20,
+                20,
+                180,
+                24
+              ],
+              "size": 10,
+              "color": "f0f0e8",
+              "fill": "202028"
+            }
+          },
+          {
+            "from_line": "demo_cl_005",
+            "none": true
+          }
+        ]
+      }
+    }
+  },
+  "audio": {
+    "ambience": {
+      "linear": "assets/original/audio/ambience/wind_loop.wav",
+      "hifi": "assets/original/audio/ambience/rain_loop.wav",
+      "hub": "assets/original/audio/ambience/corridor_loop.wav"
+    },
+    "ambience_db": -6,
+    "stingers": {
+      "demo_jump": "assets/original/audio/sfx/jumpscare.wav",
+      "demo_dark": "assets/original/audio/sfx/ghost_appear.wav",
+      "demo_caught": "assets/original/audio/sfx/death_sting.wav",
+      "demo_phone": "assets/original/audio/sfx/switch_click.wav"
+    },
+    "sfx": {
+      "step": {
+        "file": [
+          "assets/original/audio/sfx/footstep_wood_a.wav",
+          "assets/original/audio/sfx/footstep_wood_b.wav",
+          "assets/original/audio/sfx/footstep_wood_c.wav"
+        ],
+        "db": -12
+      },
+      "rec_on": {
+        "file": "assets/original/audio/sfx/flashlight_click.wav",
+        "db": -12
+      },
+      "rec_off": {
+        "file": "assets/original/audio/sfx/flashlight_click.wav",
+        "db": -12
+      }
+    }
+  },
+  "rising_water": [
+    {
+      "x0": 2900,
+      "x1": 3200,
+      "track": "hifi",
+      "base_y": 880,
+      "linear_y": 850,
+      "rate": 30,
+      "max_rise": 120,
+      "submerge": 24,
+      "respawn": [
+        2860,
+        790
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "all": [
+        "loop.lamp_on"
+      ],
+      "set": "save.demo_lamp"
+    }
+  ],
+  "bot_patrol": [
+    80,
+    3150
+  ],
+  "escorts": [
+    {
+      "id": "lamp_walk",
+      "requires": [
+        "save.demo_lamp"
+      ],
+      "path": [
+        [
+          700,
+          797
+        ],
+        [
+          1000,
+          797
+        ]
+      ],
+      "speed": 60,
+      "max_gap": 2000,
+      "ribbon": {
+        "color": "d8d8d0",
+        "width": 4
+      },
+      "done_flag": "save.demo_walked"
+    }
+  ],
+  "end_docs": [
+    {
+      "doc": "demo_end"
+    }
+  ],
+  "bot_prefer": [
+    "demo_cl_003",
+    "demo_i_003"
+  ],
+  "credits": {
+    "doc": "demo_credits",
+    "secs": 4
+  },
+  "title": {
+    "text": "Prototype demo",
+    "sub": "Generic placeholder content, not the game's story"
+  }
+}

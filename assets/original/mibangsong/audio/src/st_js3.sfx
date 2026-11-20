@@ -1,0 +1,8 @@
+# ST-JS3: caught. A noise burst with a tracking whine. Rise 2 ms, body 500 ms.
+# The director lowers its level on every repeat.
+@output ../stingers/st_js3_caught.wav
+@length 0.9
+@seed 54
+layer noise amp=0.7 attack=0.002 dur=0.5 lp=7000 hp=150 decay=0.3
+layer saw freq=60 amp=0.4 attack=0.002 dur=0.5 lp=500 decay=0.25
+layer sine freq=2200 freq_end=900 amp=0.15 attack=0.002 dur=0.4 trem=40 trem_depth=0.8

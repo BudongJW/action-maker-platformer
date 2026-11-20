@@ -109,6 +109,10 @@ class SpecExampleTest(unittest.TestCase):
         for key in ("format", "source_locale", "locales"):
             self.assertEqual(story[key], self.expected[key])
 
+    def test_csv_folder_hidden_from_godot(self):
+        self.p.run()
+        self.assertTrue((self.p.story / "l10n/.gdignore").is_file())
+
     def test_strings_match_spec(self):
         self.p.run()
         expected = json.loads(spec_block("### 10.2", "json"))

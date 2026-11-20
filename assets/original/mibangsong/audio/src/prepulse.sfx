@@ -1,0 +1,6 @@
+# Soft-mode prepulse: a short soft tick played about 90 ms before a stinger (weakens the startle).
+@output ../sfx/prepulse.wav
+@length 0.05
+@seed 57
+@peak -6
+layer noise amp=0.5 attack=0.002 dur=0.03 hp=1000 lp=6000 decay=0.01

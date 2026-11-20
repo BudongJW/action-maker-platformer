@@ -18,6 +18,8 @@ the row.
 | `mibangsong/art/**/*.png`, `mibangsong/overview/*.png` | `tools/pixelart.py` (deterministic renderer, no AI) from the sources above; three cut composites and the overview sheets are assembled from those renders by a script | 2026-11-17 | Rendered output of AI-written sources |
 | `audio/src/*.sfx` | Anthropic Claude (Claude Code) | 2026-11-17 | The AI wrote the synthesis recipes (oscillators, noise, envelopes, filters); the music recipes were generated from note lists the AI composed |
 | `audio/sfx/*.wav`, `audio/ambience/*.wav`, `audio/music/*.wav` | `tools/sfxsynth.py` (deterministic synthesizer, no AI) from the recipes above | 2026-11-17 | Rendered output of AI-written recipes; nobody has listened to them yet |
+| `mibangsong/audio/src/*.sfx`, `mibangsong/audio/README.md` | Anthropic Claude (Claude Code) | 2026-11-17 | 《미방송분》 chapter 1 placeholder sounds (ambience, generator, a temporary janggu cycle, stingers, camera and deck sounds): the AI wrote the synthesis recipes and the notes |
+| `mibangsong/audio/**/*.wav` | `tools/sfxsynth.py` (deterministic synthesizer, no AI) from the recipes above | 2026-11-17 | Rendered output of AI-written recipes; nobody has listened to them yet |
 
 What was **not** involved:
 

@@ -1,0 +1,36 @@
+# GUT-01 (TEMPORARY): a janggu cycle in a 12/8 gutgeori-like feel, dotted quarter = 70.
+# Placeholder only: the jangdan is decided after the shamanism consultation, and the final
+# take is a live recording. Seamless 3.43 s loop (12 eighths).
+@output ../gut/janggu_loop_temp.wav
+@length 3.428
+@rate 22050
+@seed 46
+@peak -10
+@loop 0.02
+# 덩 (both hands)
+layer sine freq=95 freq_end=58 amp=0.9 at=0 attack=0.003 decay=0.22 dur=0.6
+layer noise amp=0.5 at=0.000 attack=0.001 decay=0.035 dur=0.12 hp=2000 lp=7000
+layer triangle freq=430 amp=0.23 at=0.000 attack=0.001 decay=0.025 dur=0.1
+# 덕
+layer noise amp=0.55 at=0.571 attack=0.001 decay=0.035 dur=0.12 hp=2000 lp=7000
+layer triangle freq=430 amp=0.25 at=0.571 attack=0.001 decay=0.025 dur=0.1
+# 쿵
+layer sine freq=85 freq_end=55 amp=0.8 at=0.857 attack=0.003 decay=0.25 dur=0.6
+# 기덕
+layer noise amp=0.22 at=1.359 attack=0.001 decay=0.02 dur=0.06 hp=2200 lp=7000
+layer noise amp=0.55 at=1.429 attack=0.001 decay=0.035 dur=0.12 hp=2000 lp=7000
+layer triangle freq=430 amp=0.25 at=1.429 attack=0.001 decay=0.025 dur=0.1
+# 쿵
+layer sine freq=85 freq_end=55 amp=0.8 at=1.714 attack=0.003 decay=0.25 dur=0.6
+# 덕
+layer noise amp=0.55 at=2.286 attack=0.001 decay=0.035 dur=0.12 hp=2000 lp=7000
+layer triangle freq=430 amp=0.25 at=2.286 attack=0.001 decay=0.025 dur=0.1
+# 쿵
+layer sine freq=85 freq_end=55 amp=0.8 at=2.571 attack=0.003 decay=0.25 dur=0.6
+# 덕
+layer noise amp=0.55 at=2.857 attack=0.001 decay=0.035 dur=0.12 hp=2000 lp=7000
+layer triangle freq=430 amp=0.25 at=2.857 attack=0.001 decay=0.025 dur=0.1
+# 기덕
+layer noise amp=0.22 at=3.073 attack=0.001 decay=0.02 dur=0.06 hp=2200 lp=7000
+layer noise amp=0.55 at=3.143 attack=0.001 decay=0.035 dur=0.12 hp=2000 lp=7000
+layer triangle freq=430 amp=0.25 at=3.143 attack=0.001 decay=0.025 dur=0.1

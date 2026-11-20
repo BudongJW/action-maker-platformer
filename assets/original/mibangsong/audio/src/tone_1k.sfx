@@ -1,0 +1,6 @@
+# SFX-05: 1 kHz reference tone under the colour bars at the head of the tape.
+@output ../sfx/tone_1k.wav
+@length 1.0
+@seed 64
+@peak -12
+layer sine freq=1000 amp=0.5 attack=0.005 fade=0.01

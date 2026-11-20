@@ -1,0 +1,8 @@
+# SFX-04: rewinding to the start (a rising whine that clunks to a stop).
+@output ../sfx/deck_rewind.wav
+@length 2.2
+@seed 63
+@peak -8
+layer saw freq=500 freq_end=1600 amp=0.2 dur=2.0 lp=3000 attack=0.2 fade=0.1
+layer noise amp=0.1 dur=2.0 hp=2000 lp=6000 attack=0.2 fade=0.1
+layer noise amp=0.6 at=2.0 attack=0.001 dur=0.08 lp=2500 hp=200 decay=0.025

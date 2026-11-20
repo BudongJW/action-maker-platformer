@@ -1,0 +1,7 @@
+{
+  "id": "guide",
+  "name": "Guide",
+  "expressions": ["neutral"],
+  "default_expression": "neutral",
+  "style": "window"
+}

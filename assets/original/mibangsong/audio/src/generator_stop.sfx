@@ -1,0 +1,11 @@
+# AMB-04: the generator cutting out at 01:40. A clack, then the engine spins down to nothing.
+# What follows is silence (at least 1 s before the next scare); the next sound is the scare.
+@output ../ambience/generator_stop.wav
+@length 1.6
+@rate 22050
+@seed 45
+@peak -14
+layer noise amp=0.3 lp=3000 hp=500 dur=0.06 decay=0.03
+layer saw freq=30 freq_end=5 amp=0.5 lp=220 lp_end=60 fade=1.2
+layer square freq=60 freq_end=10 amp=0.2 lp=400 lp_end=80 fade=1.0
+layer noise amp=0.25 lp=1400 lp_end=200 hp=150 trem=30 trem_depth=0.8 dur=0.9 fade=0.6

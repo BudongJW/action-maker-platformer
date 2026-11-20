@@ -27,6 +27,24 @@ jobs:
       - name: Check GDScript files for Korean string literals
         run: python3 tools/check_dialogue_in_code.py
 
+  private-story:
+    name: Private story files are not tracked
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # The private story pack (plot, dialogue, characters, level and scare configs) lives in
+      # private/ on the developer's machine. assets/original/story/ is a public placeholder.
+      - name: Fail if anything under private/ is tracked
+        run: |
+          tracked="$(git ls-files private)"
+          if [ -n "$tracked" ]; then
+            echo "These files are private story content and must not be committed:"
+            echo "$tracked"
+            exit 1
+          fi
+          echo "OK: no private story files tracked."
+
   story-scripts:
     name: Story scripts compile and are up to date
     runs-on: ubuntu-latest
@@ -35,6 +53,35 @@ jobs:
 
       - name: Lint .dlg scripts and verify compiled output
         run: python3 tools/storyc.py --check
+
+  story-runtime:
+    name: Story runtime tests (Godot headless)
+    runs-on: ubuntu-latest
+    env:
+      # ACTION GAME MAKER G is built on Godot 4.7.0.
+      GODOT_VERSION: 4.7-stable
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download and verify Godot
+        run: |
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          zip="Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          mkdir -p "$RUNNER_TEMP/godot" && cd "$RUNNER_TEMP/godot"
+          curl -fsSL -o "$zip" "$base/$zip"
+          curl -fsSL -o SHA512-SUMS.txt "$base/SHA512-SUMS.txt"
+          grep " ${zip}\$" SHA512-SUMS.txt | sha512sum -c -
+          unzip -q "$zip"
+          echo "GODOT_BIN=$RUNNER_TEMP/godot/Godot_v${GODOT_VERSION}_linux.x86_64" >> "$GITHUB_ENV"
+
+      - name: Run GDScript runtime tests
+        run: python3 tools/run_godot_tests.py --require-godot
+
+      - name: Prototype bot playthrough (generic demo content)
+        run: python3 tools/build_prototype.py --story demo --smoke --require-godot
+
+      - name: Prototype reel plays through (generic demo content)
+        run: python3 tools/build_prototype.py --story demo --reel prototype/demo/reel.json --require-godot
 
   pixel-art:
     name: Pixel art PNGs match their text sources
@@ -47,3 +94,15 @@ jobs:
 
       - name: Render assets/original/mibangsong/art/src and compare
         run: python3 tools/pixelart.py --check --root assets/original/mibangsong/art/src
+
+  sound:
+    name: Sound files match their recipes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Render assets/original/audio/src and compare
+        run: python3 tools/sfxsynth.py --check
+
+      - name: Render assets/original/mibangsong/audio/src and compare
+        run: python3 tools/sfxsynth.py --check --root assets/original/mibangsong/audio/src

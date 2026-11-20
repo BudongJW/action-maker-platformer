@@ -33,6 +33,7 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 ```
 .
 ├── .claude/skills/          # Claude Code slash commands for pixel art (/pixel-sprite, /pixel-scene, /pixel-review, ...), Korean
+├── CLAUDE.md                # Rules and pointers for Claude Code sessions, Korean
 ├── LICENSE                  # GPL-3.0 full text (code only)
 ├── LICENSE-EXCEPTION.md     # GPL-3.0 section 7 additional permission (ACTION GAME MAKER G runtime)
 ├── CREDITS.md               # Source for in-game credits (required notices + third-party assets/add-ons)
@@ -43,13 +44,25 @@ If `assets_private/` is empty, scenes that reference those assets will show miss
 │   └── third_party/         # Redistributable third-party assets (one folder per source + LICENSE); 25 CC0 reference packs, indexed in its README
 ├── assets_private/          # Non-redistributable assets (git-ignored; only its README is tracked)
 ├── docs/
+│   ├── handoff.md           # Where the work stands and how to continue it locally (setup, commands, rules, next steps), Korean
 │   ├── script-format.md     # Character script format spec (.dlg), Korean
 │   ├── design-references.md # Art references: RPG Maker graphic specs, horror visual references, palettes, Korean
 │   ├── pixel-technique.md   # Pixel technique notes: hands, faces, hair, outlines, Korean
 │   ├── claude-pixel/        # How people get Claude/LLMs to make pixel art, collected prompts, prompt templates for this repo, Korean
-│   └── resource-needs.md    # What the game still needs (art, audio, text, engine), by priority, Korean
-├── shaders/                 # Godot shaders (GPL-3.0), e.g. the other-world palette swap
-├── tools/                   # Repository checks and helpers (GPL-3.0)
+│   ├── resource-needs.md    # What the game still needs (art, audio, text, engine), by priority, Korean
+│   └── scare-director.md    # Scare director, track mixer and scare lint (Korean)
+├── scripts/
+│   ├── story/               # GDScript story runtime (GPL-3.0)
+│   ├── scare/               # Jump-scare scheduling (GPL-3.0)
+│   ├── tracks/              # HI-FI / LINEAR track mixer and tape clock (GPL-3.0)
+│   └── proto/               # Vertical-slice prototype (GPL-3.0)
+├── shaders/                 # Godot shaders (GPL-3.0): palette swap, VHS texture, two-track MIX
+├── prototype/
+│   └── demo/                # Generic demo content used when the private story pack is absent
+├── private/                 # Private story pack, git-ignored (see "Story content stays out of this repository")
+├── tests/
+│   └── godot/               # GDScript runtime tests and fixtures
+├── tools/                   # Compiler, pixel-art and sound renderers, repository checks, test runners; check_all.py (every CI check), get_godot.py (fetch Godot 4.7), pack_private.py (zip the private pack) (GPL-3.0)
 ├── reports/                 # Research reports (Korean)
 └── research_notes/          # Research notes (Korean)
 ```
@@ -121,7 +134,50 @@ python3 tools/storyc.py --fix      # first add missing #line: IDs to the .dlg fi
 python3 tools/storyc.py --check    # lint and verify outputs are up to date (what CI runs)
 ```
 
-Commit the `.dlg` changes together with the updated `compiled/` and `strings.csv`; CI fails if they are out of sync. Until `assets/original/story/project.json` exists, the compiler has nothing to do and exits successfully.
+Until `assets/original/story/project.json` exists, the compiler has nothing to do and exits successfully.
+
+### Story content stays out of this repository
+
+The game's story text (plot, dialogue, character notes, endings) and its level and scare configs are kept **out of this public repository**. Keep the private story pack in `private/` (git-ignored) on your machine and back it up separately; it has the same layout as the repository (`private/assets/original/story/`, `private/assets/original/characters/`). Compile it with:
+
+```bash
+python3 tools/storyc.py --root private
+```
+
+`assets/original/story/` and `assets/original/characters/` in the repository hold a public placeholder project; do not unpack the private pack there. CI fails if any file under `private/` is tracked.
+
+The design pack in [`assets/original/mibangsong/`](assets/original/mibangsong/README.md) (sprites, tiles, palettes, storyboard cuts) is public by the project owner's decision and contains spoilers; the storyboard text, story bible and scripts are not in it.
+
+## Story runtime
+
+[`scripts/story/`](scripts/story/) loads the compiled story and runs it in the game: dialogues with choices and branches, barks, documents, subtitle cues, the loop/save/meta flag tiers, locale fallback, and in-game fallbacks for meta effects the player has not consented to. `StoryRunner` is meant to be an autoload; the game UI listens to its signals (`line_started`, `choices_presented`, `command`, ...) and calls `advance()` / `choose()`. The API is described in section 11 of [`docs/script-format.md`](docs/script-format.md).
+
+The runtime is tested in headless Godot 4.7 (the engine version ACTION GAME MAKER G uses), but **not yet inside ACTION GAME MAKER G itself**. To run the tests locally:
+
+```bash
+GODOT_BIN=/path/to/Godot_v4.7-stable_linux.x86_64 python3 tools/run_godot_tests.py
+```
+
+The runner builds a temporary Godot project from `scripts/`, `tests/godot/` and the examples in the spec, compiles it with `storyc`, and runs the story runtime, scare director and track mixer tests. Without Godot it skips; CI downloads Godot, verifies its checksum and runs it.
+
+## Scare director and track mixer
+
+- [`scripts/scare/scare_director.gd`](scripts/scare/scare_director.gd) (`ScareDirector`) schedules jump scares with timing rules taken from startle research: delays drawn from a truncated exponential distribution (so waiting does not make a scare predictable), a 0.5 s quiet window before each onset (a sound 30-500 ms before a startle stimulus weakens it), ambience ducking, repeat attenuation, a relax period, and Soft / Off / photosafe settings. The story script triggers a scare with `do emit scare_<id>`.
+- [`scripts/tracks/track_mixer.gd`](scripts/tracks/track_mixer.gd) (`TrackMixer`) switches between the HI-FI and LINEAR recordings of the same night (and MIX), crossfades their audio buses, shows or hides track-only nodes, runs the tape clock, and reports dubbed segments and timeline events.
+- [`tools/scare_lint.py`](tools/scare_lint.py) checks a scare config against those rules (loudness headroom, rise time, flash area, spacing) and estimates each scare's relative strength.
+
+Rules, numbers and sources are in [`docs/scare-director.md`](docs/scare-director.md) (Korean). `tools/run_godot_tests.py` runs their headless tests together with the story runtime tests.
+
+## Prototype
+
+A vertical slice wires the story runtime, scare director and track mixer to a playable level, so the loop, the two tracks and the scares can be played and playtested before the ACTION GAME MAKER G version exists. It is built in plain Godot 4.7. A level's optional `art` block draws it with the pixel art in `assets/original/` (sprites, tiles, backdrop, per-track palettes through `shaders/palette_swap.gdshader`, the camera viewfinder, scare frames), and an optional `audio` block plays the sounds there (per-track ambience crossfaded by the track mixer, timed loops, stingers, footsteps that fall silent before a scare); without them it is a graybox with generated noise. ACTION GAME MAKER G's own player and level tools are expected to replace the player and level code, while the runtime modules carry over.
+
+```bash
+python3 tools/build_prototype.py --run      # build into build/prototype/ and open the game window
+python3 tools/build_prototype.py --smoke    # headless bot playthrough
+```
+
+It uses the private story pack when `private/assets/original/story/` contains `proto_level.json` and `scares.json`, and the generic demo in [`prototype/demo/`](prototype/demo/) otherwise. CI runs the bot on the demo. Keys and the level format are described in [`prototype/README.md`](prototype/README.md).
 
 ## Contributing
 

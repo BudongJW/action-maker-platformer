@@ -1,0 +1,9 @@
+# SFX-04: the S-VHS deck: play button clunk, then the motor and heads come up to speed.
+@output ../sfx/deck_play.wav
+@length 1.2
+@seed 62
+@peak -6
+layer noise amp=0.6 attack=0.001 dur=0.05 lp=2500 hp=200 decay=0.02
+layer brown amp=0.5 attack=0.002 dur=0.12 lp=400 decay=0.05
+layer sine freq=30 freq_end=60 amp=0.3 at=0.1 dur=1.1 attack=0.3 fade=0.2
+layer sine freq=1800 freq_end=2400 amp=0.04 at=0.15 dur=1.0 attack=0.4 fade=0.2

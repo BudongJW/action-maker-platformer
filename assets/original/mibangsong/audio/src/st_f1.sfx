@@ -1,0 +1,7 @@
+# ST-F1 (false scare): a dog behind the wall barks twice. Rise 5 ms, body 300 ms.
+@output ../stingers/st_f1_dog.wav
+@length 0.9
+@seed 51
+layer saw freq=560 freq_end=320 amp=0.6 attack=0.005 dur=0.13 lp=2200 decay=0.08 repeat=2 every=0.22 jitter=0.15
+layer square freq=280 freq_end=170 amp=0.25 attack=0.005 dur=0.12 lp=1200 decay=0.07 repeat=2 every=0.22 jitter=0.15
+layer noise amp=0.4 attack=0.005 dur=0.12 hp=700 lp=3500 decay=0.05 repeat=2 every=0.22 jitter=0.15

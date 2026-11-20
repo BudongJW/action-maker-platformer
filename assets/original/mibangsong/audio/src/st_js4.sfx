@@ -1,0 +1,10 @@
+# ST-JS4: the deck chews the tape. Motor squeal with a short reversed swell at its end. Rise 3 ms, body 700 ms.
+@output ../stingers/st_js4_tape_chew.wav
+@length 1.3
+@seed 56
+layer noise amp=0.9 attack=0.001 dur=0.04 decay=0.015 hp=300
+layer saw freq=1700 freq_end=2600 amp=0.35 attack=0.003 dur=0.7 lp=4500 trem=17 trem_depth=0.4 fade=0.1 decay=0.5
+layer sine freq=3100 freq_end=3500 amp=0.2 attack=0.003 dur=0.7 fade=0.1
+layer noise amp=0.3 attack=0.003 dur=0.7 hp=1200 lp=6000 decay=0.4
+layer saw freq=90 amp=0.3 attack=0.003 dur=0.7 lp=400 trem=11 trem_depth=0.7
+layer noise amp=0.3 at=0.42 dur=0.28 attack=0.27 lp=3000 hp=300

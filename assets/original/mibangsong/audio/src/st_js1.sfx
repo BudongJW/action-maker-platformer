@@ -1,0 +1,12 @@
+# ST-JS1: an automated-voice chime that starts and is dragged down like stretched tape.
+# Rise 2 ms, body 600 ms. Nothing may sound in the 30-500 ms before it.
+@output ../stingers/st_js1_first_answer.wav
+@length 1.2
+@seed 52
+@echo 0.09 0.3 0.2
+layer noise amp=0.9 attack=0.001 dur=0.04 decay=0.015 hp=300
+layer sine freq=1318 amp=0.6 attack=0.002 dur=0.12 fade=0.01
+layer noise amp=0.45 attack=0.002 dur=0.6 hp=400 lp=5000 decay=0.15
+layer saw freq=82 amp=0.3 attack=0.002 dur=0.6 lp=300 decay=0.35
+layer sine freq=988 freq_end=330 amp=0.3 at=0.12 dur=0.5 trem=9 trem_depth=0.6 fade=0.2
+layer square freq=494 freq_end=165 amp=0.12 at=0.12 dur=0.5 lp=1500 trem=9 trem_depth=0.6 fade=0.2

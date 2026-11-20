@@ -1,0 +1,8 @@
+# SFX-01: footstep on packed dirt and gravel by the shore (variant a).
+@output ../sfx/step_dirt_a.wav
+@length 0.16
+@seed 60
+@peak -6
+layer noise amp=0.5 attack=0.002 dur=0.12 lp=900 hp=120 decay=0.04
+layer brown amp=0.6 attack=0.003 dur=0.12 lp=300 decay=0.05
+layer noise amp=0.12 at=0.02 attack=0.001 dur=0.06 hp=2500 lp=7000 decay=0.015

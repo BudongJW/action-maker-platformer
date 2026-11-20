@@ -1,0 +1,7 @@
+{
+  "id": "voice",
+  "name": "Voice",
+  "expressions": ["neutral"],
+  "default_expression": "neutral",
+  "style": "caption"
+}
