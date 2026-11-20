@@ -277,6 +277,7 @@ func _ready() -> void:
 	settings.screen = screen
 	settings.apply_all()
 
+	audio.sound_started.connect(_sound_caption)
 	runner.dialogue_started.connect(_on_dialogue_started)
 	runner.line_started.connect(_on_line)
 	runner.choices_presented.connect(_on_choices)
@@ -1119,6 +1120,7 @@ func _on_scare_onset(id: String, info: Dictionary) -> void:
 	_log("scare " + id)
 	_stats["scares"] += 1
 	fx.onset(id, info)
+	_sound_caption("scare:" + id)  # in the same frame as the stinger
 	var cue: String = String(info.get("cue", ""))
 	if cue != "":
 		_play_cue(cue)
@@ -1145,6 +1147,7 @@ func _on_scare_finished(id: String) -> void:
 
 
 func _on_timeline_event(event_name: String) -> void:
+	_sound_caption("event:" + event_name)
 	_events[event_name] = true
 	if event_name == String(data.get("darkness_event", "")):
 		ui.set_darkness(float(data.get("darkness_alpha", 0.55)))
@@ -1235,7 +1238,7 @@ func _fire(tr: Dictionary) -> bool:
 	if tr.has("bark"):
 		var line := runner.bark(String(tr["bark"]))
 		if not line.is_empty():
-			ui.bubble("%s: %s" % [line["attrs"].get("display_name", ""), line.get("text", "")])
+			_show_bark(line, true)
 		return false
 	if tr.has("cue"):
 		var cues: Dictionary = tr["cue"]
@@ -1317,7 +1320,7 @@ func _update_water(delta: float) -> void:
 			_water_barked[i] = true
 			var line := runner.bark(String(cfg.get("bark", "")))
 			if not line.is_empty():
-				ui.bubble(String(line.get("text", "")))
+				_show_bark(line, false)
 		if inside and feet.y > y + float(cfg.get("submerge", 24.0)):
 			var spot: Array = cfg.get("respawn", [float(cfg["x0"]) - 40.0, float(cfg.get("linear_y", 800.0)) - 10.0])
 			player.global_position = Vector2(float(spot[0]), float(spot[1]))
@@ -1602,6 +1605,32 @@ func _play_cue(cue_id: String) -> void:
 		backlog.add_line(_play_count(), _tape_at(), String(line["attrs"].get("display_name", "")), String(line.get("text", "")), "caption")
 
 
+## Sound captions (docs/ui-ux.md P1-1): the level's "sound_captions" {key: text} for sounds that
+## carry a clue, keyed "sfx:<name>", "loop:<id>", "loop_stop:<id>", "scare:<id>" or
+## "event:<timeline event>". Shown only with the "sound captions" setting.
+func _sound_caption(key: String) -> void:
+	if int(settings.values["sound_captions"]) != 1:
+		return
+	var text: String = String(data.get("sound_captions", {}).get(key, ""))
+	if text != "":
+		ui.sound_caption(text)
+
+
+## A bark. A speaker in the level's "voices" {speaker: {"label", "side"}} (or a line with [side=])
+## has no body on screen: its line goes to the screen edge with the source label (P1-2).
+## Otherwise the bubble, with the speaker's name when `named`.
+func _show_bark(line: Dictionary, named: bool) -> void:
+	var attrs: Dictionary = line.get("attrs", {})
+	var voice: Dictionary = data.get("voices", {}).get(String(line.get("speaker", "")), {})
+	var side := String(attrs.get("side", voice.get("side", "")))
+	if not voice.is_empty() or side in ["left", "right"]:
+		ui.edge_voice(String(attrs.get("display_name", "")), String(line.get("text", "")), String(voice.get("label", "")), side)
+	elif named:
+		ui.bubble("%s: %s" % [attrs.get("display_name", ""), line.get("text", "")])
+	else:
+		ui.bubble(String(line.get("text", "")))
+
+
 ## The journal and the log open during play (also mid-dialogue), not over a document or a menu.
 func _menus_allowed() -> bool:
 	return phase in [Phase.HUB, Phase.TAPE] and not ui.doc_open() and not _paused and not ui.credits_running() \
@@ -1822,6 +1851,8 @@ func _bot_step(delta: float) -> void:
 		_bot_settings_page("display", "brightness", ["menu_right", "menu_left", "accept"])
 		_bot_settings_page("access", "content", ["menu_down", "menu_right", "menu_left", "menu_down", "accept"])
 		settings._show_tab(settings.tab_index("controls"))
+		# Sound captions on for the rest of the run, so their path is walked too.
+		settings.set_value("sound_captions", 1)
 		# The controls screen: open it, start rebinding the first action and cancel, go back.
 		for i in settings.remap_row_index():
 			settings.command("menu_down")

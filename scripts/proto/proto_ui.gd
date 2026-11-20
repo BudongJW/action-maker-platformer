@@ -50,6 +50,11 @@ var show_names := true
 var _text_bg := 0.75
 var _text_box: StyleBoxFlat
 var _caption_raw := ""
+## Sound captions ([splash - the water]) under the cue lines: {"text", "left"}.
+var _sound_lines: Array = []
+## A voice with no body on screen: a caption at the screen edge it comes from.
+var _edge: Label
+var _edge_left := 0.0
 ## The tape deck panel (ProtoDeck) and where it is: "off" (title, ending), "tape" or "hub"
 ## (the workroom keeps it open).
 var deck: ProtoDeck
@@ -59,6 +64,7 @@ var deck_mode := "off"
 ## Widest part of the screen a caption or a bubble may take.
 const CAPTION_WIDTH := 0.8
 const BUBBLE_WIDTH := 0.4
+const EDGE_WIDTH := 0.36
 ## Where a bubble's top edge sits: below the viewfinder's top edge and the development status lines.
 const BUBBLE_TOP := 0.24
 var _caption_clock := 0.0
@@ -167,6 +173,9 @@ func _ready() -> void:
 	_bubble = _boxed_label(28, Control.GROW_DIRECTION_END)
 	_bubble.anchor_top = BUBBLE_TOP
 	_bubble.anchor_bottom = BUBBLE_TOP
+	_edge = _boxed_label(26, Control.GROW_DIRECTION_BOTH)
+	_edge.anchor_top = 0.42
+	_edge.anchor_bottom = 0.42
 	_hud = _anchored_label(0.01, 0.6, 0.01, 0.08, 16)
 	_toast = _anchored_label(0.6, 0.99, 0.01, 0.08, 20)
 	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -684,6 +693,59 @@ func bubble(text: String, seconds: float = -1.0) -> void:
 	_bubble_left = seconds if seconds > 0.0 else ProtoUI.reading_secs(text, 0.6, 0.06, 2.0, 4.5)
 
 
+## A sound caption ("[splash - the water]"), shown with the captions for `seconds`. It shows in the
+## same frame (a scare's caption must not lag behind its sound).
+func sound_caption(text: String, seconds := 3.0) -> void:
+	_sound_lines.append({"text": text, "left": seconds})
+	_refresh_caption()
+
+
+## The caption box: the cue lines due now (with the subtitles setting), then the sound captions.
+func _refresh_caption() -> void:
+	var shown: PackedStringArray = []
+	if _captions_on:
+		for line in _captions:
+			var at: float = float(line["attrs"].get("at", 0.0))
+			var dur: float = float(line["attrs"].get("dur", 2.0))
+			if _caption_clock >= at and _caption_clock < at + dur:
+				var who: String = String(line["attrs"].get("display_name", "")) if show_names else ""
+				shown.append((who + ": " if who != "" else "") + String(line.get("text", "")))
+	for s in _sound_lines:
+		shown.append(String(s["text"]))
+	var caption := "\n".join(shown)
+	if caption != _caption_raw:
+		_caption_raw = caption
+		_set_boxed(_caption, ProtoUI.keep_words(caption), CAPTION_WIDTH)
+
+
+## A voice with no body on screen (docs/ui-ux.md P1-2): the line at the `side` edge it comes from
+## ("left", "right"; "" for no direction, at the top like a bubble), with an arrow and the source
+## `label` (where it comes from) before the speaker's name.
+func edge_voice(speaker: String, text: String, label: String, side: String, seconds: float = -1.0) -> void:
+	var line := ""
+	if label != "":
+		line += "[%s] " % label
+	if speaker != "" and show_names:
+		line += speaker + ": "
+	line += text
+	if side == "left":
+		line = "< " + line
+	elif side == "right":
+		line = line + " >"
+	_edge.anchor_left = 0.03 if side == "left" else (0.97 if side == "right" else 0.5)
+	_edge.anchor_right = _edge.anchor_left
+	_edge.grow_horizontal = Control.GROW_DIRECTION_END if side == "left" else (Control.GROW_DIRECTION_BEGIN if side == "right" else Control.GROW_DIRECTION_BOTH)
+	_edge.anchor_top = 0.42 if side != "" else BUBBLE_TOP
+	_edge.anchor_bottom = _edge.anchor_top
+	_edge.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT if side == "left" else (HORIZONTAL_ALIGNMENT_RIGHT if side == "right" else HORIZONTAL_ALIGNMENT_CENTER)
+	_set_boxed(_edge, ProtoUI.keep_words(line), EDGE_WIDTH)
+	_edge_left = seconds if seconds > 0.0 else ProtoUI.reading_secs(line, 0.6, 0.06, 2.0, 4.5)
+
+
+func edge_text() -> String:
+	return _edge.text
+
+
 func bubble_text() -> String:
 	return _bubble.text
 
@@ -741,17 +803,10 @@ func _process(delta: float) -> void:
 		_wave_time += delta
 		_wave.queue_redraw()
 	_timecode.visible = _vf_rec != null and not _backdrop.visible and not _camera_off
-	var shown: PackedStringArray = []
-	for line in _captions:
-		var at: float = float(line["attrs"].get("at", 0.0))
-		var dur: float = float(line["attrs"].get("dur", 2.0))
-		if _caption_clock >= at and _caption_clock < at + dur:
-			var who: String = String(line["attrs"].get("display_name", "")) if show_names else ""
-			shown.append((who + ": " if who != "" else "") + String(line.get("text", "")))
-	var caption := "\n".join(shown) if _captions_on else ""
-	if caption != _caption_raw:
-		_caption_raw = caption
-		_set_boxed(_caption, ProtoUI.keep_words(caption), CAPTION_WIDTH)
+	for s in _sound_lines:
+		s["left"] = float(s["left"]) - delta
+	_sound_lines = _sound_lines.filter(func(s): return float(s["left"]) > 0.0)
+	_refresh_caption()
 	_place_deck()
 	_place_over_window()
 	# Not over the title or the pause menu.
@@ -759,6 +814,9 @@ func _process(delta: float) -> void:
 	_bubble_left -= delta
 	if _bubble_left <= 0.0 and _bubble.text != "":
 		_set_boxed(_bubble, "", BUBBLE_WIDTH)
+	_edge_left -= delta
+	if _edge_left <= 0.0 and _edge.text != "":
+		_set_boxed(_edge, "", EDGE_WIDTH)
 	_toast_left -= delta
 	if _toast_left <= 0.0:
 		_toast.text = ""
@@ -811,6 +869,7 @@ func set_text_scale(scale: float) -> void:
 	if _text_box != null:
 		_set_boxed(_caption, _caption.text, CAPTION_WIDTH)
 		_set_boxed(_bubble, _bubble.text, BUBBLE_WIDTH)
+		_set_boxed(_edge, _edge.text, EDGE_WIDTH)
 
 
 func set_captions(on: bool) -> void:

@@ -158,6 +158,16 @@
       }
     ]
   },
+  "sound_captions": {
+    "sfx:rec_on": "[click - the camera]",
+    "scare:demo_jump": "[thud - close by]",
+    "scare:demo_dark": "[click - the lights go]",
+    "scare:demo_caught": "[splash - right behind]",
+    "scare:demo_phone": "[ring - the phone]"
+  },
+  "voices": {
+    "crowd": {"label": "Shore", "side": "left"}
+  },
   "journal": {
     "tabs": [
       {"label": "ui.journal.tab_all"},

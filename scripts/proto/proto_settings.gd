@@ -41,7 +41,7 @@ var persist := true
 var apply_window := false
 var values := {
 	"fullscreen": 0, "brightness": 5, "vhs_strength": 2, "screen_shake": 1,
-	"master_volume": 10, "ambience_volume": 8, "sfx_volume": 8,
+	"master_volume": 10, "ambience_volume": 8, "sfx_volume": 8, "sound_captions": 0,
 	"text_size": 1, "subtitles": 1, "text_bg": 2, "speaker_names": 1, "advance": 0,
 	"advance_speed": 1,
 	"scare_mode": 0, "photosafe": 0, "chase_assist": 0, "meta_os": 0,
@@ -95,6 +95,7 @@ func setup(font: Font, panel: StyleBox, row_style: StyleBox, cursor: Texture2D) 
 			{"key": "master_volume", "label": "ui.options.master_volume", "range": 10},
 			{"key": "ambience_volume", "label": "ui.options.ambience_volume", "range": 10},
 			{"key": "sfx_volume", "label": "ui.options.sfx_volume", "range": 10},
+			{"key": "sound_captions", "label": "ui.options.sound_captions", "choices": off_on, "hint": "ui.options.sound_captions_hint"},
 			back,
 		]},
 		{"label": "ui.options.tab_text", "items": [

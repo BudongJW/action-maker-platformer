@@ -5,6 +5,9 @@
 ## in the workroom. Loops (generator, drums) follow tape time and stop on a timeline event.
 ## Stinger files replace ProtoFX's generated noise; one-shot sounds play on "SFX".
 ## Paths are relative to the project root; tools/build_prototype.py copies them into the build.
+##
+## sound_started(key) names each sound as it starts, for sound captions: "sfx:<name>",
+## "loop:<id>" (a loop's "id", or its index) and "loop_stop:<id>" when its until_event stops it.
 class_name ProtoAudio
 extends Node
 
@@ -24,6 +27,9 @@ var _pool: Array[AudioStreamPlayer] = []
 var _next := 0
 var _streams: Dictionary = {}
 var _warned: Dictionary = {}
+
+
+signal sound_started(key: String)
 
 
 func setup(audio: Dictionary) -> bool:
@@ -95,9 +101,16 @@ func update(tape_time: float, events: Dictionary) -> void:
 					player.stop()
 					if spec.has("stop"):
 						play_file(String(spec["stop"]), AMBIENCE_BUS, float(spec.get("db", -6.0)))
+					sound_started.emit("loop_stop:" + _loop_id(loop))
 			continue
 		var on := tape_time >= float(spec.get("from", 0.0)) and tape_time < float(spec.get("to", INF))
+		if on and player != null and not player.playing:
+			sound_started.emit("loop:" + _loop_id(loop))
 		_set_playing(player, on)
+
+
+func _loop_id(loop: Dictionary) -> String:
+	return String(loop["spec"].get("id", str(_loops.find(loop))))
 
 
 ## Plays a named sound from "sfx": a path, a list of paths (one picked at random), or
@@ -113,6 +126,7 @@ func play(sound: String, bus: String = SFX_BUS) -> void:
 	if typeof(entry) == TYPE_ARRAY:
 		entry = entry[rng.randi_range(0, entry.size() - 1)] if entry.size() > 0 else ""
 	play_file(String(entry), bus, db)
+	sound_started.emit("sfx:" + sound)
 
 
 func play_file(path: String, bus: String, db: float = 0.0) -> void:

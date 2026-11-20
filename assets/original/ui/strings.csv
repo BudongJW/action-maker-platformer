@@ -180,3 +180,5 @@ ui.first.start,시작,Start
 ui.options.brightness_hint,좌·우로 바꿉니다. 정하기를 누르면 밝기 맞추기 화면이 열립니다.,Left/Right changes it. Select opens the brightness screen.
 ui.options.content_notice,콘텐츠 안내,Content Notice
 ui.options.content_notice_hint,처음 시작할 때 본 안내를 다시 봅니다. 놀래는 연출과 깜박임도 여기서 바꿀 수 있습니다.,Read the notice shown at the first start again. Scares and flashing can be changed there too.
+ui.options.sound_captions,소리 자막,Sound Captions
+ui.options.sound_captions_hint,단서가 되는 소리를 대괄호 자막으로 띄웁니다.,Shows sounds that matter as captions in brackets.
