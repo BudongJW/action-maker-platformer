@@ -1,22 +1,35 @@
 # night-school palette (original to this project)
+# v2 (2026-11-22): the "night school x occult" bridge palette of the ARCANUM XXII
+# pixel works. The first 20 keys are the original ones (N U u M C unchanged, the
+# rest retuned a little); 9 keys were added for the occult side and for finer
+# plaster, wood and skin ramps. Every swap palette must carry all 29 keys.
 # KEY  RRGGBB  name / use
-K 0d0b12 outline, deepest shadow
-D 1c1a28 night indigo
+K 0b0810 outline, deepest shadow, void
+D 1a1424 night indigo-violet
 N 2b2b40 navy shadow
 U 3a4466 uniform blue
 u 56638a uniform light
 M 8798b8 moonlight blue-grey
-W c9c6b8 pale plaster
-w efebdc white highlight
-G 3b4740 wainscot dark green
-g 56645a wainscot green
-p 4a3429 wood dark
-P 6e4e3a wood
-s e0b493 skin
-h b07c64 skin shadow
-H 2a2224 hair
-R c0303a accent red
-r 7a1c26 dark red
-Y f0d070 flashlight yellow
+W c4bdaa pale plaster
+w ece6d4 white highlight, paper
+G 343f39 wainscot dark green
+g 4f5d53 wainscot green
+p 45301f wood dark
+P 6e4c34 wood
+s e3b08c skin
+h b0765e skin shadow
+H 231c22 hair
+R c42e38 accent red, danger
+r 6a1824 dried blood
+Y f2c86a light, flashlight
 C 7fe0d0 spirit cyan
-c 3a9a98 spirit cyan dark
+c 2f8a8a spirit cyan dark
+S 2e1c36 occult shade
+V 4e2e52 bruise violet
+m 7e4c70 rose
+n 5a5249 plaster deep shadow
+b 8f8778 plaster shadow
+o 93683f wood light
+q 6a4656 skin deep shadow
+O e07a34 candle flame
+L fff1c4 flame core

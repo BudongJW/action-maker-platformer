@@ -45,7 +45,7 @@ UUUUUUUU
 UUUUUUUU
 UUUUUUUU
 
-@frame c_u
+@frame u
 uuuuuuuu
 uuuuuuuu
 uuuuuuuu
@@ -75,7 +75,7 @@ WWWWWWWW
 WWWWWWWW
 WWWWWWWW
 
-@frame c_w
+@frame w
 wwwwwwww
 wwwwwwww
 wwwwwwww
@@ -95,7 +95,7 @@ GGGGGGGG
 GGGGGGGG
 GGGGGGGG
 
-@frame c_g
+@frame g
 gggggggg
 gggggggg
 gggggggg
@@ -105,7 +105,7 @@ gggggggg
 gggggggg
 gggggggg
 
-@frame c_p
+@frame p
 pppppppp
 pppppppp
 pppppppp
@@ -125,7 +125,7 @@ PPPPPPPP
 PPPPPPPP
 PPPPPPPP
 
-@frame c_s
+@frame s
 ssssssss
 ssssssss
 ssssssss
@@ -135,7 +135,7 @@ ssssssss
 ssssssss
 ssssssss
 
-@frame c_h
+@frame h
 hhhhhhhh
 hhhhhhhh
 hhhhhhhh
@@ -165,7 +165,7 @@ RRRRRRRR
 RRRRRRRR
 RRRRRRRR
 
-@frame c_r
+@frame r
 rrrrrrrr
 rrrrrrrr
 rrrrrrrr
@@ -195,7 +195,7 @@ CCCCCCCC
 CCCCCCCC
 CCCCCCCC
 
-@frame c_c
+@frame c
 cccccccc
 cccccccc
 cccccccc
@@ -204,3 +204,93 @@ cccccccc
 cccccccc
 cccccccc
 cccccccc
+
+@frame S
+SSSSSSSS
+SSSSSSSS
+SSSSSSSS
+SSSSSSSS
+SSSSSSSS
+SSSSSSSS
+SSSSSSSS
+SSSSSSSS
+
+@frame V
+VVVVVVVV
+VVVVVVVV
+VVVVVVVV
+VVVVVVVV
+VVVVVVVV
+VVVVVVVV
+VVVVVVVV
+VVVVVVVV
+
+@frame m
+mmmmmmmm
+mmmmmmmm
+mmmmmmmm
+mmmmmmmm
+mmmmmmmm
+mmmmmmmm
+mmmmmmmm
+mmmmmmmm
+
+@frame n
+nnnnnnnn
+nnnnnnnn
+nnnnnnnn
+nnnnnnnn
+nnnnnnnn
+nnnnnnnn
+nnnnnnnn
+nnnnnnnn
+
+@frame b
+bbbbbbbb
+bbbbbbbb
+bbbbbbbb
+bbbbbbbb
+bbbbbbbb
+bbbbbbbb
+bbbbbbbb
+bbbbbbbb
+
+@frame o
+oooooooo
+oooooooo
+oooooooo
+oooooooo
+oooooooo
+oooooooo
+oooooooo
+oooooooo
+
+@frame q
+qqqqqqqq
+qqqqqqqq
+qqqqqqqq
+qqqqqqqq
+qqqqqqqq
+qqqqqqqq
+qqqqqqqq
+qqqqqqqq
+
+@frame O
+OOOOOOOO
+OOOOOOOO
+OOOOOOOO
+OOOOOOOO
+OOOOOOOO
+OOOOOOOO
+OOOOOOOO
+OOOOOOOO
+
+@frame L
+LLLLLLLL
+LLLLLLLL
+LLLLLLLL
+LLLLLLLL
+LLLLLLLL
+LLLLLLLL
+LLLLLLLL
+LLLLLLLL

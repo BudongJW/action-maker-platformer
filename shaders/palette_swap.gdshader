@@ -2,7 +2,7 @@
 //
 // Replaces every pixel whose colour matches an entry of base_lut with the
 // colour at the same position in swap_lut. Both lookup strips are 1 pixel
-// high with one pixel per palette key:
+// high with one pixel per palette key (29 keys since art v2):
 //   base_lut = assets/original/art/palette/lut_night_school.png
 //   swap_lut = assets/original/art/palette/lut_otherworld.png
 // Import both with filtering off. Put the material on each node drawn with the
@@ -21,7 +21,7 @@ shader_type canvas_item;
 
 uniform sampler2D base_lut : filter_nearest;
 uniform sampler2D swap_lut : filter_nearest;
-uniform int palette_size = 20;
+uniform int palette_size = 29;
 uniform float amount : hint_range(0.0, 1.0) = 1.0;
 uniform float tolerance = 0.01;
 

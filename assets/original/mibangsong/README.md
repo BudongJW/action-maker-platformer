@@ -43,7 +43,7 @@
 
 ## 2. 트랙 팔레트 (같은 키, 다른 색)
 
-모든 인물·타일은 [`../art/palette/night-school.pal`](../art/palette/night-school.pal)의 20개 키로 그렸고, 장면에서 아래 팔레트로 바꿔 칠합니다. 게임에서는 저장소의 `shaders/palette_swap.gdshader`로 LINEAR ↔ HI-FI 전환을 실시간으로 할 수 있습니다.
+모든 인물·타일은 [`../art/palette/night-school.pal`](../art/palette/night-school.pal)의 키로 그렸고(이 팩은 원래 20키만 씀. 공용 아트 v2에서 9키가 늘어 트랙 팔레트에도 같은 9키를 더함), 장면에서 아래 팔레트로 바꿔 칠합니다. 게임에서는 저장소의 `shaders/palette_swap.gdshader`로 LINEAR ↔ HI-FI 전환을 실시간으로 할 수 있습니다.
 
 | 파일 | 트랙 | 성격 |
 |---|---|---|

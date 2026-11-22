@@ -82,7 +82,7 @@ T0~T7과 3절의 R1~R3는 같은 내용이 슬래시 명령으로도 들어 있�
 ```text
 이 저장소의 픽셀 아트 규칙을 따라 줘.
 - 원본은 텍스트다: .pix(스프라이트·타일), .scene(장면). 렌더러는 tools/pixelart.py이고 형식은 그 파일 첫머리 설명을 따른다.
-- 팔레트는 assets/original/art/palette/night-school.pal의 20개 키만 쓴다. 트랙·시간대 색은 같은 키의 다른 .pal로 @swap 한다.
+- 팔레트는 assets/original/art/palette/night-school.pal의 29개 키만 쓴다. 트랙·시간대 색은 같은 키의 다른 .pal로 @swap 한다.
 - 기본값: 횡스크롤 옆모습, 오른쪽을 봄. 캐릭터 셀 32x40, 타일 16x16, 장면·인서트 320x180.
 - 광원은 하나(기본 왼쪽 위 앞). 외곽선은 셀아웃(빛 쪽은 그 물체의 가장 어두운 색, 그림자 쪽만 K). 외톨이 픽셀 없음. 디더는 하늘·안개·비네트에만.
 - 손·얼굴·머리카락은 docs/pixel-technique.md의 규칙을 따른다.

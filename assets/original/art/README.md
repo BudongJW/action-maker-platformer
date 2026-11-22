@@ -5,6 +5,7 @@
 - 라이선스: [`../LICENSE.md`](../LICENSE.md) (All rights reserved). 저장소 루트의 GPL은 적용되지 않습니다.
 - **AI 생성물입니다.** 전부 AI(Anthropic Claude, Claude Code)가 텍스트 픽셀 맵으로 작성했습니다. 경위와 Steam 공개 대상 여부는 [`../AI_CONTENT.md`](../AI_CONTENT.md)에 기록했습니다.
 - 상태: **콘셉트·프로토타입용 1차안**입니다. 방향을 정하고 AGM G에서 그레이박싱하는 데 쓰고, 최종 아트는 사람 아티스트가 다듬거나 다시 그리는 것을 전제로 합니다.
+- **v2 (2026-11-22): 플랫포머 리디자인 반영.** 프로젝트 책임자가 보낸 「ARCANUM XXII 픽셀 작업」의 플랫포머 리디자인으로 팔레트(29색 브리지 팔레트), 주인공(대기·걷기·점프), 그림자 손님(대기·손 뻗기), 소복 귀신(떠 있음·한쪽 눈), 복도 타일, 복도 목업 두 장을 바꾸고 XXII 카드를 더했습니다. 나머지 프레임은 그 그림에서 다시 만들었습니다. 무엇이 받은 그림이고 무엇이 파생인지는 아래 "v2 반영 내역"에 있습니다.
 
 ![night corridor mock-up](previews/corridor_night_x3.png)
 
@@ -21,28 +22,37 @@
 
 | 원리 (출처) | 적용 |
 |---|---|
-| 크기 대비로 무력감 만들기 (design-references 2.2·2.3, Little Nightmares 분석) | 그림자 손님은 주인공 키의 약 2.2배 |
+| 크기 대비로 무력감 만들기 (design-references 2.2·2.3, Little Nightmares 분석) | 그림자 손님은 주인공 키의 약 2배(v2: 55px 대 28px) |
 | 색 = 신호 (INSIDE, In Stars and Time) | 빨강은 위험·눈에만, 청록은 영적 존재에만, 노랑은 빛과 부적에만 |
 | 어둠 오버레이 + 광원 (Fear & Hunger, Witch's House, 기법 표 2.3) | 목업은 어둠 78% + 손전등 원뿔·형광등·달빛·도깨비불 광원 |
-| 어둠 속 실루엣은 테두리광으로 읽히게 | 그림자 손님 오른쪽 가장자리에 달빛색(M) 림라이트 |
-| 팔레트 하나로 고정 (design-references 4절) | 아래 20색 `night-school` 팔레트 하나로 전부 그림 |
+| 어둠 속 실루엣은 테두리광으로 읽히게 | 그림자 손님 후드와 로브 가장자리, 주인공 등에 달빛색(M) 림라이트 |
+| 팔레트 하나로 고정 (design-references 4절) | 아래 `night-school` 팔레트 하나로 전부 그림(v1 20색, v2 29색) |
 
 ## 팔레트
 
 [`palette/night-school.pal`](palette/night-school.pal), 견본 ![palette](previews/palette_swatch_x4.png)
 
+v2에서 「ARCANUM XXII 픽셀 작업」의 브리지 팔레트(밤의 학교 × 오컬트, 29색)로 바꿨습니다. 원래 20키는 그대로 두고(`N U u M C`는 같은 색, 나머지는 조금 조정), 9키를 더했습니다. 원래 그림은 키를 바꾸지 않아 조정된 색으로 다시 렌더링되었습니다.
+
 | 키 | 색 | 용도 | 키 | 색 | 용도 |
 |---|---|---|---|---|---|
-| `K` | `#0d0b12` | 외곽선, 가장 깊은 그림자, 어둠 | `P` | `#6e4e3a` | 나무 |
-| `D` | `#1c1a28` | 밤 남색, 실루엣 몸통 | `p` | `#4a3429` | 나무 그림자 |
-| `N` | `#2b2b40` | 남색 그림자 | `s` | `#e0b493` | 피부 |
-| `U` | `#3a4466` | 교복 | `h` | `#b07c64` | 피부 그림자 |
-| `u` | `#56638a` | 교복 밝은 면 | `H` | `#2a2224` | 머리카락 |
-| `M` | `#8798b8` | 달빛, 림라이트 | `R` | `#c0303a` | **위험·눈** (강조색) |
-| `W` | `#c9c6b8` | 회벽, 소복 | `r` | `#7a1c26` | 빨강 그림자 |
-| `w` | `#efebdc` | 하이라이트, 종이 | `Y` | `#f0d070` | 손전등, 부적 종이 |
-| `G` | `#3b4740` | 징두리 판벽 어두운 면 | `C` | `#7fe0d0` | 영적 존재 (도깨비불) |
-| `g` | `#56645a` | 징두리 판벽 | `c` | `#3a9a98` | 영적 존재 그림자 |
+| `K` | `#0b0810` | 외곽선, 가장 깊은 그림자, 어둠 | `P` | `#6e4c34` | 나무 |
+| `D` | `#1a1424` | 밤 남보라, 실루엣 몸통 | `p` | `#45301f` | 나무 그림자 |
+| `N` | `#2b2b40` | 남색 그림자 | `s` | `#e3b08c` | 피부 |
+| `U` | `#3a4466` | 교복 | `h` | `#b0765e` | 피부 그림자 |
+| `u` | `#56638a` | 교복 밝은 면 | `H` | `#231c22` | 머리카락 |
+| `M` | `#8798b8` | 달빛, 림라이트 | `R` | `#c42e38` | **위험·눈** (강조색) |
+| `W` | `#c4bdaa` | 회벽, 소복 | `r` | `#6a1824` | 마른 피, 빨강 그림자 |
+| `w` | `#ece6d4` | 하이라이트, 종이 | `Y` | `#f2c86a` | 손전등, 부적 종이 |
+| `G` | `#343f39` | 징두리 판벽 어두운 면 | `C` | `#7fe0d0` | 영적 존재 (도깨비불) |
+| `g` | `#4f5d53` | 징두리 판벽 | `c` | `#2f8a8a` | 영적 존재 그림자 |
+| `S` | `#2e1c36` | (v2) 오컬트 그늘 | `o` | `#93683f` | (v2) 나무 밝은 면 |
+| `V` | `#4e2e52` | (v2) 멍, 로브 안쪽 | `q` | `#6a4656` | (v2) 피부 깊은 그늘 |
+| `m` | `#7e4c70` | (v2) 장미 | `O` | `#e07a34` | (v2) 촛불 |
+| `n` | `#5a5249` | (v2) 회벽 깊은 그늘 | `L` | `#fff1c4` | (v2) 불꽃 심지 |
+| `b` | `#8f8778` | (v2) 회벽 그늘 | | | |
+
+바꿔 칠하는 팔레트(`otherworld.pal`, `dawn.pal`, 《미방송분》의 트랙 팔레트)에도 9키를 더했습니다. 새 키의 색은 원래 팔레트에서 그 색에 가장 가까운 두 키의 섞음 비율을 구해, 각 팔레트의 같은 두 키에 같은 비율을 적용해 정했습니다.
 
 색 규칙의 예외는 두 곳뿐입니다. **고어 세트**의 피는 `R`·`r`로 칠하고(피도 위험 신호라 규칙과 어긋나지 않음), **굿 장면**은 오방색(파랑·하양·빨강·검정·노랑)을 옷과 깃발에 그대로 씁니다. 굿은 두 세계의 경계에서 벌어지는 일이라, 평소에는 위험·빛에만 쓰던 색이 화면에 함께 나오는 것 자체를 연출로 봅니다.
 
@@ -52,7 +62,7 @@
 |---|---|---|
 | 타일 | 16x16 | AGM G는 타일 크기를 자유롭게 정함 (design-references 1.3) |
 | 내부 해상도 | 320x180 (목업 기준), 640x360·1920x1080에 정수배 | Godot 문서의 640x360 기준과 정수 배율 권장 (1.3) |
-| 주인공 | 24x32 셀, 실제 키 약 25px(타일 1.5개) | 쯔꾸르 2000의 캐릭터 셀과 같은 크기 |
+| 주인공 | 24x32 셀, 실제 키 약 28px(v2, 타일 1.75개) | 쯔꾸르 2000의 캐릭터 셀과 같은 크기 |
 | 얼굴 | 48x48, 9표정 | EasyRPG 문서 기준 쯔꾸르 2000 얼굴 크기 (다른 값도 있어 design-references 7절에 미확인으로 기록) |
 
 ## 파일
@@ -61,15 +71,16 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 
 | 파일 | 크기·배치 | 내용 | 미리보기 |
 |---|---|---|---|
-| [`characters/protagonist_side.png`](characters/protagonist_side.png) | 24x32 셀, 7열x3행 | 주인공 횡스크롤(오른쪽을 봄, 왼쪽은 엔진에서 반전). `idle_0 idle_1 walk_0 walk_1 walk_2 walk_3 jump / fall crouch hurt interact turn_back(사물함·문 진입, 뒷모습) death_0 death_1 / death_2 run_0 run_1 run_2 run_3 climb_0 climb_1(사다리)`. 사망은 고어 없이 쓰러짐(D9), 손전등이 떨어짐 | [x6](previews/protagonist_side_x6.png) |
-| [`characters/$protagonist_topdown.png`](characters/$protagonist_topdown.png) | 24x32 셀, 3열x4행 | 쯔꾸르 MV/MZ 단일 캐릭터(`$`) 배치. 행: 아래·왼쪽·오른쪽·위, 열: 걸음·정지·걸음. 좌우는 횡스크롤 프레임을 재사용. 탑다운 타일·맵은 아래 "탑다운" 절 | [x6](previews/protagonist_topdown_x6.png) |
-| [`characters/enemy_shadow_visitor.png`](characters/enemy_shadow_visitor.png) | 32x56 셀, 5열x3행 | **그림자 손님**: 긴 외투의 구부정한 실루엣, 붉은 외눈. `idle_0 idle_1(눈 깜박임) walk_0 walk_1 look(뒤돌아봄) / grab chase_0 chase_1 vanish_0 vanish_1 / vanish_2`. 상태와 모션의 대응은 [`docs/decisions.md`](../../../docs/decisions.md) | [x4](previews/enemy_shadow_visitor_x4.png) |
-| [`characters/enemy_sobok_gwisin.png`](characters/enemy_sobok_gwisin.png) | 24x40 셀, 3열x2행 | **소복 귀신**: 흰 저고리·치마, 얼굴을 가린 장발, 발 대신 흐려지는 치맛단. `float_0 float_1 reveal(한쪽 눈) / vanish_0 vanish_1 vanish_2` | [x4](previews/enemy_sobok_gwisin_x4.png) |
+| [`characters/protagonist_side.png`](characters/protagonist_side.png) | 24x32 셀, 7열x3행 | 주인공 횡스크롤(오른쪽을 봄, 왼쪽은 엔진에서 반전). `idle_0 idle_1 walk_0 walk_1 walk_2 walk_3 jump / fall crouch hurt interact turn_back(사물함·문 진입, 뒷모습) death_0 death_1 / death_2 run_0 run_1 run_2 run_3 climb_0 climb_1(사다리)`. 사망은 고어 없이 쓰러짐(D9), 손전등이 떨어짐. v2: 1행은 리디자인 그림, 2·3행은 그 그림에서 다시 만듦 | [x6](previews/protagonist_side_x6.png) |
+| [`characters/$protagonist_topdown.png`](characters/$protagonist_topdown.png) | 24x32 셀, 3열x4행 | 쯔꾸르 MV/MZ 단일 캐릭터(`$`) 배치. 행: 아래·왼쪽·오른쪽·위, 열: 걸음·정지·걸음. 좌우는 v1 횡스크롤 프레임(v2에서 리디자인하지 않은 앞·뒷모습과 화풍을 맞추려고 v1 그대로 고정). 탑다운 타일·맵은 아래 "탑다운" 절 | [x6](previews/protagonist_topdown_x6.png) |
+| [`characters/enemy_shadow_visitor.png`](characters/enemy_shadow_visitor.png) | 32x56 셀, 5열x3행 | **그림자 손님**(v2): 찢어진 긴 로브와 후드, 후드 속에서 타는 외눈, 갈고리 손톱의 창백한 손, 흘러내리는 밑단. `idle_0 idle_1(눈 깜박임) walk_0 walk_1 look(뒤돌아봄) / grab chase_0 chase_1 vanish_0 vanish_1 / vanish_2`. `idle_0`·`grab`이 리디자인 그림, 나머지는 파생. 상태와 모션의 대응은 [`docs/decisions.md`](../../../docs/decisions.md) | [x4](previews/enemy_shadow_visitor_x4.png) |
+| [`characters/enemy_sobok_gwisin.png`](characters/enemy_sobok_gwisin.png) | 24x40 셀, 3열x2행 | **소복 귀신**(v2): 흰 저고리·치마, 얼굴을 가린 장발, 가슴의 부적, 발 대신 영혼빛 안개로 흩어지는 치맛단. `float_0 float_1 reveal(한쪽 눈) / vanish_0 vanish_1 vanish_2` | [x4](previews/enemy_sobok_gwisin_x4.png) |
+| [`characters/enemy_xxii_card.png`](characters/enemy_xxii_card.png) | 16x24 셀, 2프레임 | **XXII 카드**(v2 새로 추가): 머리 높이에 떠 있는 타로 카드, 앞면에 눈, 둘레에 영혼빛 티끌. `float_0 float_1`. 아직 데모에서 쓰지 않음 | [x4](previews/enemy_xxii_card_x4.png) |
 | [`characters/enemy_dokkaebi_bul.png`](characters/enemy_dokkaebi_bul.png) | 16x16 셀, 4프레임 | **도깨비불**: 외곽선 없는 청록 불꽃 + 불티. 어둠 위에 그려 발광처럼 보이게 | [x8](previews/enemy_dokkaebi_bul_x8.png) |
 | [`tiles/tiles_night_school.png`](tiles/tiles_night_school.png) | 16x16 타일, 8열 | 아래 타일 목록 참고 | [x4](previews/tiles_night_school_x4.png) |
 | [`portraits/protagonist_faces.png`](portraits/protagonist_faces.png) | 48x48, 5열 | 대화용 얼굴. `neutral scared sad determined surprised / relieved angry smile eyes_closed(깜박임 겸용)`. 표정별 파일은 `@split`으로 [`../characters/protagonist/portraits/`](../characters/protagonist/character.json)에도 생성 | [x4](previews/protagonist_faces_x4.png) |
-| [`mockups/corridor_night.png`](mockups/corridor_night.png) | 320x180 | 위 요소를 조합한 분위기 확인용 장면. 레벨 설계안이 아님 | [x3](previews/corridor_night_x3.png) |
-| [`palette/night-school.png`](palette/night-school.png) | 8x8 x 20색 | 팔레트 견본 | [x4](previews/palette_swatch_x4.png) |
+| [`mockups/corridor_night.png`](mockups/corridor_night.png) | 320x180 | 분위기 확인용 장면. 레벨 설계안이 아님. v2: 리디자인 그림을 픽셀 그대로 옮긴 `corridor_night.pix`(예전 `.scene` 조합은 삭제). 위쪽의 배터리·카드 수 표시는 그림 속 HUD 예시 | [x3](previews/corridor_night_x3.png) |
+| [`palette/night-school.png`](palette/night-school.png) | 8x8 x 29색 | 팔레트 견본 | [x4](previews/palette_swatch_x4.png) |
 | [`lights/light_circle.png`](lights/light_circle.png), [`lights/light_cone.png`](lights/light_cone.png) | 64x64, 128x64 | PointLight2D용 라이트 텍스처. 흰색 4단계 투명도(`palette/light.pal`). 원뿔은 왼쪽 가운데가 광원 위치 | [원형](previews/light_circle_x2.png), [원뿔](previews/light_cone_x2.png) (흰 배경에서는 안 보임) |
 | [`ui/ui_panel.png`](ui/ui_panel.png) | 24x24, 9-slice (여백 8) | 대화창·이름표·메뉴 공용 패널 | [x6](previews/ui_panel_x6.png) |
 | [`ui/ui_bubble.png`](ui/ui_bubble.png) | 24x24, 9-slice (여백 8) | 바크용 말풍선. 꼬리는 `ui_small`의 `bubble_tail` | [x6](previews/ui_bubble_x6.png) |
@@ -115,7 +126,7 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 |---|---|
 | [`mockups/classroom_night.png`](mockups/classroom_night.png) | 교실 타일셋, TV 불빛, 손전등에 비친 소복 귀신 |
 | [`mockups/schoolyard_night.png`](mockups/schoolyard_night.png) | 패럴랙스 3층, 운동장 타일, 가로등과 도깨비불 |
-| [`mockups/corridor_otherworld.png`](mockups/corridor_otherworld.png) | 이계 팔레트 교체(주인공만 원래 색) |
+| [`mockups/corridor_otherworld.png`](mockups/corridor_otherworld.png) | 이계의 복도. v2: 리디자인 그림을 픽셀 그대로 옮김(팔레트 교체가 아니라 그 자체로 칠한 그림) |
 | [`mockups/title_mock.png`](mockups/title_mock.png) | 타이틀 화면: 배경 + 로고 자리(제목 미정) + 메뉴 |
 | [`mockups/document_mock.png`](mockups/document_mock.png) | 쪽지 열람: 디더로 어둡게 한 화면 위 종이 |
 | [`mockups/menu_mock.png`](mockups/menu_mock.png) | 일시정지 메뉴와 세이브 슬롯 3개(촛불 = 체크포인트) |
@@ -175,7 +186,7 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 | [`tiles/tiles_topdown.png`](tiles/tiles_topdown.png) | 바닥(마루 2종·벽 그림자, 화장실 타일·그림자, 콘크리트, 흙, 풀), 벽면(`face_upper` 회벽+걸레받이 레일, `face_lower` 판벽), 미닫이문 1x2(닫힘·열림), 화장실 칸 문 1x2, 책상·의자·교탁(위에서 본 모습), 계단 2x2, 나무 2x2, 울타리(가로·세로), 가로등, 바닥의 쪽지 | [x4](previews/tiles_topdown_x4.png) |
 | [`tiles/tiles_topdown_walltop.png`](tiles/tiles_topdown_walltop.png) | 위에서 본 벽 윗면 16종. Godot 지형 **Match Sides** 모드용, `walltop_NN`의 NN은 이어진 면의 합(N=1, E=2, S=4, W=8) | [x4](previews/tiles_topdown_walltop_x4.png) |
 | [`characters/$protagonist_topdown.png`](characters/$protagonist_topdown.png) | 주인공 (위 표 참고) | [x6](previews/protagonist_topdown_x6.png) |
-| [`characters/$enemy_shadow_visitor_topdown.png`](characters/$enemy_shadow_visitor_topdown.png) | 그림자 손님, 32x56 셀, MV/MZ `$` 배치. 정면·뒷모습은 새로 그리고 좌우는 횡스크롤 프레임 재사용 | [x4](previews/enemy_shadow_visitor_topdown_x4.png) |
+| [`characters/$enemy_shadow_visitor_topdown.png`](characters/$enemy_shadow_visitor_topdown.png) | 그림자 손님, 32x56 셀, MV/MZ `$` 배치. 정면·뒷모습은 새로 그리고 좌우는 v1 횡스크롤 프레임(v2에서도 v1 그대로 고정) | [x4](previews/enemy_shadow_visitor_topdown_x4.png) |
 | [`characters/$enemy_sobok_gwisin_topdown.png`](characters/$enemy_sobok_gwisin_topdown.png) | 소복 귀신, 24x40 셀, MV/MZ `$` 배치. 떠 있으므로 걸음 프레임 대신 1px 위아래로 흔들림 | [x4](previews/enemy_sobok_gwisin_topdown_x4.png) |
 | [`mockups/map_corridor_td.png`](mockups/map_corridor_td.png), [`map_classroom_td.png`](mockups/map_classroom_td.png), [`map_schoolyard_td.png`](mockups/map_schoolyard_td.png) | 복도(480x160), 교실(320x224), 운동장(384x224) 맵 목업 | [복도](previews/map_corridor_td_x2.png), [교실](previews/map_classroom_td_x2.png), [운동장](previews/map_schoolyard_td_x2.png) |
 
@@ -338,11 +349,11 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 
 ## 이계: 팔레트 교체
 
-모든 그림이 같은 20개 팔레트 키를 쓰므로, 이계는 타일셋을 따로 그리지 않고 **같은 키에 다른 색을 넣은 팔레트**로 만듭니다(design-references 2.3의 "세계 전환 = 화풍 전환").
+모든 그림이 같은 팔레트 키(v2부터 29개)를 쓰므로, 이계는 타일셋을 따로 그리지 않고 **같은 키에 다른 색을 넣은 팔레트**로 만듭니다(design-references 2.3의 "세계 전환 = 화풍 전환").
 
 - [`palette/otherworld.pal`](palette/otherworld.pal): 밤의 푸른색 대신 녹·마른 피·뼈 색, 영적 존재는 산성 초록. 키는 `night-school.pal`과 같아야 합니다.
 - 목업에서는 `.scene`의 `@swap ../palette/otherworld.pal`로 바꾸고, 원래 색을 유지할 스프라이트에 `keep`을 붙입니다.
-- 게임에서는 [`shaders/palette_swap.gdshader`](../../../shaders/palette_swap.gdshader)(GPL 코드)를 씁니다. `palette/lut_night_school.png`와 `palette/lut_otherworld.png`(20x1, 키 순서대로 한 픽셀씩)를 넘기면 색을 바꿔 칠하고, `amount`로 두 세계 사이를 섞을 수 있습니다. AGM G에서 아직 시험하지 않았습니다.
+- 게임에서는 [`shaders/palette_swap.gdshader`](../../../shaders/palette_swap.gdshader)(GPL 코드)를 씁니다. `palette/lut_night_school.png`와 `palette/lut_otherworld.png`(29x1, 키 순서대로 한 픽셀씩, 셰이더의 `palette_size` 기본값도 29)를 넘기면 색을 바꿔 칠하고, `amount`로 두 세계 사이를 섞을 수 있습니다. AGM G에서 아직 시험하지 않았습니다.
 
 ### 타일 목록 (`tiles_night_school.png`, 왼쪽 위부터)
 
@@ -353,9 +364,24 @@ PNG는 모두 `src/`의 텍스트 원본에서 생성됩니다. PNG를 직접 �
 | 3 | `desk` `window_0_0` `window_1_0` `window_0_1` `window_1_1` `door_0_0` `door_1_0` `door_0_1` | 책상은 낮은 one-way 발판 후보. 창문은 2x2, 미닫이문은 2x3 타일 (`이름_x_y`) |
 | 4 | `door_1_1` `door_0_2` `door_1_2` `door_open_0_0` `door_open_1_0` `door_open_0_1` `door_open_1_1` `door_open_0_2` | 열린 문은 닫힌 문과 같은 2x3 배치 |
 | 5 | `door_open_1_2` `locker_0_0` `locker_0_1` `locker_open_0_0` `locker_open_0_1` `note` `note_glint` `candle_lit_0` | 사물함은 1x2 타일(숨는 곳). 쪽지는 `note`/`note_glint`를 번갈아 깜박임 |
-| 6 | `candle_lit_1` `candle_out` | 촛불 체크포인트: 켜짐 2프레임 깜박임, 꺼짐 |
+| 6 | `candle_lit_1` `candle_out` `wall_talisman` `wall_sigil` `wall_wainscot_scratch` `floor_chalk_l` `floor_chalk_m` `floor_chalk_r` | 촛불 체크포인트: 켜짐 2프레임 깜박임, 꺼짐. (v2) 부적·주술 문양이 붙은 회벽, 손톱 자국 난 판벽, 분필 원이 그려진 바닥 3칸 |
+| 7 | `candle_checkpoint` `candles_3` `floor_card` `door_s_0` `door_s_1` `ceiling_lamp` | (v2) 어두운 벽 앞 체크포인트 촛불, 촛불 셋, 바닥에 떨어진 카드, 1x2 나무문, 형광등 달린 천장(불투명) |
+
+v2에서 리디자인 타일로 바꾼 것: `floor_top` `floor_fill`(나무 마루), `floor_edge_l/r`(마루 끝에 외곽선을 더함), `ceiling`(형광등 타일의 천장 바탕), `lamp_off` `lamp_on`(벽 위 소품으로 쓰도록 바탕을 투명하게), `wall_plaster` `wall_plaster_crack` `wall_rail` `wall_wainscot`, `wall_wainscot_hand`(새 판벽 위에 예전 손자국), `talisman`(새 부적만 투명 바탕에), 창문 2x2, `locker_0_0/0_1`, `locker_open_*`(새 사물함 틀에 어두운 안쪽), 촛불 세 장(새 체크포인트 촛불에서). 리디자인에 짝이 없는 `shelf` `sign_plate` `geumjul` `desk`, 2x3 미닫이문, `note`는 예전 그림입니다.
 
 명패에는 글자 대신 자리표시 무늬만 넣었습니다. 반 이름 같은 텍스트는 대사 규칙상 데이터로 따로 관리하거나, 확정 후 아트로 그립니다.
+
+## v2 반영 내역 (2026-11-22)
+
+프로젝트 책임자가 보낸 「ARCANUM XXII 픽셀 작업」 묶음의 `03_platformer_redesign`(1x PNG)을 반영했습니다.
+
+| 받은 그림 (픽셀 그대로) | 그 그림에서 만든 것 | 그대로 둔 것 |
+|---|---|---|
+| 팔레트 29색(키 포함), 주인공 `idle_0 idle_1 walk_0~3 jump`, 그림자 손님 `idle_0` `grab`, 소복 귀신 `float_0` `reveal`, XXII 카드 2프레임, 타일 24종, 목업 `corridor_night` `corridor_otherworld` | 주인공 `fall crouch hurt interact turn_back death_0~2 run_0~3 climb_0~1`, `protagonist_death_gore`(예전 핏자국을 새 쓰러짐 프레임에), 그림자 손님 `idle_1 walk_0~1 look chase_0~1 vanish_0~2 _eye_glow`, 소복 `float_1 vanish_0~2`, 타일 `floor_edge_l/r ceiling lamp_off lamp_on wall_wainscot_hand talisman locker_open_* candle_*` | 탑다운 시트(앞·뒷모습이 리디자인되지 않아 좌우도 v1로 고정), 리디자인에 짝이 없는 타일, 좀비·괴이·점프스케어·굿 장면 등 다른 그림(팔레트 조정만 반영) |
+
+- 파생 프레임은 받은 프레임을 옮기고 이어 붙인 뒤 몇 줄을 손으로 고쳐 만들었습니다. 받은 그림보다 다듬어지지 않았으니 사람 아티스트가 손볼 첫 대상입니다.
+- 다시 만들기: `py -I private/tools_private/platformer_redesign_import.py <묶음 폴더>`(비공개 스토리 팩) 뒤 `python3 tools/pixelart.py`. 받은 그림의 렌더는 보내온 1x PNG와 픽셀 단위로 같습니다.
+- 데모(`prototype/demo/`)는 같은 프레임 이름을 쓰므로 바뀐 주인공·그림자 손님·소복 귀신이 그대로 나옵니다.
 
 ## AGM G에서 쓰는 법 (예정)
 

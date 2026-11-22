@@ -17,7 +17,7 @@ allowed-tools: Read Grep Glob Bash(python3 tools/pixelart.py *)
 - AI가 만든 원본·렌더는 `assets/original/AI_CONTENT.md`의 기록 범위 안에 있어야 한다. 새 폴더를 만들면 그 표에 반영한다.
 
 ## 그림 규칙
-1. 팔레트는 `assets/original/art/palette/night-school.pal`의 20개 키만 쓴다. 트랙·시간대 색은 같은 키의 다른 `.pal`로 `@swap` 한다. 트랙이 바뀌어도 색이 변하면 안 되는 UI는 `ui.pal`로 따로 그린다.
+1. 팔레트는 `assets/original/art/palette/night-school.pal`의 29개 키만 쓴다(아트 v2: 원래 20키 + 오컬트·회벽·나무·피부 9키). 트랙·시간대 색은 같은 키의 다른 `.pal`로 `@swap` 한다. 트랙이 바뀌어도 색이 변하면 안 되는 UI는 `ui.pal`로 따로 그린다.
 2. 기본값: 횡스크롤 옆모습, 오른쪽을 봄. 캐릭터 셀 32x40(어른 키 약 34px), 타일 16x16, 장면·인서트 320x180.
 3. 실루엣 → 색 덩어리 → 디테일 순서. 1배 크기에서 실루엣만으로 무엇인지 읽혀야 한다.
 4. 광원은 하나(기본 왼쪽 위 앞). 명암 경계는 뚜렷하게. 디더는 하늘·안개·비네트에만. 외톨이 픽셀 없음.
