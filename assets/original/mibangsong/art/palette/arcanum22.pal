@@ -1,0 +1,37 @@
+# ARCANUM XXII: the 22-colour palette of the internal card concept (ARCANUM XXII, 스물세 번째 패), used by the
+# 〈고을 기담〉 prop tarot cards and the E5 night cuts of the no-hope pack. A palette of its own, like ui.pal:
+# 33 keys share the 22 colours so the drawing keys stay readable (bone, flesh, water, ...).
+# v0.5: old gold and moss corrected to the concept's exact values (825422, 465430).
+K 0a060e void (outline)
+n 0a060e void (night sky)
+D 180e1e abyss
+c 180e1e abyss (deep water)
+N 2a1830 shade
+s 2a1830 shade (night mid)
+q 2a1830 shade (concrete dark)
+P 442646 dusk
+m 6a3a5e bruise
+M 965876 rose (LINEAR, the overdubbed thing)
+r 4a0c14 dried blood
+R 8a1620 blood
+b d42e2a crimson
+O e47028 ember (lamp glow)
+Y f4ba48 candle (card gold)
+o fcecba flame (lamp core)
+w fcecba flame (highlight)
+W e6decc bone
+V aa9e8a bone shade
+F aa9e8a bone shade (pale skin of the dead)
+Q aa9e8a bone shade (concrete light, glare)
+v 6a5e56 old bone
+f 6a5e56 old bone (skin shadow)
+B 283848 slate (water)
+t 283848 slate (dark teal)
+L 4e6c7a slate light
+T 4e6c7a slate light (HI-FI teal)
+x 9cc6c2 spirit (water light)
+S 4e4856 ash (steel, concrete)
+y 825422 old gold
+p 825422 old gold (wood)
+G 8c9c4e bile (drowned flesh)
+g 465430 moss (reeds, rot)

@@ -1,0 +1,10 @@
+# ST-JS2: right after the blackout's silence, a harsh voice-like buzz at the ear
+# (stand-in for the recorded automated voice). Rise 2 ms, body 800 ms, the loudest in chapter 1.
+@output ../stingers/st_js2_blackout.wav
+@length 1.4
+@seed 53
+layer noise amp=1.2 attack=0.001 dur=0.06 decay=0.03 hp=200
+layer square freq=196 amp=0.35 attack=0.002 dur=0.8 lp=2600 trem=6 trem_depth=0.5 fade=0.15
+layer saw freq=207.6 amp=0.35 attack=0.002 dur=0.8 lp=2400 trem=6 trem_depth=0.5 fade=0.15
+layer noise amp=0.3 attack=0.002 dur=0.8 hp=800 lp=2600 trem=6 trem_depth=0.6 fade=0.15
+layer sine freq=55 amp=0.4 attack=0.002 dur=0.8 decay=0.6

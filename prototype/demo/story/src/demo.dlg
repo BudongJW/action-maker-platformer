@@ -1,0 +1,247 @@
+// demo.dlg - generic placeholder story for the prototype. Not game content.
+// The private story pack replaces this whole folder when it is present.
+
+~doc demo_notice
+@category system
+
+title: Before you start  #line:demo_n_001
+p: This is a generic demo for the prototype. It has no game story.  #line:demo_n_002
+p: Esc opens the settings (scare mode, flashing, graphic content, volume, text size). M and P are shortcuts.  #line:demo_n_003
+
+
+~doc demo_card_rec
+@category board
+
+title: Recorded clip  #line:demo_card_001
+p: A clip you recorded with the camera (R) on the LINEAR track. Its timecode is pinned to the board.  #line:demo_card_002
+
+~doc demo_card_lamp
+@category board
+
+title: Lamp switched on  #line:demo_card_003
+p: Someone switched the lamp on. The flag stays on for the whole save.  #line:demo_card_004
+
+~doc demo_card_end
+@category board
+
+title: End of the tape  #line:demo_card_005
+p: The last card of the demo. It stays unknown until the demo ends.  #line:demo_card_006
+
+
+~doc demo_knot_1
+@category board_knot
+
+title: First knot — the lamp  #line:demo_knot_001
+p: Untied once someone switched the lamp on.  #line:demo_knot_002
+
+~doc demo_knot_2
+@category board_knot
+
+title: Second knot — the clip  #line:demo_knot_003
+p: Untied once the clip was recorded.  #line:demo_knot_004
+
+~doc demo_answer_1
+@category board_conclusion
+
+title: The keeper  #line:demo_answer_001
+p: The keeper told the rules.  #line:demo_answer_002
+
+
+~ demo_intro
+@style window
+@once save
+
+narrator: A tape is waiting in the deck.  #line:demo_i_001
+- Play it  #line:demo_i_002
+- Label it and play it  #line:demo_i_003
+    set save.demo_labelled = true
+narrator: The counter starts at zero.  #line:demo_i_004
+system [to=notice]: Tape loaded.  #line:demo_i_005 #ctx:A notice at the top right instead of a dialogue line
+=> END
+
+
+~ demo_call
+@requires sys.loop_count >= 2
+@once save
+@style window
+
+guide: Did it play? Try the switch on the back if it sounds wrong.  #line:demo_c_001
+- "Thanks, I will."  #line:demo_c_002
+    set save.aff_guide += 1
+- "I know how to run a deck."  #line:demo_c_003
+    set save.aff_guide -= 1
+set save.hifi_unlocked = true
+=> END
+
+
+~ demo_keeper
+@style bubble
+
+keeper: Keep to the path tonight.  #line:demo_k_001
+- "Thank you."  #line:demo_k_002
+    set save.aff_keeper += 1
+- "Why should I?"  #line:demo_k_003
+    set save.aff_keeper -= 1
+=> END
+
+
+// Affinity events: the keeper trigger offers these before demo_keeper once the keeper's affinity
+// (save.aff_keeper, raised and lowered by the choices above) crosses a threshold.
+~ demo_keeper_warm
+@requires save.aff_keeper >= 1
+@once save
+@style bubble
+
+keeper: You listened. Take the lamp on the shore, it lights the way back.  #line:demo_kw_001
+set save.demo_keeper_warm = true
+=> END
+
+
+~ demo_keeper_cold
+@requires save.aff_keeper <= -1
+@once save
+@style bubble
+
+keeper: Suit yourself. Nobody will wait for you on the path.  #line:demo_kc_001
+=> END
+
+
+~ demo_rules
+@style bubble
+
+if loop.track_hifi
+    keeper: When I call, answer with me.  #line:demo_r_001
+else
+    keeper: If someone calls your name, do not answer.  #line:demo_r_002
+=> END
+
+
+~ demo_call_linear
+@forbids loop.track_hifi
+@style bubble
+
+voice: Hello-  #line:demo_x_001
+- "Who is it?"  #line:demo_x_002
+    do emit scare_demo_jump
+- (Stay quiet)  #line:demo_x_003
+=> END
+
+
+~cue demo_sting
+voice [at=0.0] [dur=1.2]: Press one-  #line:demo_s_001
+
+
+~ demo_dark_linear
+@requires loop.power_cut
+@forbids loop.track_hifi
+@style caption
+
+narrator: The lights go out.  #line:demo_d_001
+do emit scare_demo_dark
+=> END
+
+
+~ demo_dark_hifi
+@requires loop.track_hifi and loop.power_cut
+@style bubble
+
+keeper: The lights are out. Keep going anyway.  #line:demo_d_002
+set save.demo_done = true
+=> END
+
+
+~bark demo_crowd
+@cooldown 4
+
+crowd: Quiet tonight.  #line:demo_b_001
+crowd: Look how low the water is.  #line:demo_b_002
+
+
+// Random events (the level's story_algorithm.random): each play of the tape draws one of these by
+// weight (the keeper's affinity tips it) and turns on loop.rand_<id>; a level trigger places it.
+~bark demo_r_lamp
+@requires loop.rand_r_lamp
+@cooldown 30
+
+keeper: Mind your step, the lamp is low.  #line:demo_rl_001 #ctx:Placeholder. Drawn more often when the keeper likes you
+
+~bark demo_r_turn
+@requires loop.rand_r_turn
+@cooldown 30
+
+narrator: The keeper turns away as you pass.  #line:demo_rt_001 #ctx:Placeholder. Drawn more often when the keeper does not
+
+~bark demo_r_wind
+@requires loop.rand_r_wind
+@cooldown 30
+
+narrator: The wind drops for a moment.  #line:demo_rw_001 #ctx:Placeholder. Not tied to anyone
+
+
+// Workroom random events: one drawn per visit, at the end of the visit's list.
+~ demo_h_note
+@requires loop.rand_h_note
+@forbids save.demo_closed
+@style window
+
+guide: I left a note on the deck for you.  #line:demo_hn_001 #ctx:Placeholder. Weighted by the guide's affinity
+=> END
+
+~ demo_h_static
+@requires loop.rand_h_static
+@forbids save.demo_closed
+@style window
+
+narrator: The deck hisses for a second, then stops.  #line:demo_hs_001 #ctx:Placeholder
+=> END
+
+
+// Workroom action (hub "actions", key N): a note on the deck.
+~ demo_notes
+@style window
+
+narrator: A note on the deck says to check the switch at the back.  #line:demo_note_001
+=> END
+
+
+// After the last tape: close out the job. The level's bot_prefer picks the second option.
+~ demo_close
+@requires save.demo_done
+@once save
+@style window
+
+narrator: The tape has run to the end. Time to file it.  #line:demo_cl_001
+- Ship it as it is  #line:demo_cl_002
+    set save.demo_ending = 1
+- File it with notes  #line:demo_cl_003
+    set save.demo_ending = 2
+narrator: A label goes on the spine.  #line:demo_cl_004
+// Story algorithm roles (the level's story_algorithm): the game writes save.role_helper and
+// save.role_villain from the affinity values.
+if save.role_helper == "keeper"
+    narrator: The keeper's lamp is still lit on the shore.  #line:demo_cl_010 #ctx:Placeholder. The helper role (highest affinity, 1 or more)
+elif save.role_villain == "keeper"
+    narrator: Someone has turned the keeper's lamp to the wall.  #line:demo_cl_011 #ctx:Placeholder. The villain role (lowest affinity, -1 or less)
+if sys.gore
+    narrator: A dark smear runs across the label.  #line:demo_cl_008 #ctx:Placeholder for a graphic line. sys.gore is the Graphic Content setting (on by default)
+else
+    narrator: The label is plain.  #line:demo_cl_009 #ctx:Placeholder for the veiled version of the line above
+system [to=os_dialog]: Filing complete.  #line:demo_cl_005 #ctx:Meta output. Without the player's consent it is a window drawn inside the game
+system [to=window_title]: Demo, filed  #line:demo_cl_006 #ctx:Meta output. Without consent, a title bar along the top
+narrator [to=desktop_file]: A note: the tape is filed.  #line:demo_cl_007 #ctx:Meta output. Without consent, a journal note
+set save.demo_closed = true
+=> END
+
+~doc demo_end
+@category system
+
+title: End of the demo  #line:demo_end_001
+p: The level's end_docs show this card when the end flag turns on.  #line:demo_end_002
+
+~doc demo_credits
+@category system
+
+title: Prototype demo  #line:demo_credits_001
+p: Generic placeholder content for testing the prototype.  #line:demo_credits_002
+p: The level's credits block rolls this document after the end card.  #line:demo_credits_003
+p: Godot Engine is available under the MIT license.  #line:demo_credits_004

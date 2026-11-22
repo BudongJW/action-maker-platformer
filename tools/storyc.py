@@ -49,10 +49,10 @@ FLAG_RE = re.compile(rf"^{IDENT}(?:\.[a-z0-9_]+)+$")
 RESERVED_SPEAKERS = ("narrator", "system")
 DOC_SPEAKERS = ("title", "p")
 KEYWORDS = ("if", "elif", "else", "set", "do")
-STYLES = ("window", "bubble", "caption")
+STYLES = ("window", "bubble", "caption", "notice")
 TARGETS = STYLES + ("os_dialog", "window_title", "desktop_file")
 TIERS = ("loop", "save", "meta")
-SYS_FLAGS = ("loop_count", "playthrough", "meta_os", "locale")
+SYS_FLAGS = ("loop_count", "playthrough", "meta_os", "locale", "gore")
 TOKENS = ("player_name", "loop_count", "os_user")
 KNOWN_TAGS = ("line", "ctx")
 
@@ -1524,6 +1524,9 @@ def analyze(root: Path) -> Result:
     for loc, table in tables.items():
         result.outputs[compiled_dir / f"strings.{loc}.json"] = _dump(table)
     result.outputs[story_dir / "l10n" / "strings.csv"] = csv_text
+    # Keep Godot (and ACTION GAME MAKER G) from importing strings.csv as a translation table;
+    # the game reads compiled/strings.<locale>.json instead.
+    result.outputs[story_dir / "l10n" / ".gdignore"] = ""
     if compiled_dir.is_dir():
         wanted = {compiled_dir / f"strings.{loc}.json" for loc in tables}
         result.stale_outputs = sorted(p for p in compiled_dir.glob("strings.*.json") if p not in wanted)

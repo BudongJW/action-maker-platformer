@@ -100,6 +100,34 @@ def encode_png(width, height, pixels):
             + chunk(b'IDAT', zlib.compress(bytes(raw), 9)) + chunk(b'IEND', b''))
 
 
+def _png_content(data):
+    """(chunks other than IDAT, decompressed image data) of a PNG, or None if it is not one."""
+    if not data.startswith(b'\x89PNG\r\n\x1a\n'):
+        return None
+    other, idat, i = [], bytearray(), 8
+    while i + 8 <= len(data):
+        length = struct.unpack('>I', data[i:i + 4])[0]
+        tag, body = data[i + 4:i + 8], data[i + 8:i + 8 + length]
+        if tag == b'IDAT':
+            idat += body
+        else:
+            other.append((tag, body))
+        i += 12 + length
+    try:
+        return other, zlib.decompress(bytes(idat))
+    except zlib.error:
+        return None
+
+
+def same_png(a, b):
+    """True if two PNG files hold the same image. zlib builds compress differently (CPython 3.14 on
+    Windows ships zlib-ng), so equal pixels can come out as different bytes."""
+    if a == b:
+        return True
+    ca, cb = _png_content(a), _png_content(b)
+    return ca is not None and ca == cb
+
+
 def scale_pixels(pixels, factor):
     out = []
     for row in pixels:
@@ -498,7 +526,7 @@ def main(argv=None):
                 if os.path.exists(out_path):
                     with open(out_path, 'rb') as f:
                         current = f.read()
-                if current == data:
+                if current is not None and same_png(current, data):
                     continue
                 if args.check:
                     stale.append(out_path)

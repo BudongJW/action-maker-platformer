@@ -197,6 +197,32 @@ class PixelArtTest(unittest.TestCase):
         Path(src).write_text(Path(src).read_text().replace("\nR\n", "\nK\n"))
         self.assertEqual(self.run_main("--check", src)[0], 1)
 
+    def test_check_ignores_how_zlib_compressed(self):
+        # Another zlib build (zlib-ng in CPython 3.14 on Windows) writes other bytes for the same
+        # pixels; that is not out of date, and the file is left alone.
+        src = self.write("z.pix", "@palette p.pal\n@size 4 2\n@output z.png\n@frame a\nKWRK\nRRWW\n")
+        self.assertEqual(self.run_main(src)[0], 0)
+        out = self.dir / "z.png"
+        data = out.read_bytes()
+        recompressed = bytearray(data)
+        pos = 8
+        while pos < len(recompressed):
+            length, tag = struct.unpack(">I4s", recompressed[pos:pos + 8])
+            if tag == b"IDAT":
+                body = zlib.compress(zlib.decompress(recompressed[pos + 8:pos + 8 + length]), 0)
+                recompressed[pos:pos + 12 + length] = (struct.pack(">I", len(body)) + b"IDAT" + body
+                                                       + struct.pack(">I", zlib.crc32(b"IDAT" + body)))
+                break
+            pos += 12 + length
+        recompressed = bytes(recompressed)
+        self.assertNotEqual(recompressed, data)
+        out.write_bytes(recompressed)
+        self.assertTrue(pixelart.same_png(recompressed, data))
+        self.assertEqual(self.run_main("--check", src)[0], 0)
+        self.assertEqual(self.run_main(src)[0], 0)
+        self.assertEqual(out.read_bytes(), recompressed)
+        self.assertFalse(pixelart.same_png(recompressed, data.replace(b"IHDR\x00\x00\x00\x04", b"IHDR\x00\x00\x00\x02")))
+
     def test_empty_root_is_ok(self):
         empty = self.dir / "empty"
         empty.mkdir()

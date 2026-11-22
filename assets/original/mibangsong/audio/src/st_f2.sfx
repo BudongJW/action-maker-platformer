@@ -1,0 +1,6 @@
+# ST-F2 (false scare): a phone vibrating on the desk. Rise 10 ms, body 400 ms, quiet.
+@output ../stingers/st_f2_phone.wav
+@length 0.6
+@seed 55
+layer square freq=160 amp=0.5 attack=0.01 dur=0.4 lp=420 fade=0.05
+layer noise amp=0.15 attack=0.01 dur=0.4 lp=900 hp=100 trem=80 trem_depth=0.9

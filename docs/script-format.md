@@ -2,7 +2,7 @@
 
 이 문서는 게임의 대사·바크·문서·자막을 작성하는 텍스트 포맷(`.dlg`)과, 그것을 컴파일한 데이터, 그리고 런타임이 지켜야 할 계약을 정의합니다. 설계 근거는 [`reports/오픈소스 게임 스토리 스크립트 분석.md`](../reports/오픈소스%20게임%20스토리%20스크립트%20분석.md)의 "캐릭터 스크립트는 레지스트리·줄 ID·3층 플래그로 설계하라" 절입니다.
 
-상태: **초안**. 컴파일러·린터는 [`tools/storyc.py`](../tools/storyc.py)로 구현되어 있습니다(12절). 런타임(GDScript)은 아직 구현되지 않았습니다.
+상태: **초안**. 컴파일러·린터는 [`tools/storyc.py`](../tools/storyc.py)(12절), 런타임은 [`scripts/story/`](../scripts/story/)(11절)에 구현되어 있습니다. 런타임은 Godot 4.7 헤드리스에서 테스트했지만, ACTION GAME MAKER G 안에서의 동작은 아직 확인하지 않았습니다.
 
 ---
 
@@ -33,11 +33,14 @@ assets/original/                      # All Rights Reserved
     ├── project.json                  # 원문 언어, 번역 언어, 길이 제한 (8절)
     ├── src/*.dlg                     # 원문 스크립트 (4~7절)
     ├── l10n/strings.csv              # 번역 표 (9절)
+    ├── l10n/.gdignore                # Godot이 CSV를 번역 리소스로 가져오지 않게 함 (컴파일러가 만듦)
     └── compiled/                     # 컴파일 결과, 커밋함 (10절)
         ├── story.json
         └── strings.<locale>.json
 
-tools/storyc.py                       # 컴파일러·린터 (GPL)
+scripts/story/*.gd                    # 런타임 (GPL, 11절)
+tools/storyc.py                       # 컴파일러·린터 (GPL, 12절)
+tools/run_godot_tests.py              # 런타임 테스트 실행기 (Godot 헤드리스)
 ```
 
 - `compiled/`는 컴파일러가 만드는 파일이지만 **커밋합니다.** AGM G 에디터와 내보내기 빌드가 Python 없이도 바로 읽을 수 있어야 하기 때문입니다. CI는 `compiled/`가 `src/`와 일치하는지 검사합니다.
@@ -137,7 +140,7 @@ tools/storyc.py                       # 컴파일러·린터 (GPL)
 | `@forbids <식>` | 조건식 | 참이면 시작할 수 없습니다. 여러 줄이면 하나라도 참이면 막힙니다. |
 | `@once [loop\|save\|meta]` | 층 | 해당 층에서 이미 본 대화(`seen.<층>.<id>`)면 시작할 수 없습니다. 층을 생략하면 `save`입니다. |
 | `@priority <정수>` | 기본 0 | 한 트리거에 후보 대화가 여럿일 때 높은 값부터 고릅니다(11절 `pick`). |
-| `@style <window\|bubble\|caption>` | 스타일 | 이 대화 안 모든 줄의 기본 출력 방식. 화자 레지스트리의 `style`보다 우선합니다. |
+| `@style <window\|bubble\|caption\|notice>` | 스타일 | 이 대화 안 모든 줄의 기본 출력 방식. 화자 레지스트리의 `style`보다 우선합니다. |
 
 ### 5.2 대사 줄
 
@@ -192,7 +195,7 @@ hongryeon (sad) [name=unknown]: 또 오셨네요. 이번이 몇 번째 밤인지
 - `[once]`: 이 세이브에서 한 번 고르면 다시 보이지 않습니다.
 - `=> <대상>`을 쓰면 고른 즉시 그곳으로 이동합니다. 대신 들여쓴 본문을 둘 수 있습니다.
 - 본문이 점프로 끝나지 않으면 **선택지 묶음 다음 줄로 이어집니다**(분기 후 다시 합류하는 branch-and-bottleneck 구조).
-- 보이는 선택지가 하나도 없으면 묶음 전체를 건너뜁니다.
+- 보이는 선택지가 하나도 없거나, 보이는 선택지가 모두 `[enable_if]`로 막혀 고를 수 있는 것이 없으면 묶음 전체를 건너뜁니다(막다른 화면 방지).
 
 ### 5.4 라벨과 점프
 
@@ -245,6 +248,9 @@ do emit open_east_gate
 | `loop_reset` | 없음 | 루프 리셋 요청(`loop.*`와 `seen.loop.*` 초기화) |
 | `window_shake` | 세기, 초 | **메타.** 실제 OS 창 흔들기(동의하지 않았으면 `shake`로 대체) |
 
+- 런타임은 모든 명령을 `command` 시그널로 게임에 넘깁니다. `loop_reset`은 런타임이 직접 루프를 리셋한 뒤에 알립니다. `window_shake`는 동의가 없거나 창을 움직일 수 없는 환경(Wayland, 웹, 모바일)이면 `shake`로 바꿔서 알립니다.
+- `wait`와 `fade`는 대화를 멈춥니다. 런타임이 씬 트리 안에 있으면 지정한 시간 뒤에 스스로 이어 가고, 게임이 그 전에 `resume()`을 불러도 됩니다.
+
 ---
 
 ## 6. 조건식, 플래그, 출력 대상
@@ -275,10 +281,13 @@ not_식  := "not" not_식 | 비교
 | `save.*` | 세이브 파일 하나 | 가능 | `save.has_seal`, `save.ibang_trust` |
 | `meta.*` | 세이브 슬롯과 새 게임을 넘어 유지(`user://meta.dat`) | 가능 | `meta.knows_name`, `meta.endings.true` |
 | `seen.loop.*` / `seen.save.*` / `seen.meta.*` | 각 층의 수명 | 런타임 자동 | `seen.meta.ch01_pond_ghost` |
-| `sys.*` | 런타임 제공 | 읽기 전용 | `sys.loop_count`, `sys.playthrough`, `sys.meta_os`, `sys.locale` |
+| `sys.*` | 런타임 제공 | 읽기 전용 | `sys.loop_count`, `sys.playthrough`, `sys.meta_os`, `sys.locale`, `sys.gore` |
 
-- **본 기록(`seen`).** 대화나 문서 블록이 **시작될 때** 런타임이 `seen.loop.<id>`, `seen.save.<id>`, `seen.meta.<id>`를 함께 참으로 만듭니다. 그래서 "이번 루프에서 봤나", "이 세이브에서 봤나", "어떤 세이브에서든 봤나"를 구분해 쓸 수 있습니다.
+- **본 기록(`seen`).** 대화가 **끝날 때**(`=> END`, 블록 끝, 다른 대화로 전환, `stop()` 모두 포함), 그리고 문서를 주울 때 런타임이 `seen.loop.<id>`, `seen.save.<id>`, `seen.meta.<id>`를 함께 참으로 만듭니다. 그래서 "이번 루프에서 봤나", "이 세이브에서 봤나", "어떤 세이브에서든 봤나"를 구분해 쓸 수 있습니다. 시작이 아니라 끝에 기록하므로, 대화 안에서 `seen.<층>.<자기 ID>`는 **이전에** 본 적이 있는지를 뜻합니다(13절 예시의 기시감 분기).
 - **`sys.meta_os`.** 플레이어가 실제 OS를 건드리는 메타 연출에 동의했는지를 나타냅니다. 기본값은 거짓입니다.
+- **호감도(`save.aff_<사람>`).** 런타임 플래그가 아니라 이름 약속입니다. 선택지 아래에 `set save.aff_mijeong += 1`(또는 `-= 1`)로 올리고 내리며, 처음에는 0으로 셉니다. 프로토타입은 레벨의 `affinity` 블록에 적힌 플래그만 지켜보다가 값이 바뀌면 오름·내림 알림을 띄우고, 값을 게이지 범위(기본 -3~3) 안으로 맞춥니다. 문턱 이벤트는 보통 대화로 씁니다: `@requires save.aff_mijeong >= 3`과 `@once save`. 테이프 장면이 루프마다 되풀이되므로, 같은 선택을 다시 고르면 값도 다시 움직입니다.
+- **역할과 랜덤 이벤트(`save.role_<이름>`, `loop.rand_<id>`).** 원고가 아니라 게임(레벨의 `story_algorithm`)이 쓰는 플래그입니다. 역할은 호감도 값에서 정해지는 텍스트라 `save.role_helper == "keeper"`처럼 비교하고(누가 조력자인지, 누가 빌런인지), 랜덤 이벤트는 플레이마다 가중치로 뽑혀 참이 됩니다(`@requires loop.rand_<id>`). 원고가 읽으므로 `project.json`의 `external_flags`에 적어 W101을 막습니다. 뽑는 규칙과 레벨 키는 `prototype/README.md`의 `story_algorithm`.
+- **`sys.gore`.** 플레이어가 잔혹 표현(신체 훼손을 그린 글과 그림)을 보이게 두었는지를 나타냅니다. 기본값은 참이고, 게임이 설정(「잔혹 표현: 보임/가림」)에서 `StoryFlags.gore`로 넣습니다. 원고는 `if sys.gore … else …`로 가린 판을 함께 쓰고, 프로토타입의 장면 그림(`art.cuts`의 `when`)은 `"requires": ["sys.gore"]`로 그림을 고릅니다.
 
 ### 6.3 출력 대상 (`[to=...]`)
 
@@ -287,9 +296,12 @@ not_식  := "not" not_식 | 비교
 | `window` | 초상화 대화창 | — |
 | `bubble` | 화자 노드 머리 위 말풍선 | — |
 | `caption` | 화면 하단 자막 | — |
-| `os_dialog` | **메타.** OS 알림창(`OS.alert` 등) | 게임 화면 안에 그린 가짜 시스템 창 |
-| `window_title` | **메타.** 게임 창 제목 | 화면 상단 캡션 |
-| `desktop_file` | **메타.** 바탕화면에 텍스트 파일 생성 | 게임 안 저널에 쪽지로 추가 |
+| `notice` | 화면 오른쪽 위 알림 한 줄. 대화창에 띄우지 않고 대화는 바로 다음 줄로 간다(프로토타입) | — |
+| `os_dialog` | **메타.** OS 알림창(`OS.alert` 등) | 게임 화면 안에 그린 가짜 시스템 창 (`fake_os_dialog`) |
+| `window_title` | **메타.** 게임 창 제목 | 화면 상단 캡션 (`caption`) |
+| `desktop_file` | **메타.** 바탕화면에 텍스트 파일 생성 | 게임 안 저널에 쪽지로 추가 (`journal_note`) |
+
+괄호 안은 런타임이 대체할 때 `line_started`의 `attrs.target`에 넣는 값입니다. 원래 요청한 대상은 `attrs.requested_target`에 남습니다.
 
 - 우선순위: 줄의 `[to=]` > 블록의 `@style` > 화자 레지스트리의 `style` > `window`.
 - 메타 대상은 `sys.meta_os`가 참일 때만 실제 OS에 출력합니다. 런타임은 **모든 메타 대상에 대체 연출을 반드시 구현**해야 합니다. 웹·모바일·Linux Wayland처럼 OS 조작이 막힌 환경에서도 같은 이야기가 진행되어야 하기 때문입니다.
@@ -462,30 +474,47 @@ ch01_pg_002,line,hongryeon,sad,"정체를 숨긴 화자, 체념한 존댓말",67
 
 ## 11. 런타임 계약 (GDScript, GPL)
 
-런타임은 GPL 코드이며 **대사 원문을 한 글자도 담지 않습니다**(CI의 `tools/check_dialogue_in_code.py`가 검사). 최소한 다음을 제공해야 합니다.
+런타임은 GPL 코드이며 **대사 원문을 한 글자도 담지 않습니다**(CI의 `tools/check_dialogue_in_code.py`가 검사). 구현은 [`scripts/story/`](../scripts/story/)에 있습니다.
 
-| API | 설명 |
+| 파일 | 클래스 | 역할 |
+|---|---|---|
+| `story_runner.gd` | `StoryRunner` (Node) | 대화 진행, 바크·문서·자막, 언어, 메타 대체 처리. 오토로드로 쓰는 것을 전제로 함 |
+| `story_flags.gd` | `StoryFlags` (RefCounted) | 플래그 층, `seen`·`[once]` 기록, 세이브 직렬화, 메타 파일 |
+| `story_condition.gd` | `StoryCondition` | 컴파일된 조건 트리 평가 |
+| `story_text.gd` | `StoryText` | 자리표시자 치환, `[wait=]` 위치 계산 |
+
+| API (`StoryRunner`) | 설명 |
 |---|---|
-| `load_story(story_json, strings_dir)` | 컴파일 결과 로드 |
-| `set_locale(locale)` | 표시 언어 변경. 없는 줄은 원문 언어로 대체 |
+| `load_story(story_json, strings_dir) -> Error` | 컴파일 결과와 원문 언어 문자열을 읽고, 메타 파일도 읽음 |
+| `set_locale(locale) -> bool` / `get_locale()` | 표시 언어 변경. 번역이 없거나 원문이 바뀐 줄은 원문 언어로 대체 |
 | `is_available(id) -> bool` | `@requires`/`@forbids`/`@once` 판정 |
 | `pick(ids) -> String` | 후보 중 시작 가능한 것을 `@priority` 높은 순, 같으면 나열 순으로 고름. 없으면 빈 문자열 |
-| `start(id)` / `advance()` / `choose(index)` | 대화 진행 |
-| `bark(pool_id, speaker_node)` | 바크 한 줄 출력(쿨다운·가중치·직전 줄 제외 처리) |
-| `play_cue(cue_id)` | 자막 큐 재생 |
+| `start(id)` / `advance()` / `choose(index)` / `resume()` / `stop()` | 대화 진행. `start`는 시작 조건을 검사하지 않음(트리거는 `pick` 또는 `is_available`을 먼저 호출) |
+| `bark(pool_id, speaker_node) -> Dictionary` | 바크 한 줄 출력(조건·쿨다운·가중치·직전 줄 제외). 못 말하면 빈 딕셔너리 |
+| `collect_doc(id)` / `get_doc(id)` / `collected_docs(category)` | 문서 줍기, 표시용 텍스트, 저널 목록 |
+| `play_cue(cue_id) -> Array` | 자막 줄 목록(`attrs.at`, `attrs.dur`) |
 | `get_flag(name)` / `set_flag(name, value)` | 플래그 읽기·쓰기 |
-| `reset_loop()` | `loop.*`, `seen.loop.*` 초기화, `sys.loop_count` 증가 |
-| `serialize_save()` / `restore_save(data)` | `save.*`, `seen.save.*`, 선택지 `[once]` 기록 |
+| `new_game()` / `reset_loop()` | 새 게임(`loop.*`·`save.*` 초기화, 회차 증가) / 루프 리셋(`loop.*`·`seen.loop.*` 초기화, `sys.loop_count` 증가) |
+| `serialize_save()` / `restore_save(data)` | `loop.*`, `save.*`, `seen.loop.*`, `seen.save.*`, `[once]` 기록, 루프 회차. 진행 중인 대화 위치는 저장하지 않음 |
+| `flags.set_meta_os(enabled)` | 실제 OS를 건드리는 메타 연출에 대한 플레이어 동의(`sys.meta_os`) |
 
 | 시그널 | 인자 |
 |---|---|
-| `line_started` | `line_id`, `speaker`, `expression`, `attrs`, `text`(치환·번역 완료) |
+| `dialogue_started` | `dialogue_id` |
+| `line_started` | `line_id`, `speaker`, `expression`, `attrs`, `text`(치환·번역 완료, `[wait=]` 제거) |
 | `choices_presented` | `[{line_id, text, enabled}]` |
-| `command` | `name`, `args` |
-| `dialogue_finished` | `id` |
+| `command` | `cmd`, `args` |
+| `dialogue_finished` | `dialogue_id` |
+| `bark_started` | `pool_id`, `line_id`, `speaker`, `expression`, `attrs`, `text` |
+| `doc_collected` | `doc_id` |
+| `cue_started` | `cue_id`, `lines` |
 
-- `meta.*`와 `seen.meta.*`는 값이 바뀔 때마다 `user://meta.dat`에 바로 저장합니다. 세이브를 지우거나 새 게임을 시작해도 남습니다.
-- **ACTION GAME MAKER G 연동(미검증).** AGM G의 Custom Action Plugin(`AGMPluginAction` / `AGMPluginCondition`)으로 "대화 시작(id 또는 후보 목록)", "대화 시작 가능?", "플래그 비교" 액션·조건을 만드는 것을 1안으로 합니다. AGM 안에서 이 플러그인 경로가 실제로 동작하는지는 AGM G가 설치된 PC에서 확인해야 합니다.
+`line_started`의 `attrs`에는 `display_name`(이름 덮어쓰기 반영), `portrait`, `color`, `blip`, `target`(대체 반영), `requested_target`, `emote`, `voice`, `voice_path`(`assets/original/voice/<언어>/<줄 ID>.ogg`가 있으면 그 경로), `side`, `waits`(`[{at, seconds}]`, `at`은 BBCode를 뺀 글자 위치), `dialogue_id`가 들어갑니다.
+
+- 표정을 생략한 줄은 같은 대화 안에서 그 화자가 마지막으로 쓴 표정을 이어받고, 처음이면 `default_expression`을 씁니다.
+- `meta.*`, `seen.meta.*`, 회차, 메타 동의는 값이 바뀔 때마다 `user://meta.dat`(JSON)에 바로 저장합니다. 세이브를 지우거나 새 게임을 시작해도 남습니다.
+- 신호 처리기 안에서 `advance()`·`choose()`·`resume()`·`start()`·`stop()`을 바로 불러도 됩니다.
+- **ACTION GAME MAKER G 연동(미검증).** AGM G의 Custom Action Plugin(`AGMPluginAction` / `AGMPluginCondition`)으로 "대화 시작(id 또는 후보 목록)", "대화 시작 가능?", "플래그 비교" 액션·조건을 만드는 것을 1안으로 합니다. AGM 안에서 이 플러그인 경로와 오토로드가 실제로 동작하는지, 내보내기 빌드에 `compiled/*.json`이 포함되는지는 AGM G가 설치된 PC에서 확인해야 합니다.
 
 ---
 
@@ -513,7 +542,7 @@ python3 tools/storyc.py --strict   # 경고도 실패로 처리
 | E007 | 오류 | 허용 목록에 없는 `do` 명령이나 잘못된 인자 |
 | E008 | 오류 | 블록 종류에 맞지 않는 문장(바크의 선택지, 문서의 일반 화자 등), 자막 큐의 `at`/`dur` 누락, 빈 블록 |
 | E009 | 오류 | `project.json` 또는 `character.json`이 잘못됨(필수 필드 누락, `default_expression`이 목록에 없음, 예약어 ID 등) |
-| E010 | 오류 | `--check`에서 `compiled/` 또는 `strings.csv`가 원문과 맞지 않음 |
+| E010 | 오류 | `--check`에서 `compiled/`, `strings.csv`, `l10n/.gdignore`가 원문과 맞지 않거나 없음 |
 | W101 | 경고 | 읽기만 하고 `.dlg` 어디서도 `set`하지 않는 플래그(`sys.*`, `seen.*`, `project.json`의 `external_flags` 제외) |
 | W102 | 경고 | 도달할 수 없는 라벨이나 문장 |
 | W103 | 경고 | 스타일별 `max_chars` 초과 |
@@ -617,3 +646,6 @@ narrator [at=3.5] [dur=4.0]: 그날 밤, 새 사또가 부임했다.  #line:ch01
 ## 변경 이력
 
 - v1 초안 (2026-11-17): 최초 작성.
+- v1 초안 (2026-11-17): 컴파일러(`tools/storyc.py`) 구현에 맞춰 `skip_pc`, E009·E010, W106 추가.
+- v1 초안 (2026-11-17): 런타임(`scripts/story/`) 구현. `seen` 기록 시점을 대화 시작에서 **끝**으로 변경(대화 안에서 자기 ID의 `seen`이 이전 기록을 뜻하도록), 고를 수 있는 선택지가 없으면 묶음을 건너뜀, 메타 대체 값(`fake_os_dialog`·`caption`·`journal_note`) 명시, 세이브에 루프 상태 포함, 컴파일러가 `l10n/.gdignore`를 만듦.
+- v1 초안 (2026-11-22): 런타임 플래그 `sys.gore`(잔혹 표현 설정, 기본 참) 추가.

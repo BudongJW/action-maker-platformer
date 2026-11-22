@@ -1,0 +1,43 @@
+# ARCANUM XXII sacred occult: arcanum22.pal (same 33 keys first) plus the 8 extra colours of the
+# "sacred occult" concept package (stained glass, icon skin, wood). Used by the E5 curse inserts (v0.6).
+K 0a060e void (outline)
+n 0a060e void (night sky)
+D 180e1e abyss
+c 180e1e abyss (deep water)
+N 2a1830 shade
+s 2a1830 shade (night mid)
+q 2a1830 shade (concrete dark)
+P 442646 dusk
+m 6a3a5e bruise
+M 965876 rose (LINEAR, the overdubbed thing)
+r 4a0c14 dried blood
+R 8a1620 blood
+b d42e2a crimson
+O e47028 ember (lamp glow)
+Y f4ba48 candle (card gold)
+o fcecba flame (lamp core)
+w fcecba flame (highlight)
+W e6decc bone
+V aa9e8a bone shade
+F aa9e8a bone shade (pale skin of the dead)
+Q aa9e8a bone shade (concrete light, glare)
+v 6a5e56 old bone
+f 6a5e56 old bone (skin shadow)
+B 283848 slate (water)
+t 283848 slate (dark teal)
+L 4e6c7a slate light
+T 4e6c7a slate light (HI-FI teal)
+x 9cc6c2 spirit (water light)
+S 4e4856 ash (steel, concrete)
+y 825422 old gold
+p 825422 old gold (wood)
+G 8c9c4e bile (drowned flesh)
+g 465430 moss (reeds, rot)
+1 1e245c glass blue deep
+2 3c5ca8 glass blue
+3 8aa6d6 glass blue light
+4 346c46 glass green
+8 76aa68 glass green light
+5 d6a080 icon skin, straw light
+6 3c281e dark wood, bark shadow
+7 96684c wood, bark

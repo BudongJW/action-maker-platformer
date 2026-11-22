@@ -1,0 +1,7 @@
+{
+  "id": "keeper",
+  "name": "Keeper",
+  "expressions": ["neutral"],
+  "default_expression": "neutral",
+  "style": "bubble"
+}

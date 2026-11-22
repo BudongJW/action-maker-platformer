@@ -1,0 +1,8 @@
+{
+  "format": 1,
+  "source_locale": "en",
+  "locales": ["en"],
+  "emotes": [],
+  "max_chars": {"bubble": 40, "caption": 60, "window": 120, "notice": 40},
+  "external_flags": ["loop.track_hifi", "loop.power_cut", "save.ev_lipsync", "save.role_helper", "save.role_villain", "loop.rand_r_lamp", "loop.rand_r_turn", "loop.rand_r_wind", "loop.rand_h_note", "loop.rand_h_static"]
+}
