@@ -22,6 +22,8 @@
 ##   follow {escort, gap, secs}     walks beside a level escort (`gap` pixels behind it) for secs
 ##   warp {x, y}, track {track}, wait {secs}, cue {id, secs}, scare {id, secs}
 ##   board {keys: ["RIGHT", "DOWN", ...], key_secs}   opens the deduction board and presses keys
+##   people {secs}                  opens the People page (affinity) for secs
+##   save_point {id}                uses the level's tape save point `id` here (its notice shows)
 ##   credits {id, secs}             rolls a document as end credits
 ##   end                            stops every sound and quits (ends the movie)
 class_name ProtoReel
@@ -173,6 +175,8 @@ func tick(delta: float) -> void:
 			if _t >= secs:
 				if kind == "doc":
 					game.ui.hide_doc()
+				elif kind == "people" and game.people.is_open():
+					game.people.close()
 				_next()
 
 
@@ -263,6 +267,13 @@ func _next() -> void:
 			game.board.open()
 			_keys = _step.get("keys", []).duplicate()
 			_key_left = float(_step.get("key_secs", 0.9))
+		"people":
+			game._open_people("")
+		"save_point":
+			for sp in game.data.get("save_points", []):
+				if String(sp.get("id", "")) == String(_step.get("id", "")):
+					game._take_checkpoint(sp)
+			_next()
 		"end":
 			_finish()
 

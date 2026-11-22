@@ -98,6 +98,7 @@ func build(level: Dictionary, label_font: Font = null, level_art: ProtoArt = nul
 			_label(String(npc.get("label", "")), p + Vector2(-30, -64))
 	for lb in level.get("labels", []):
 		_label(String(lb[2]), Vector2(float(lb[0]), float(lb[1])))
+	_build_save_points(level.get("save_points", []))
 
 
 ## True if `point` is inside a ladder.
@@ -281,6 +282,29 @@ func _build_props() -> void:
 				"negate": prop.has("unless_flag")})
 			holder.visible = prop.has("unless_flag")
 		add_child(outer)
+
+
+## Tape save points ("save_points": [{rect, ...}]): a marker at the bottom middle of each, the art
+## block's "save_point" picture ({sheet, frame}), else a small graybox post. The marker keeps its
+## colours on every track.
+func _build_save_points(points: Array) -> void:
+	for sp in points:
+		if not sp.has("rect"):
+			continue
+		var r := _rect(sp["rect"])
+		var foot := Vector2(r.position.x + r.size.x / 2.0, r.position.y + r.size.y)
+		var spec: Dictionary = art.cfg.get("save_point", {}) if art != null else {}
+		var tex: Texture2D = art.frame(String(spec.get("sheet", "")), String(spec.get("frame", ""))) \
+			if art != null and not spec.is_empty() else null
+		if tex != null:
+			var s := Sprite2D.new()
+			s.texture = tex
+			s.centered = false
+			s.position = foot - Vector2(tex.get_width() / 2.0, tex.get_height())
+			add_child(s)
+		else:
+			_rect_visual(Rect2(foot - Vector2(3, 28), Vector2(6, 28)), Color(0.95, 0.85, 0.55), self)
+			_label("SAVE", foot + Vector2(-16, -44))
 
 
 func _prop_sprite(holder: Node2D, tex: Texture2D, top_left: Vector2) -> void:

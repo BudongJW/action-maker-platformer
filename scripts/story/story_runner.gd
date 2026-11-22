@@ -15,8 +15,8 @@ extends Node
 
 ## A dialogue started. Lock player input until dialogue_finished.
 signal dialogue_started(dialogue_id: String)
-## Show a line, then call advance(). attrs: dialogue_id, display_name, portrait, color, blip,
-## target, requested_target, emote, voice, voice_path, side, waits.
+## Show a line, then call advance(). attrs: dialogue_id, display_name, alias ([name=...], or ""),
+## portrait, color, blip, target, requested_target, emote, voice, voice_path, side, waits.
 signal line_started(line_id: String, speaker: String, expression: String, attrs: Dictionary, text: String)
 ## Show options ({line_id, text, enabled}), then call choose(index).
 signal choices_presented(choices: Array)
@@ -535,6 +535,7 @@ func _line_event(op: Dictionary, block_style: Variant, kind_default: String, rem
 	var split := _Text.split_waits(_interpolate(get_text(line_id)))
 	var attrs := {
 		"display_name": display_name(speaker, String(op.get("name", ""))),
+		"alias": String(op.get("name", "")),
 		"portrait": "" if portrait == null else String(portrait),
 		"color": String(character.get("color", "")),
 		"blip": String(character.get("blip", "")),

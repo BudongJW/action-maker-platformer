@@ -237,6 +237,7 @@ func test_pond_ghost_first_loop() -> void:
 	check_eq(line["id"], "ch01_pg_002", "second line")
 	check_eq(line["expression"], "sad", "expression")
 	check_eq(line["attrs"]["display_name"], runner.display_name("hongryeon", "unknown"), "alias name")
+	check_eq(line["attrs"]["alias"], "unknown", "alias id for the game (portraits by alias)")
 	check_eq(line["attrs"]["portrait"], "res://assets/original/characters/hongryeon/portraits/sad.png", "portrait")
 	check_eq(line["text"], runner.get_text("ch01_pg_002"), "text from string table")
 	runner.advance()

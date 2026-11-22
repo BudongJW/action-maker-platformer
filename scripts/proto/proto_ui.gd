@@ -9,6 +9,7 @@ extends CanvasLayer
 
 var font: Font
 var _window: PanelContainer
+var _portrait: TextureRect
 var _name: Label
 var _text: Label
 var _hint: Label
@@ -138,8 +139,20 @@ func _ready() -> void:
 	_window.anchor_bottom = 0.96
 	# Taller content (choices) grows the window upward, never off the bottom of the screen.
 	_window.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	# The speaker's portrait on the left (set_portrait), the name and the text beside it.
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	_window.add_child(row)
+	_portrait = TextureRect.new()
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_portrait.size_flags_vertical = Control.SIZE_SHRINK_END
+	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_portrait.visible = false
+	row.add_child(_portrait)
 	var box := VBoxContainer.new()
-	_window.add_child(box)
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(box)
 	_name = _label(26, Color(0.95, 0.85, 0.55))
 	_text = _label(30, Color.WHITE)
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -338,6 +351,16 @@ func show_line(speaker: String, text: String, kind: String = "") -> void:
 	_text.text = ProtoUI.keep_words(text)
 	_clear_choices()
 	_hint.text = next_hint
+
+
+## The speaker's portrait beside the dialogue text, already scaled to screen pixels; null hides it.
+func set_portrait(tex: Texture2D) -> void:
+	_portrait.texture = tex
+	_portrait.visible = tex != null
+
+
+func portrait_shown() -> bool:
+	return _portrait.visible and _portrait.texture != null
 
 
 ## Lists the options; `selected` is highlighted (arrow keys move it, Enter picks it).

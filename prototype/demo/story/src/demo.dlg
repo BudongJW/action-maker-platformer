@@ -66,6 +66,10 @@ system [to=notice]: Tape loaded.  #line:demo_i_005 #ctx:A notice at the top righ
 @style window
 
 guide: Did it play? Try the switch on the back if it sounds wrong.  #line:demo_c_001
+- "Thanks, I will."  #line:demo_c_002
+    set save.aff_guide += 1
+- "I know how to run a deck."  #line:demo_c_003
+    set save.aff_guide -= 1
 set save.hifi_unlocked = true
 => END
 
@@ -74,6 +78,31 @@ set save.hifi_unlocked = true
 @style bubble
 
 keeper: Keep to the path tonight.  #line:demo_k_001
+- "Thank you."  #line:demo_k_002
+    set save.aff_keeper += 1
+- "Why should I?"  #line:demo_k_003
+    set save.aff_keeper -= 1
+=> END
+
+
+// Affinity events: the keeper trigger offers these before demo_keeper once the keeper's affinity
+// (save.aff_keeper, raised and lowered by the choices above) crosses a threshold.
+~ demo_keeper_warm
+@requires save.aff_keeper >= 1
+@once save
+@style bubble
+
+keeper: You listened. Take the lamp on the shore, it lights the way back.  #line:demo_kw_001
+set save.demo_keeper_warm = true
+=> END
+
+
+~ demo_keeper_cold
+@requires save.aff_keeper <= -1
+@once save
+@style bubble
+
+keeper: Suit yourself. Nobody will wait for you on the path.  #line:demo_kc_001
 => END
 
 

@@ -1,0 +1,57 @@
+# Dialogue portraits (mbs_portraits): 2026_ext.pal with the same 44 keys first, plus
+# clothing ramps (navy, khaki, brick) and a magenta accent.
+# Authoring script: private/tools_private/portraits.py
+K 0e0f12 outline
+D 1d2024 deep shadow
+N 2c3136 shadow
+U 46505a cool mid
+u 66727c cool light
+M 98a2a8 fluorescent grey
+W cfd2cc plaster, paper
+w eef0ea highlight
+G 3b4a40 dark green
+g 5b6b5d green
+p 4a3a30 wood dark
+P 74604e wood
+s e0b493 skin
+h b07c64 skin shadow
+H 26221f hair
+R b8443c red (REC lamp only)
+r 6e2a26 dark red
+Y f2e2a0 screen and lamp light
+C 7fe0d0 HI-FI teal (waveform)
+c 3a9a98 teal dark
+q 6e4446 skin core shadow
+j c8957a skin mid
+t f0ceb0 skin light
+e fbe8d6 skin highlight
+l b86a62 lip, flush
+L 8a4a4a lip shadow
+X 3c3634 hair dark
+x 5c5a66 hair cool, steel
+v b6bcbe wall light
+o 7e8890 wall mid
+b 6a4024 tape
+B 3a2214 tape dark
+y a86c38 tape sheen
+1 183232 drain water deep
+2 24484a drain water
+3 3a6a6a drain water light
+4 948fa0 drowned skin
+5 666274 drowned skin shadow
+6 3c3844 drowned skin deep
+7 bebbc4 drowned skin light
+8 6a7466 grime
+9 d2aaa2 nail bed
+0 8a5e66 raw flesh
+E 4e5650 grate shadow
+A 1e2438 navy deep
+F 313e5e navy
+I 4c5d80 navy light
+J 3c3a26 khaki dark
+O 6a6642 khaki
+Q 9a9466 khaki light
+T 7e3430 brick
+V a85444 brick light
+Z ff5ad0 magenta accent
+z a8308c magenta dark

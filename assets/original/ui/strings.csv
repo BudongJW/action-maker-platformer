@@ -46,7 +46,7 @@ ui.options.scare_hint,약하게: 소리를 줄이고 직전에 짧은 신호음�
 ui.options.gore,잔혹 표현,Graphic Content
 ui.options.gore_shown,보임,Shown
 ui.options.gore_veiled,가림,Veiled
-ui.options.gore_hint,가림: 신체 훼손을 그린 그림과 글을 가린 판으로 바꿉니다. 이야기는 같습니다.,"Veiled: pictures and lines showing mutilation are replaced by veiled versions. The story stays the same."
+ui.options.gore_hint,가림: 신체 훼손을 그린 그림과 글을 가린 판으로 바꿉니다. 이야기는 같습니다.,Veiled: pictures and lines showing mutilation are replaced by veiled versions. The story stays the same.
 ui.options.controls,"{tab_prev}{tab_next} 탭, 위·아래 항목, 좌·우 값, {cancel} 닫기","{tab_prev}{tab_next}: tab, Up/Down: item, Left/Right: value, {cancel}: close"
 ui.prompt.hang_lantern,등불 걸기,Hang the Lantern
 ui.board.title,추리 보드,Deduction Board
@@ -63,7 +63,7 @@ ui.hub.deadline,마감 처리 {key},Close Out the Job {key}
 ui.hub.notes,메모 보기 {key},Read the Notes {key}
 ui.dialog.ok,확인,OK
 ui.journal.added,기록철에 남김,Added to the Journal
-ui.title.confirm_new,저장된 진행이 지워집니다. 처음부터 시작할까요?,Your saved progress will be lost. Start a new game?
+ui.title.confirm_new,새 게임으로 저장하면 지금 저장이 덮어써집니다. 처음부터 시작할까요?,Saving in a new game replaces your current save. Start a new game?
 ui.common.yes,예,Yes
 ui.common.no,아니요,No
 ui.hub.counter,작업실 · 재생 {n},Workroom · Play {n}
@@ -186,3 +186,17 @@ ui.options.content_notice,콘텐츠 안내,Content Notice
 ui.options.content_notice_hint,처음 시작할 때 본 안내를 다시 봅니다. 놀래는 연출과 깜박임도 여기서 바꿀 수 있습니다.,Read the notice shown at the first start again. Scares and flashing can be changed there too.
 ui.options.sound_captions,소리 자막,Sound Captions
 ui.options.sound_captions_hint,단서가 되는 소리를 대괄호 자막으로 띄웁니다.,Shows sounds that matter as captions in brackets.
+ui.hub.save,여기서 저장 {key},Save here {key}
+ui.hub.save_log,작업 일지에 적기(저장) {key},Write up the work log (save) {key}
+ui.prompt.save,저장하기,Save
+ui.prompt.counter_memory,카운터 메모리(저장),Counter memory (save)
+ui.save.done,저장했습니다,Saved
+ui.save.checkpoint,체크포인트에 저장했습니다,Saved at the checkpoint
+ui.save.counter_memory,카운터를 기억했습니다(저장),Counter remembered (saved)
+ui.save.back,체크포인트로 돌아왔습니다,Back to the checkpoint
+ui.affinity.up,호감도 상승: {name},Affinity up: {name}
+ui.affinity.down,호감도 하락: {name},Affinity down: {name}
+ui.pause.people,인물,People
+ui.people.title,인물과 호감도,People and affinity
+ui.people.empty,아직 만난 사람이 없습니다.,You have not met anyone yet.
+ui.people.controls,"{menu_left}{menu_right}{menu_up}{menu_down} 고르기, {cancel} 닫기","{menu_left}{menu_right}{menu_up}{menu_down}: select, {cancel}: close"

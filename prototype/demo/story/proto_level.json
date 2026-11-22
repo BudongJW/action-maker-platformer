@@ -205,6 +205,45 @@
         "prompt": "ui.hub.notes",
         "bot": true
       }
+    ],
+    "save_point": {
+      "key": "S",
+      "prompt": "ui.hub.save"
+    }
+  },
+  "save_points": [
+    {
+      "id": "candle_a",
+      "rect": [
+        700,
+        700,
+        80,
+        100
+      ],
+      "prompt": "ui.prompt.save",
+      "notice": "ui.save.checkpoint"
+    }
+  ],
+  "affinity": {
+    "people": [
+      {
+        "id": "keeper",
+        "flag": "save.aff_keeper",
+        "speaker": "keeper",
+        "portrait": "sunrye",
+        "met": [
+          "seen.save.demo_keeper"
+        ]
+      },
+      {
+        "id": "guide",
+        "flag": "save.aff_guide",
+        "speaker": "guide",
+        "portrait": "archivist",
+        "met": [
+          "seen.save.demo_call"
+        ]
+      }
     ]
   },
   "board": {
@@ -291,6 +330,8 @@
         100
       ],
       "dialogue": [
+        "demo_keeper_warm",
+        "demo_keeper_cold",
         "demo_keeper"
       ]
     },
@@ -419,7 +460,10 @@
     "save.demo_labelled",
     "save.demo_ending",
     "save.demo_closed",
-    "save.demo_walked"
+    "save.demo_walked",
+    "save.aff_keeper",
+    "save.aff_guide",
+    "save.demo_keeper_warm"
   ],
   "bot_route": [
     {
@@ -435,6 +479,17 @@
   ],
   "art": {
     "zoom": 3,
+    "save_point": {
+      "sheet": "assets/original/art/tiles/tiles_night_school.png",
+      "frame": "candle_lit_0"
+    },
+    "portraits": {
+      "sheet": "assets/original/mibangsong/art/portraits/mbs_portraits.png",
+      "speakers": {
+        "keeper": "sunrye",
+        "guide": "archivist"
+      }
+    },
     "camera_offset_y": -30,
     "vhs": {"off_flag": "save.demo_camera_off", "noise": 0.05},
     "base_palette": "assets/original/art/palette/night-school.pal",

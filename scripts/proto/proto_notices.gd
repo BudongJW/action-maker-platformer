@@ -61,7 +61,8 @@ func _ready() -> void:
 	_save = save_row
 
 
-## Queues a notice. `kind`: "card", "knot", "doc", "track", "rec" or "info" (the icon).
+## Queues a notice. `kind`: "card", "knot", "doc", "track", "rec", "aff_up", "aff_down", "save" or
+## "info" (the icon).
 func push(kind: String, text: String) -> void:
 	_queue.append({"kind": kind, "text": text})
 
@@ -202,6 +203,20 @@ class _Glyph extends Control:
 				draw_rect(Rect2(4, 11, 8, 2), dark)
 			"rec":
 				draw_circle(Vector2(8, 8), 6.0, Color(0.92, 0.3, 0.3))
+			"aff_up", "aff_down":
+				# A heart, and an arrow beside it (up warm, down cold), so it reads without colour.
+				var heart := Color(0.95, 0.72, 0.45) if kind == "aff_up" else Color(0.45, 0.62, 0.85)
+				draw_circle(Vector2(4, 6), 3.0, heart)
+				draw_circle(Vector2(9, 6), 3.0, heart)
+				draw_colored_polygon(PackedVector2Array([Vector2(1, 7), Vector2(12, 7), Vector2(6.5, 13)]), heart)
+				var tip := 1.0 if kind == "aff_up" else 15.0
+				var base := 7.0 if kind == "aff_up" else 9.0
+				draw_colored_polygon(PackedVector2Array([Vector2(14, tip), Vector2(11, base), Vector2(17, base)]), color)
+			"save":
+				# A cassette: the case, two reels.
+				draw_rect(Rect2(0, 3, 16, 11), color)
+				draw_circle(Vector2(5, 8), 2.0, dark)
+				draw_circle(Vector2(11, 8), 2.0, dark)
 			"reel":
 				draw_circle(Vector2(8, 8), 7.0, color)
 				draw_circle(Vector2(8, 8), 2.0, dark)

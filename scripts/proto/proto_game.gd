@@ -29,8 +29,12 @@ const FONT_NAMES := ["Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", "Apple
 enum Phase { HUB, TAPE, END, TITLE }
 
 const SAVE_PATH := "user://proto_save.json"
-const SAVE_FORMAT := 1
-const PAUSE_OPTIONS := ["resume", "journal", "log", "options", "to_title"]
+## 2: saves are made only at save points ("where": "hub" or "tape", a tape save carries its
+## checkpoint). Format 1 files (the old workroom autosave) load as workroom saves.
+const SAVE_FORMAT := 2
+const PAUSE_OPTIONS := ["resume", "journal", "log", "people", "options", "to_title"]
+## Pixel size of a portrait frame in the art block's "portraits" sheet.
+const PORTRAIT_SIZE := 64.0
 
 var runner: StoryRunner
 var director: ScareDirector
@@ -124,6 +128,19 @@ var _bot_actions := {}  # workroom action keys the bot has used
 var _save_path := SAVE_PATH  # "" keeps the save in memory (bot runs, reels)
 var _memory_save: Dictionary = {}
 var _bot_reloaded := false
+## The tape save point used last in this play: {id, tape, pos, track, story, journal, done, events}.
+## Being caught goes back to it instead of rewinding the tape (empty: no checkpoint in this play).
+var _checkpoint: Dictionary = {}
+var _checkpoint_restores := 0
+var _save_point_here: Dictionary = {}
+var _save_point_used := ""
+var _saved_this_visit := false
+## Affinity values seen last (person id -> number), for the up/down notices.
+var _aff_state: Dictionary = {}
+var _aff_ready := false
+var people: ProtoPeople
+var _bot_tried_people := false
+var _portrait_cache: Dictionary = {}
 var _title_options: Array = []
 var _title_selected := 0
 var _paused := false
@@ -239,6 +256,12 @@ func _ready() -> void:
 	ui.add_child(backlog)
 	backlog.setup(font, ui.window_style(), ui.choice_style())
 	backlog.closed.connect(_on_menu_closed)
+	# The people page (affinity), opened from the pause menu when the level has an "affinity" block.
+	people = ProtoPeople.new()
+	people.input = input
+	ui.add_child(people)
+	people.setup(font, ui.window_style())
+	people.closed.connect(_on_menu_closed)
 	settings = ProtoSettings.new()
 	settings.director = director
 	settings.audio = audio
@@ -382,7 +405,7 @@ func _title_cmd(cmds: Array) -> void:
 				_continue_game()
 			"new_game":
 				if not _read_save().is_empty():
-					# A new game overwrites the save at its first workroom visit: ask first.
+					# A new game overwrites the save the first time the player saves: ask first.
 					_title_options = ["confirm_no", "confirm_yes"]
 					_title_selected = 0
 					ui.show_title("", tr("ui.title.confirm_new"), _title_options.map(func(o): return tr("ui." + o.replace("confirm_", "common."))), 0)
@@ -402,6 +425,7 @@ func _start_new_game() -> void:
 	ui.hide_title()
 	runner.new_game()
 	_notice_ready = false
+	_aff_ready = false
 	ui.notices.clear()
 	journal.reset()
 	backlog.clear()
@@ -419,28 +443,36 @@ func _open_pause() -> void:
 	_draw_pause()
 
 
+## The pause menu's options: the people page only when the level keeps affinity.
+func _pause_options() -> Array:
+	return PAUSE_OPTIONS.filter(func(o): return o != "people" or not _affinity_people().is_empty())
+
+
 func _draw_pause() -> void:
-	ui.show_title(tr("ui.pause.title"), "", PAUSE_OPTIONS.map(func(o): return tr("ui.pause." + o)), _pause_selected, true)
+	ui.show_title(tr("ui.pause.title"), "", _pause_options().map(func(o): return tr("ui.pause." + o)), _pause_selected, true)
 
 
 func _pause_cmd(cmds: Array) -> void:
+	var options := _pause_options()
 	if cmds.has("menu_up") or cmds.has("menu_down"):
-		_pause_selected = wrapi(_pause_selected + (-1 if cmds.has("menu_up") else 1), 0, PAUSE_OPTIONS.size())
+		_pause_selected = wrapi(_pause_selected + (-1 if cmds.has("menu_up") else 1), 0, options.size())
 		_draw_pause()
 	elif cmds.has("cancel") or cmds.has("pause"):
 		_close_pause()
 	elif cmds.has("accept"):
-		match String(PAUSE_OPTIONS[_pause_selected]):
+		match String(options[_pause_selected]):
 			"resume":
 				_close_pause()
 			"journal":
 				_open_journal("pause")
 			"log":
 				_open_log("pause")
+			"people":
+				_open_people("pause")
 			"options":
 				settings.open()
 			"to_title":
-				# Progress since the last workroom visit is not kept (the save is made there).
+				# Progress since the last save point is not kept (saves are made only there).
 				get_tree().reload_current_scene()
 
 
@@ -472,15 +504,26 @@ func _continue_game() -> void:
 		return
 	_log("continue")
 	backlog.clear()  # the log is not saved
+	var cp: Dictionary = state.get("checkpoint", {})
+	if String(state.get("where", "hub")) == "tape" and not cp.is_empty():
+		# Saved at a tape save point: the tape starts again from that point.
+		_start_loop()
+		_checkpoint = cp
+		_apply_checkpoint(cp)
+		return
 	_enter_hub(false)
 
 
-## Saves at the start of every workroom visit (before its dialogues run), so Continue comes back to
-## the last workroom: between tapes, and before the choice that ends the game.
-func _autosave() -> void:
-	var state := {"format": SAVE_FORMAT, "story": runner.serialize_save(),
+## Saves are made only at save points (docs/ui-ux.md): the workroom's save point ("hub":
+## {"save_point"}) and the tape's ("save_points"). `where` is "hub" or "tape"; a tape save carries
+## its checkpoint so Continue starts the tape there.
+func _write_save(where: String, checkpoint: Dictionary = {}) -> void:
+	var state := {"format": SAVE_FORMAT, "where": where, "story": runner.serialize_save(),
 		"track": ["hifi", "linear", "mix"][int(mixer.get_track())], "journal": journal.store()}
+	if not checkpoint.is_empty():
+		state["checkpoint"] = checkpoint
 	ui.notices.saving()
+	_log("save " + where)
 	if _save_path == "":
 		_memory_save = JSON.parse_string(JSON.stringify(state))  # the same round trip as a file
 		return
@@ -497,10 +540,99 @@ func _read_save() -> Dictionary:
 	if not FileAccess.file_exists(_save_path):
 		return {}
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_save_path))
-	if typeof(parsed) != TYPE_DICTIONARY or int(parsed.get("format", 0)) != SAVE_FORMAT:
+	if typeof(parsed) != TYPE_DICTIONARY or not int(parsed.get("format", 0)) in [1, SAVE_FORMAT]:
 		push_warning("ProtoGame: ignoring unreadable save %s" % _save_path)
 		return {}
 	return parsed
+
+
+## The workroom save point: saves now and says so.
+func _save_at_hub() -> void:
+	_write_save("hub")
+	_saved_this_visit = true
+	ui.notices.push("save", tr("ui.save.done"))
+	audio.play("rec_on")
+	_show_hub_prompt()
+
+
+## A tape save point: remembers this moment of the play (the counter, where the player stands, the
+## story so far) and saves it. Being caught later in the same play comes back here.
+func _take_checkpoint(sp: Dictionary) -> void:
+	_checkpoint = {
+		"id": String(sp.get("id", "")),
+		"tape": mixer.tape_time(),
+		"pos": [player.global_position.x, player.global_position.y],
+		"track": ["hifi", "linear", "mix"][int(mixer.get_track())],
+		"story": runner.serialize_save(),
+		"journal": journal.store(),
+		"done": _done.keys(),
+		"events": _events.keys(),
+	}
+	_write_save("tape", _checkpoint)
+	ui.notices.push("save", tr(String(sp.get("notice", "ui.save.checkpoint"))))
+	audio.play("rec_on")
+
+
+## Caught by the chaser: back to the play's checkpoint if there is one, otherwise the tape rewinds
+## (the loop ends). A bot goes back at most once per play, so a chase it cannot win still ends.
+func _caught() -> void:
+	if not _checkpoint.is_empty() and not (bot and _checkpoint_restores >= 1):
+		_checkpoint_restores += 1
+		_restore_checkpoint()
+		return
+	_end_loop()
+
+
+func _restore_checkpoint() -> void:
+	_log("back to checkpoint " + String(_checkpoint.get("id", "")))
+	director.cancel_all()
+	runner.stop()
+	ui.hide_window()
+	_choices.clear()
+	runner.restore_save(_checkpoint.get("story", {}))
+	journal.restore(_checkpoint.get("journal", {}))
+	# Flags went back in time: take the new values as they are, without notices.
+	_notice_ready = false
+	_aff_ready = false
+	_apply_checkpoint(_checkpoint)
+	audio.play("deck_rewind")
+	ui.notices.push("save", tr("ui.save.back"))
+
+
+## Puts the play back to a checkpoint: counter, track, triggers and events already passed, the
+## player's place. The chase and the rising water start over.
+func _apply_checkpoint(cp: Dictionary) -> void:
+	phase = Phase.TAPE
+	mixer.set_track(_track_named(String(cp.get("track", "linear"))))
+	mixer.seek(float(cp.get("tape", 0.0)))
+	mixer.sync_flags()
+	mixer.apply_layers(level)
+	_apply_tint()
+	_done.clear()
+	for id in cp.get("done", []):
+		_done[String(id)] = true
+	_events.clear()
+	for ev in cp.get("events", []):
+		_events[String(ev)] = true
+	var dark_event: String = String(data.get("darkness_event", ""))
+	ui.set_darkness(float(data.get("darkness_alpha", 0.55)) if dark_event != "" and _events.has(dark_event) else 0.0)
+	var pos: Array = cp.get("pos", data.get("player_start", [100, 600]))
+	player.global_position = Vector2(float(pos[0]), float(pos[1]))
+	player.velocity = Vector2.ZERO
+	player.pose_override = ""
+	player.frozen = false
+	player.camera().reset_smoothing()
+	_last_safe = player.global_position
+	_save_point_used = String(cp.get("id", ""))  # standing on it: it rests until the player steps off
+	_chaser_on = false
+	_chaser.visible = false
+	_catching = false
+	_chaser_flag_started = false
+	_scare_on = ""
+	for i in _water_rise.size():
+		_water_rise[i] = 0.0
+		_water_barked[i] = false
+	_reset_escorts()
 
 
 func _restore(state: Dictionary) -> bool:
@@ -509,15 +641,18 @@ func _restore(state: Dictionary) -> bool:
 	mixer.set_track(_track_named(String(state.get("track", "linear"))))
 	journal.restore(state.get("journal", {}))
 	_notice_ready = false
+	_aff_ready = false
 	return true
 
 
-## The bot loads its own save once (at the second workroom visit) and checks that the story state
-## comes back unchanged, so the smoke test covers saving and loading.
+## The bot loads its own save once (at a workroom visit after it has saved at the workroom's save
+## point) and checks that the story state comes back unchanged, so the smoke test covers saving and
+## loading.
 func _bot_reload_check() -> bool:
-	if not bot or _bot_reloaded or _stats["loops"] < 1 or _memory_save.is_empty():
+	if not bot or _bot_reloaded or _stats["loops"] < 1:
 		return false
 	_bot_reloaded = true
+	_write_save("hub")  # as if the bot had used the workroom's save point
 	var before := JSON.stringify(runner.serialize_save())
 	runner.new_game()
 	if not _restore(_memory_save) or JSON.stringify(runner.serialize_save()) != before:
@@ -535,7 +670,8 @@ func _enter_hub(first: bool) -> void:
 	ui.set_darkness(0.0)
 	_show_hub_art(true)
 	audio.enter_hub()
-	_autosave()
+	# No autosave: the workroom has a save point ("hub": {"save_point"}) the player uses.
+	_saved_this_visit = false
 	if _bot_reload_check():
 		_enter_hub(false)
 		return
@@ -593,12 +729,24 @@ func _hub_actions_ready() -> Array:
 	for action in data.get("hub", {}).get("actions", []):
 		if _requirements_met(action) and runner.is_available(String(action.get("dialogue", ""))):
 			ready.append(action)
+	# The workroom's save point: {"key", "prompt", "requires"}; once per visit is enough.
+	var sp: Dictionary = data.get("hub", {}).get("save_point", {})
+	if not sp.is_empty() and not _saved_this_visit and _requirements_met(sp):
+		var entry := sp.duplicate()
+		entry["save"] = true
+		entry["bot"] = true
+		if not entry.has("prompt"):
+			entry["prompt"] = "ui.hub.save"
+		ready.append(entry)
 	return ready
 
 
 func _hub_action(action: Dictionary) -> void:
 	ui.set_hub("")
 	_log("hub action " + String(action.get("key", "")))
+	if bool(action.get("save", false)):
+		_save_at_hub()
+		return
 	runner.start(String(action.get("dialogue", "")))
 
 
@@ -640,6 +788,9 @@ func _start_loop() -> void:
 	audio.play("tape_start")
 	_done.clear()
 	_events.clear()
+	_checkpoint = {}
+	_checkpoint_restores = 0
+	_save_point_here = {}
 	_chaser_on = false
 	_catching = false
 	_chaser_flag_started = false
@@ -724,7 +875,7 @@ func _process(delta: float) -> void:
 	if reel_on:
 		reel.tick(delta)
 	if settings.is_open() or (board != null and board.is_open()) or _paused or journal.is_open() \
-			or backlog.is_open() or _journal_reading or first_run.is_open():
+			or backlog.is_open() or people.is_open() or _journal_reading or first_run.is_open():
 		# The settings screen and the board pause the tape, the player and the scare clock.
 		player.frozen = true
 		return
@@ -800,7 +951,7 @@ func _command(cmds: Array, key: InputEventKey = null) -> void:
 		return
 	if board != null and board.handle(cmds):
 		return
-	if journal.handle(cmds) or backlog.handle(cmds):
+	if journal.handle(cmds) or backlog.handle(cmds) or people.handle(cmds):
 		return
 	if _journal_reading:
 		if cmds.has("accept") or cmds.has("interact") or cmds.has("cancel"):
@@ -887,9 +1038,9 @@ func _input(event: InputEvent) -> void:
 	if settings.mouse(event):
 		get_viewport().set_input_as_handled()
 		return
-	if journal.is_open() or backlog.is_open():
+	if journal.is_open() or backlog.is_open() or people.is_open():
 		# The wheel is left to the lists' scroll containers.
-		if journal.mouse(event) or backlog.mouse(event):
+		if journal.mouse(event) or backlog.mouse(event) or people.mouse(event):
 			get_viewport().set_input_as_handled()
 		return
 	var button := event as InputEventMouseButton
@@ -972,6 +1123,7 @@ func _on_line(id: String, speaker: String, _expression: String, attrs: Dictionar
 	elif target == "journal_note" or target == "desktop_file":
 		kind = "note"
 	ui.show_line(String(attrs.get("display_name", speaker)), text, kind)
+	ui.set_portrait(_portrait_for_line(speaker, attrs) if kind == "" else null)
 	backlog.add_line(_play_count(), _tape_at(), String(attrs.get("display_name", speaker)), text)
 	# Auto-advance (a setting) waits as long as the line takes to read; up to 12 seconds, since a
 	# dialogue window line can be three times as long as a caption.
@@ -979,6 +1131,59 @@ func _on_line(id: String, speaker: String, _expression: String, attrs: Dictionar
 		if settings.auto_advance() else -1.0
 	# Some voices have no body on screen; a soft waveform stands in for them.
 	ui.set_voice(speaker in _voice_speakers)
+
+
+## The speaker's portrait for the dialogue window. The art block's "portraits": {"sheet",
+## "speakers": {"<speaker>" or "<speaker>.<alias>": frame}, "dialogues": {"<dialogue id>":
+## {"<speaker>[.<alias>]" or "*": frame or ""}}} picks a frame of the sheet ("dialogues" first, for
+## a person shown at another age, or "" for a voice heard on a recording). Without it, the
+## character file's own portrait (attrs.portrait) is used. Narration has none.
+func _portrait_for_line(speaker: String, attrs: Dictionary) -> Texture2D:
+	var cfg: Dictionary = art.cfg.get("portraits", {}) if art != null and art.enabled() else {}
+	if cfg.is_empty():
+		var path := String(attrs.get("portrait", ""))
+		return _portrait_from_file(path) if path != "" else null
+	var alias := String(attrs.get("alias", ""))
+	var keys: Array = ([speaker + "." + alias] if alias != "" else []) + [speaker]
+	var by_dialogue: Dictionary = cfg.get("dialogues", {}).get(String(attrs.get("dialogue_id", "")), {})
+	for key in keys + ["*"]:
+		if by_dialogue.has(key):
+			return _portrait_tex(String(by_dialogue[key]), _portrait_scale())
+	var speakers: Dictionary = cfg.get("speakers", {})
+	for key in keys:
+		if speakers.has(key):
+			return _portrait_tex(String(speakers[key]), _portrait_scale())
+	return null
+
+
+## Screen pixels per portrait pixel: a whole number, the portrait about a fifth of the screen high.
+func _portrait_scale() -> int:
+	return maxi(1, int(get_viewport().get_visible_rect().size.y * 0.2 / PORTRAIT_SIZE))
+
+
+func _portrait_tex(frame_name: String, k: int) -> Texture2D:
+	if frame_name == "" or art == null:
+		return null
+	var key := "%s@%d" % [frame_name, k]
+	if not _portrait_cache.has(key):
+		var sheet := String(art.cfg.get("portraits", {}).get("sheet", ""))
+		_portrait_cache[key] = art.scaled(sheet, frame_name, k) if sheet != "" else null
+	return _portrait_cache[key]
+
+
+func _portrait_from_file(path: String) -> Texture2D:
+	var key := "file:" + path
+	if not _portrait_cache.has(key):
+		var tex := load(path) as Texture2D if ResourceLoader.exists(path) else null
+		var img := tex.get_image() if tex != null else null
+		if img != null:
+			if img.is_compressed():
+				img.decompress()
+			var k := maxi(1, int(get_viewport().get_visible_rect().size.y * 0.2 / float(img.get_height())))
+			img.resize(img.get_width() * k, img.get_height() * k, Image.INTERPOLATE_NEAREST)
+			tex = ImageTexture.create_from_image(img)
+		_portrait_cache[key] = tex
+	return _portrait_cache[key]
 
 
 ## Auto-advance: once the line has been on screen long enough, the next one. Never past choices
@@ -1147,7 +1352,7 @@ func _on_scare_finished(id: String) -> void:
 		_catching = false
 		player.pose_override = ""
 		if phase == Phase.TAPE:
-			_end_loop()
+			_caught()
 		return
 	if phase == Phase.TAPE and id in chaser.get("start_after", []) and mixer.get_track() == TrackMixer.Track.LINEAR:
 		_chaser_on = true
@@ -1210,8 +1415,40 @@ func _check_triggers() -> void:
 				runner.set_flag(String(tr["mark"]), true)
 		if runner.is_running():
 			break
+	# Tape save points ("save_points": [{id, rect, prompt, notice, requires, from, to, track,
+	# after_event}]): where nothing else asks for the interact key, it saves a checkpoint.
+	# A save point rests once used until the player steps out of it.
+	_save_point_here = {}
+	if _prompt_here == "" and not runner.is_running():
+		for sp in data.get("save_points", []):
+			if _save_point_open(sp, t, p):
+				_save_point_here = sp
+				if String(sp.get("id", "")) == _save_point_used:
+					break
+				_prompt_here = String(sp.get("prompt", "ui.prompt.save"))
+				if _interact_pressed:
+					_interact_pressed = false
+					_save_point_used = String(sp.get("id", ""))
+					_take_checkpoint(sp)
+				break
+	if _save_point_here.is_empty():
+		_save_point_used = ""
 	_interact_pressed = false
 	_show_prompt()
+
+
+func _save_point_open(sp: Dictionary, t: float, p: Vector2) -> bool:
+	if not sp.has("rect") or not ProtoLevel.to_rect(sp["rect"]).has_point(p):
+		return false
+	if sp.has("from") and t < float(sp["from"]):
+		return false
+	if sp.has("to") and t > float(sp["to"]):
+		return false
+	if sp.has("track") and not _track_is(String(sp["track"])):
+		return false
+	if sp.has("after_event") and not _events.has(String(sp["after_event"])):
+		return false
+	return _requirements_met(sp)
 
 
 func _fire(tr: Dictionary) -> bool:
@@ -1274,13 +1511,28 @@ func _requirements_met(entry: Dictionary) -> bool:
 		var negate := name.begins_with("!")
 		if negate:
 			name = name.substr(1)
-		var on: bool
-		var eq := name.find("=")
-		if eq > 0:
-			# "flag=value" compares a number or text flag, for example "save.ending=5".
-			on = str(runner.get_flag(name.substr(0, eq))) == name.substr(eq + 1)
-		else:
-			on = runner.get_flag(name) == true
+		var on: bool = runner.get_flag(name) == true
+		for op: String in [">=", "<=", ">", "<", "="]:
+			var at := name.find(op)
+			if at <= 0:
+				continue
+			var flag := name.substr(0, at)
+			var rhs := name.substr(at + op.length())
+			if op == "=":
+				# "flag=value" compares a number or text flag, for example "save.ending=5".
+				on = str(runner.get_flag(flag)) == rhs
+			else:
+				# "flag>=2" and the like compare numbers (an unset flag counts as 0), for example an
+				# affinity threshold "save.aff_keeper>=2".
+				var lhs: Variant = runner.get_flag(flag)
+				var a := float(lhs) if typeof(lhs) in [TYPE_INT, TYPE_FLOAT] else 0.0
+				var b := float(rhs)
+				match op:
+					">=": on = a >= b
+					"<=": on = a <= b
+					">": on = a > b
+					"<": on = a < b
+			break
 		if on == negate:
 			return false
 	return true
@@ -1398,7 +1650,7 @@ func _update_chaser(delta: float) -> void:
 		var catch_id: String = String(data.get("chaser", {}).get("catch_scare", ""))
 		if catch_id == "" or not director.trigger(catch_id):
 			_catching = false
-			_end_loop()
+			_caught()
 
 
 # --- Art ----------------------------------------------------------------------------------
@@ -1586,6 +1838,79 @@ func _watch_notices() -> void:
 				_notice_for(key)
 	_notice_state = now
 	_notice_ready = true
+	_watch_affinity()
+
+
+## The level's "affinity" block: {"people": [{"id", "flag", "speaker", "alias", "portrait", "min",
+## "max", "met": [flags]}]}. Choices in the story change the flags (set save.aff_<id> += 1); each
+## change shows an up or down notice. Threshold events are dialogues that require a value
+## (@requires save.aff_<id> >= 2), or level entries with "requires": ["save.aff_<id>>=2"].
+func _affinity_people() -> Array:
+	return data.get("affinity", {}).get("people", [])
+
+
+func _affinity_value(person: Dictionary) -> float:
+	var v: Variant = runner.get_flag(String(person.get("flag", "")))
+	return float(v) if typeof(v) in [TYPE_INT, TYPE_FLOAT] else 0.0
+
+
+func _person_name(person: Dictionary) -> String:
+	return runner.display_name(String(person.get("speaker", person.get("id", ""))), String(person.get("alias", "")))
+
+
+func _watch_affinity() -> void:
+	var people_cfg := _affinity_people()
+	if people_cfg.is_empty():
+		return
+	for person in people_cfg:
+		if String(person.get("flag", "")) == "":
+			continue
+		var id := String(person.get("id", ""))
+		var v := _affinity_value(person)
+		if _aff_ready and _aff_state.has(id) and v != float(_aff_state[id]):
+			var up := v > float(_aff_state[id])
+			ui.notices.push("aff_up" if up else "aff_down",
+				tr("ui.affinity.up" if up else "ui.affinity.down").format({"name": _person_name(person)}))
+			_log("affinity %s %s%d" % [id, "+" if up else "", int(v - float(_aff_state[id]))])
+		# Kept inside the gauge ("min".."max", default -3..3): choices repeated on every play of the
+		# tape cannot pile up past it, and the other way stays reachable.
+		var lo := float(person.get("min", -3))
+		var hi := float(person.get("max", 3))
+		if v < lo or v > hi:
+			v = clampf(v, lo, hi)
+			runner.set_flag(String(person["flag"]), int(v))
+		_aff_state[id] = v
+	_aff_ready = true
+
+
+## People met so far, for the people page: a person is met once any of their "met" flags is on or
+## their affinity has moved.
+func _people_list() -> Array:
+	var out: Array = []
+	for person in _affinity_people():
+		var flag := String(person.get("flag", ""))
+		var met := flag != "" and runner.get_flag(flag) != null
+		for f in person.get("met", []):
+			if runner.get_flag(String(f)) == true:
+				met = true
+		if not met:
+			continue
+		var entry := {"id": person.get("id", ""), "name": _person_name(person),
+			"portrait": _portrait_tex(String(person.get("portrait", person.get("id", ""))), maxi(1, _portrait_scale()))}
+		# A person without a flag is on the page for their portrait only (no gauge).
+		if flag != "":
+			entry["value"] = _affinity_value(person)
+			entry["min"] = float(person.get("min", -3))
+			entry["max"] = float(person.get("max", 3))
+		out.append(entry)
+	return out
+
+
+func _open_people(from: String) -> void:
+	_menu_return = from
+	if from == "pause":
+		ui.hide_title()
+	people.open(_people_list())
 
 
 func _notice_for(key: String) -> void:
@@ -1879,6 +2204,15 @@ func _bot_step(delta: float) -> void:
 		return
 	if phase == Phase.HUB and not _bot_tried_journal and journal.has_docs():
 		_bot_journal()
+		return
+	if phase == Phase.HUB and not _bot_tried_people and not _people_list().is_empty():
+		# The people page once someone is on it: move about, close.
+		_bot_tried_people = true
+		_open_people("")
+		for cmd in ["menu_right", "menu_down", "menu_left", "menu_up", "cancel"]:
+			people.command(cmd)
+		if people.is_open():
+			push_error("people: the page did not close")
 		return
 	if _board_ready() and _bot_board_seen != _board_state():
 		# Exercise the board whenever something new is on it: every card, then the other rows.
