@@ -40,10 +40,11 @@ TEST_SCRIPTS = [
     ("res://tests/godot/test_scare_director.gd", "scare director"),
     ("res://tests/godot/test_track_mixer.gd", "track mixer"),
     ("res://tests/godot/test_proto_input.gd", "prototype input"),
+    ("res://tests/godot/test_story_algo.gd", "story algorithm"),
 ]
 SCRIPT_DIRS = ("story", "scare", "tracks")
 # Single prototype scripts that have no dependencies on the rest of the prototype.
-SCRIPT_FILES = ("proto/proto_input.gd",)
+SCRIPT_FILES = ("proto/proto_input.gd", "proto/proto_story_algo.gd")
 
 # Characters used by the spec example besides hongryeon (whose registry is in the spec).
 EXTRA_CHARACTERS = {

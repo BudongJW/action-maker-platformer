@@ -140,6 +140,9 @@ var _aff_state: Dictionary = {}
 var _aff_ready := false
 var people: ProtoPeople
 var _bot_tried_people := false
+## The running chase's "modifiers" (the level's chaser block): a speed factor and seconds it waits.
+var _chase_speed_k := 1.0
+var _chase_hold := 0.0
 var _portrait_cache: Dictionary = {}
 var _title_options: Array = []
 var _title_selected := 0
@@ -628,6 +631,7 @@ func _apply_checkpoint(cp: Dictionary) -> void:
 	_chaser.visible = false
 	_catching = false
 	_chaser_flag_started = false
+	_chase_hold = 0.0
 	_scare_on = ""
 	for i in _water_rise.size():
 		_water_rise[i] = 0.0
@@ -675,6 +679,7 @@ func _enter_hub(first: bool) -> void:
 	if _bot_reload_check():
 		_enter_hub(false)
 		return
+	_draw_random("hub")
 	var hub: Dictionary = data.get("hub", {})
 	_hub_queue = (hub.get("start", []) if first else []) + hub.get("between", [])
 	_run_hub_queue()
@@ -794,10 +799,12 @@ func _start_loop() -> void:
 	_chaser_on = false
 	_catching = false
 	_chaser_flag_started = false
+	_chase_hold = 0.0
 	_scare_on = ""
 	player.pose_override = ""
 	_chaser.visible = false
 	_reset_escorts()
+	_draw_random("tape")
 	ui.set_darkness(0.0)
 	_water_rise.clear()
 	_water_barked.clear()
@@ -1357,7 +1364,7 @@ func _on_scare_finished(id: String) -> void:
 	if phase == Phase.TAPE and id in chaser.get("start_after", []) and mixer.get_track() == TrackMixer.Track.LINEAR:
 		_chaser_on = true
 		_chaser.visible = true
-		_chaser.position = player.global_position + Vector2(float(chaser.get("offset", -360)), -56)
+		_chaser.position = player.global_position + Vector2(_chase_start(float(chaser.get("offset", -360))), -56)
 		if _chaser_sprite != null:
 			_chaser_sprite.play("idle")
 
@@ -1484,9 +1491,14 @@ func _fire(tr: Dictionary) -> bool:
 		_show_doc(String(tr["doc"]))
 		return true
 	if tr.has("bark"):
-		var line := runner.bark(String(tr["bark"]))
-		if not line.is_empty():
-			_show_bark(line, true)
+		# A pool id, or a list tried in order: the first pool whose conditions hold speaks (for
+		# example one pool per story-algorithm role).
+		var pools: Array = tr["bark"] if typeof(tr["bark"]) == TYPE_ARRAY else [tr["bark"]]
+		for pool_id: Variant in pools:
+			var line := runner.bark(String(pool_id))
+			if not line.is_empty():
+				_show_bark(line, true)
+				break
 		return false
 	if tr.has("cue"):
 		var cues: Dictionary = tr["cue"]
@@ -1626,7 +1638,7 @@ func _update_chaser(delta: float) -> void:
 			and (stop_flag == "" or runner.get_flag(stop_flag) != true):
 		_chaser_flag_started = true
 		_chaser_on = true
-		_chaser.position = player.global_position + Vector2(float(chaser_cfg.get("start_offset", -360)), -56)
+		_chaser.position = player.global_position + Vector2(_chase_start(float(chaser_cfg.get("start_offset", -360))), -56)
 	if not _chaser_on or _catching:
 		return
 	var linear := mixer.get_track() == TrackMixer.Track.LINEAR
@@ -1634,8 +1646,11 @@ func _update_chaser(delta: float) -> void:
 	# It holds still while a scare is on screen, so a player startled by one is not caught for it.
 	if not linear or runner.is_running() or _scare_on != "":
 		return
+	if _chase_hold > 0.0:
+		_chase_hold -= delta  # a modifier's "hold": it waits before it moves
+		return
 	var target := player.global_position + Vector2(-18, -56)
-	var speed: float = float(data.get("chaser", {}).get("speed", 150.0)) * settings.chase_speed_factor()
+	var speed: float = float(data.get("chaser", {}).get("speed", 150.0)) * settings.chase_speed_factor() * _chase_speed_k
 	if _chaser_sprite != null:
 		_chaser_sprite.flip_h = target.x < _chaser.position.x
 	_chaser.position.x = move_toward(_chaser.position.x, target.x, speed * delta)
@@ -1839,6 +1854,7 @@ func _watch_notices() -> void:
 	_notice_state = now
 	_notice_ready = true
 	_watch_affinity()
+	_update_roles()
 
 
 ## The level's "affinity" block: {"people": [{"id", "flag", "speaker", "alias", "portrait", "min",
@@ -1913,6 +1929,99 @@ func _open_people(from: String) -> void:
 	people.open(_people_list())
 
 
+# --- Story algorithm ---------------------------------------------------------------------
+# The level's "story_algorithm" block (prototype/README.md): roles picked from affinity, written as
+# text flags save.role_<name>, and random events drawn per play into loop.rand_<id>. The story and the
+# level read those flags; nothing else changes here.
+
+
+## Picks every role again from the affinity values; a role with a "freeze" condition that holds keeps
+## the value it has (for example while a scene that depends on it is playing).
+func _update_roles() -> void:
+	var roles: Array = data.get("story_algorithm", {}).get("roles", [])
+	if roles.is_empty():
+		return
+	var values := {}
+	for person in _affinity_people():
+		values[String(person.get("id", ""))] = _affinity_value(person)
+	for role: Dictionary in roles:
+		var flag := "save.role_" + String(role.get("name", ""))
+		var current: Variant = runner.get_flag(flag)
+		if current != null and not role.get("freeze", []).filter(func(f): return _requirements_met({"requires": [f]})).is_empty():
+			continue
+		var who := ProtoStoryAlgo.pick_role(role, values)
+		if current == null or str(current) != who:
+			runner.set_flag(flag, who)
+			_log("role %s %s" % [role.get("name", ""), who])
+
+
+## A "weights" key's value for the random events: a condition in the level's "requires" form
+## ("!save.role_villain=dub", "save.aff_mansu>=1") counts 1 or 0; a flag gives its number, true 1.
+func _algo_value(key: String) -> float:
+	if key.begins_with("!") or "=" in key or "<" in key or ">" in key:
+		return 1.0 if _requirements_met({"requires": [key]}) else 0.0
+	var v: Variant = runner.get_flag(key)
+	if typeof(v) == TYPE_BOOL:
+		return 1.0 if v else 0.0
+	return float(v) if typeof(v) in [TYPE_INT, TYPE_FLOAT] else 0.0
+
+
+## Draws one pool's events for this play ("random": {"pools": {name: {"draw", "events"}}}): each
+## event of the pool is turned off, then up to "draw" of those whose "requires" hold are turned on
+## by weight. The workroom pool is drawn on each visit, the tape pool as the tape starts.
+func _draw_random(pool_name: String) -> void:
+	var cfg: Dictionary = data.get("story_algorithm", {}).get("random", {})
+	var pool: Dictionary = cfg.get("pools", {}).get(pool_name, {})
+	if pool.is_empty():
+		return
+	var prefix := String(cfg.get("prefix", "loop.rand_"))
+	var open: Array = []
+	for event: Dictionary in pool.get("events", []):
+		runner.set_flag(prefix + String(event.get("id", "")), false)
+		if _requirements_met(event):
+			open.append(event)
+	var seed_value := ProtoStoryAlgo.seed_for(_rng_seed(), int(runner.get_flag("sys.loop_count")), pool_name)
+	var picked := ProtoStoryAlgo.draw(open, int(pool.get("draw", 1)), seed_value, _algo_value)
+	for id: String in picked:
+		runner.set_flag(prefix + id, true)
+	_stats["random"] = int(_stats.get("random", 0)) + picked.size()
+	_log("random %s: %s" % [pool_name, ", ".join(picked) if not picked.is_empty() else "-"])
+
+
+## The game's random seed (save.rng_seed, or the block's "seed_flag"), chosen once per new game:
+## `-- --seed N` when given, 1 for bot runs and reels (so they repeat), otherwise at random.
+func _rng_seed() -> int:
+	var flag := String(data.get("story_algorithm", {}).get("random", {}).get("seed_flag", "save.rng_seed"))
+	var v: Variant = runner.get_flag(flag)
+	if typeof(v) in [TYPE_INT, TYPE_FLOAT]:
+		return int(v)
+	var args := OS.get_cmdline_user_args()
+	var at := args.find("--seed")
+	var chosen := 1
+	if at >= 0 and at + 1 < args.size():
+		chosen = int(args[at + 1])
+	elif not bot and not "--reel" in args:
+		chosen = randi_range(1, 999999)
+	runner.set_flag(flag, chosen)
+	return chosen
+
+
+## The chaser's "modifiers": [{"requires", "speed", "start_offset", "hold"}] that hold as a chase
+## starts. Speeds multiply, the last start_offset wins, the longest hold wins. Returns the offset.
+func _chase_start(offset: float) -> float:
+	_chase_speed_k = 1.0
+	_chase_hold = 0.0
+	for mod: Dictionary in data.get("chaser", {}).get("modifiers", []):
+		if not _requirements_met(mod):
+			continue
+		_chase_speed_k *= float(mod.get("speed", 1.0))
+		offset = float(mod.get("start_offset", offset))
+		_chase_hold = maxf(_chase_hold, float(mod.get("hold", 0.0)))
+	if _chase_speed_k != 1.0 or _chase_hold > 0.0:
+		_log("chase speed x%.2f hold %.1f" % [_chase_speed_k, _chase_hold])
+	return offset
+
+
 func _notice_for(key: String) -> void:
 	var kind := key.get_slice(":", 0)
 	var what := key.substr(kind.length() + 1)
@@ -1957,6 +2066,7 @@ func _sound_caption(key: String) -> void:
 ## Otherwise the bubble, with the speaker's name when `named`.
 func _show_bark(line: Dictionary, named: bool) -> void:
 	var attrs: Dictionary = line.get("attrs", {})
+	_log("bark %s" % line.get("id", ""))
 	var voice: Dictionary = data.get("voices", {}).get(String(line.get("speaker", "")), {})
 	var side := String(attrs.get("side", voice.get("side", "")))
 	if not voice.is_empty() or side in ["left", "right"]:
@@ -2321,6 +2431,13 @@ func _finish_bot(reason: String) -> void:
 	if _finished:
 		return
 	_finished = true
+	# The smoke test covers the story algorithm: every role was picked and some random event drawn.
+	var algo: Dictionary = data.get("story_algorithm", {})
+	for role: Dictionary in algo.get("roles", []):
+		if runner.get_flag("save.role_" + String(role.get("name", ""))) == null:
+			push_error("ProtoGame: role '%s' was never picked" % role.get("name", ""))
+	if not algo.get("random", {}).get("pools", {}).is_empty() and int(_stats.get("random", 0)) == 0:
+		push_error("ProtoGame: the story algorithm drew no random event")
 	var flags: PackedStringArray = []
 	for f in data.get("report_flags", []):
 		flags.append("%s=%s" % [f, str(runner.get_flag(String(f)))])

@@ -157,6 +157,45 @@ crowd: Quiet tonight.  #line:demo_b_001
 crowd: Look how low the water is.  #line:demo_b_002
 
 
+// Random events (the level's story_algorithm.random): each play of the tape draws one of these by
+// weight (the keeper's affinity tips it) and turns on loop.rand_<id>; a level trigger places it.
+~bark demo_r_lamp
+@requires loop.rand_r_lamp
+@cooldown 30
+
+keeper: Mind your step, the lamp is low.  #line:demo_rl_001 #ctx:Placeholder. Drawn more often when the keeper likes you
+
+~bark demo_r_turn
+@requires loop.rand_r_turn
+@cooldown 30
+
+narrator: The keeper turns away as you pass.  #line:demo_rt_001 #ctx:Placeholder. Drawn more often when the keeper does not
+
+~bark demo_r_wind
+@requires loop.rand_r_wind
+@cooldown 30
+
+narrator: The wind drops for a moment.  #line:demo_rw_001 #ctx:Placeholder. Not tied to anyone
+
+
+// Workroom random events: one drawn per visit, at the end of the visit's list.
+~ demo_h_note
+@requires loop.rand_h_note
+@forbids save.demo_closed
+@style window
+
+guide: I left a note on the deck for you.  #line:demo_hn_001 #ctx:Placeholder. Weighted by the guide's affinity
+=> END
+
+~ demo_h_static
+@requires loop.rand_h_static
+@forbids save.demo_closed
+@style window
+
+narrator: The deck hisses for a second, then stops.  #line:demo_hs_001 #ctx:Placeholder
+=> END
+
+
 // Workroom action (hub "actions", key N): a note on the deck.
 ~ demo_notes
 @style window
@@ -177,6 +216,12 @@ narrator: The tape has run to the end. Time to file it.  #line:demo_cl_001
 - File it with notes  #line:demo_cl_003
     set save.demo_ending = 2
 narrator: A label goes on the spine.  #line:demo_cl_004
+// Story algorithm roles (the level's story_algorithm): the game writes save.role_helper and
+// save.role_villain from the affinity values.
+if save.role_helper == "keeper"
+    narrator: The keeper's lamp is still lit on the shore.  #line:demo_cl_010 #ctx:Placeholder. The helper role (highest affinity, 1 or more)
+elif save.role_villain == "keeper"
+    narrator: Someone has turned the keeper's lamp to the wall.  #line:demo_cl_011 #ctx:Placeholder. The villain role (lowest affinity, -1 or less)
 if sys.gore
     narrator: A dark smear runs across the label.  #line:demo_cl_008 #ctx:Placeholder for a graphic line. sys.gore is the Graphic Content setting (on by default)
 else

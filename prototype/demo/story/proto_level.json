@@ -186,7 +186,9 @@
           "save.hifi_unlocked"
         ]
       },
-      "demo_close"
+      "demo_close",
+      "demo_h_note",
+      "demo_h_static"
     ],
     "scares": {
       "demo_call": "demo_phone"
@@ -297,6 +299,84 @@
           ]
         }
       ]
+    }
+  },
+  "story_algorithm": {
+    "roles": [
+      {
+        "name": "helper",
+        "pick": "highest",
+        "min": 1,
+        "people": [
+          "keeper",
+          "guide"
+        ],
+        "default": "none"
+      },
+      {
+        "name": "villain",
+        "pick": "lowest",
+        "max": -1,
+        "people": [
+          "keeper",
+          "guide"
+        ],
+        "default": "shade"
+      }
+    ],
+    "random": {
+      "pools": {
+        "tape": {
+          "draw": 1,
+          "events": [
+            {
+              "id": "r_lamp",
+              "weight": 0.5,
+              "weights": {
+                "save.aff_keeper": 1
+              },
+              "group": "keeper",
+              "requires": [
+                "seen.save.demo_keeper"
+              ]
+            },
+            {
+              "id": "r_turn",
+              "weight": 0.5,
+              "weights": {
+                "save.aff_keeper": -1
+              },
+              "group": "keeper",
+              "requires": [
+                "seen.save.demo_keeper"
+              ]
+            },
+            {
+              "id": "r_wind",
+              "weight": 1
+            }
+          ]
+        },
+        "hub": {
+          "draw": 1,
+          "events": [
+            {
+              "id": "h_note",
+              "weight": 0.5,
+              "weights": {
+                "save.aff_guide": 1
+              },
+              "requires": [
+                "seen.save.demo_call"
+              ]
+            },
+            {
+              "id": "h_static",
+              "weight": 0.5
+            }
+          ]
+        }
+      }
     }
   },
   "triggers": [
@@ -439,6 +519,29 @@
         "save.demo_done"
       ],
       "end_loop": true
+    },
+    {
+      "id": "rnd_keeper",
+      "rect": [
+        1200,
+        700,
+        200,
+        100
+      ],
+      "bark": [
+        "demo_r_lamp",
+        "demo_r_turn"
+      ]
+    },
+    {
+      "id": "rnd_wind",
+      "rect": [
+        600,
+        700,
+        200,
+        100
+      ],
+      "bark": "demo_r_wind"
     }
   ],
   "chaser": {
@@ -448,7 +551,21 @@
     ],
     "catch_scare": "demo_caught",
     "speed": 160,
-    "offset": -360
+    "offset": -360,
+    "modifiers": [
+      {
+        "requires": [
+          "save.role_helper=keeper"
+        ],
+        "hold": 1.5
+      },
+      {
+        "requires": [
+          "save.role_villain=keeper"
+        ],
+        "speed": 1.1
+      }
+    ]
   },
   "end_flag": "save.demo_closed",
   "report_flags": [
@@ -463,7 +580,10 @@
     "save.demo_walked",
     "save.aff_keeper",
     "save.aff_guide",
-    "save.demo_keeper_warm"
+    "save.demo_keeper_warm",
+    "save.role_helper",
+    "save.role_villain",
+    "save.rng_seed"
   ],
   "bot_route": [
     {
