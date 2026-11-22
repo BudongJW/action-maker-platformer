@@ -226,6 +226,7 @@ func _row_items() -> Array:
 	return [
 		{"key": "scare_mode", "label": "ui.options.scare_mode", "choices": ["ui.options.scare_default", "ui.options.scare_soft", "ui.options.scare_off"]},
 		{"key": "photosafe", "label": "ui.options.reduce_flashing", "choices": ["ui.options.off", "ui.options.on"]},
+		{"key": "gore", "label": "ui.options.gore", "choices": ProtoSettings.GORE_CHOICES},
 		{"key": "", "label": "ui.first.start" if last_row == "start" else "ui.options.back"},
 	]
 
@@ -268,7 +269,8 @@ func _draw_rows() -> void:
 		row.add_child(line)
 		_rows.add_child(row)
 	var key_now: String = String(items[_selected]["key"])
-	_row_hint.text = tr("ui.options.scare_hint") if page() == "notice" and key_now == "scare_mode" else ""
+	var row_hints := {"scare_mode": "ui.options.scare_hint", "gore": "ui.options.gore_hint"}
+	_row_hint.text = tr(String(row_hints[key_now])) if page() == "notice" and row_hints.has(key_now) else ""
 	_row_hint.visible = _row_hint.text != ""
 
 

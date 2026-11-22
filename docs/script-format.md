@@ -281,10 +281,11 @@ not_식  := "not" not_식 | 비교
 | `save.*` | 세이브 파일 하나 | 가능 | `save.has_seal`, `save.ibang_trust` |
 | `meta.*` | 세이브 슬롯과 새 게임을 넘어 유지(`user://meta.dat`) | 가능 | `meta.knows_name`, `meta.endings.true` |
 | `seen.loop.*` / `seen.save.*` / `seen.meta.*` | 각 층의 수명 | 런타임 자동 | `seen.meta.ch01_pond_ghost` |
-| `sys.*` | 런타임 제공 | 읽기 전용 | `sys.loop_count`, `sys.playthrough`, `sys.meta_os`, `sys.locale` |
+| `sys.*` | 런타임 제공 | 읽기 전용 | `sys.loop_count`, `sys.playthrough`, `sys.meta_os`, `sys.locale`, `sys.gore` |
 
 - **본 기록(`seen`).** 대화가 **끝날 때**(`=> END`, 블록 끝, 다른 대화로 전환, `stop()` 모두 포함), 그리고 문서를 주울 때 런타임이 `seen.loop.<id>`, `seen.save.<id>`, `seen.meta.<id>`를 함께 참으로 만듭니다. 그래서 "이번 루프에서 봤나", "이 세이브에서 봤나", "어떤 세이브에서든 봤나"를 구분해 쓸 수 있습니다. 시작이 아니라 끝에 기록하므로, 대화 안에서 `seen.<층>.<자기 ID>`는 **이전에** 본 적이 있는지를 뜻합니다(13절 예시의 기시감 분기).
 - **`sys.meta_os`.** 플레이어가 실제 OS를 건드리는 메타 연출에 동의했는지를 나타냅니다. 기본값은 거짓입니다.
+- **`sys.gore`.** 플레이어가 잔혹 표현(신체 훼손을 그린 글과 그림)을 보이게 두었는지를 나타냅니다. 기본값은 참이고, 게임이 설정(「잔혹 표현: 보임/가림」)에서 `StoryFlags.gore`로 넣습니다. 원고는 `if sys.gore … else …`로 가린 판을 함께 쓰고, 프로토타입의 장면 그림(`art.cuts`의 `when`)은 `"requires": ["sys.gore"]`로 그림을 고릅니다.
 
 ### 6.3 출력 대상 (`[to=...]`)
 
@@ -645,3 +646,4 @@ narrator [at=3.5] [dur=4.0]: 그날 밤, 새 사또가 부임했다.  #line:ch01
 - v1 초안 (2026-11-17): 최초 작성.
 - v1 초안 (2026-11-17): 컴파일러(`tools/storyc.py`) 구현에 맞춰 `skip_pc`, E009·E010, W106 추가.
 - v1 초안 (2026-11-17): 런타임(`scripts/story/`) 구현. `seen` 기록 시점을 대화 시작에서 **끝**으로 변경(대화 안에서 자기 ID의 `seen`이 이전 기록을 뜻하도록), 고를 수 있는 선택지가 없으면 묶음을 건너뜀, 메타 대체 값(`fake_os_dialog`·`caption`·`journal_note`) 명시, 세이브에 루프 상태 포함, 컴파일러가 `l10n/.gdignore`를 만듦.
+- v1 초안 (2026-11-22): 런타임 플래그 `sys.gore`(잔혹 표현 설정, 기본 참) 추가.

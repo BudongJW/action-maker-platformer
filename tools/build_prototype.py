@@ -105,6 +105,14 @@ def build(out: Path, mode: str) -> str:
         (out / "assets/original/ui").mkdir(parents=True, exist_ok=True)
         shutil.copy2(ui_strings, out / "assets/original/ui/strings.csv")
         (out / "assets/original/ui/.gdignore").write_text("", encoding="utf-8")
+    font_dir = REPO / "assets/third_party/quiple-galmuri"
+    if font_dir.is_dir():
+        # The UI font (Galmuri11, SIL OFL 1.1); the license ships next to the font files.
+        dest = out / "assets/third_party/quiple-galmuri"
+        dest.mkdir(parents=True, exist_ok=True)
+        for name in ("Galmuri11-Condensed.ttf", "Galmuri11-Bold.ttf", "LICENSE"):
+            if (font_dir / name).is_file():
+                shutil.copy2(font_dir / name, dest / name)
     log = io.StringIO()
     with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
         code = storyc.main(["--root", str(out)])

@@ -6,7 +6,7 @@
 
 title: Before you start  #line:demo_n_001
 p: This is a generic demo for the prototype. It has no game story.  #line:demo_n_002
-p: Esc opens the settings (scare mode, flashing, volume, text size). M and P are shortcuts.  #line:demo_n_003
+p: Esc opens the settings (scare mode, flashing, graphic content, volume, text size). M and P are shortcuts.  #line:demo_n_003
 
 
 ~doc demo_card_rec
@@ -148,6 +148,10 @@ narrator: The tape has run to the end. Time to file it.  #line:demo_cl_001
 - File it with notes  #line:demo_cl_003
     set save.demo_ending = 2
 narrator: A label goes on the spine.  #line:demo_cl_004
+if sys.gore
+    narrator: A dark smear runs across the label.  #line:demo_cl_008 #ctx:Placeholder for a graphic line. sys.gore is the Graphic Content setting (on by default)
+else
+    narrator: The label is plain.  #line:demo_cl_009 #ctx:Placeholder for the veiled version of the line above
 system [to=os_dialog]: Filing complete.  #line:demo_cl_005 #ctx:Meta output. Without the player's consent it is a window drawn inside the game
 system [to=window_title]: Demo, filed  #line:demo_cl_006 #ctx:Meta output. Without consent, a title bar along the top
 narrator [to=desktop_file]: A note: the tape is filed.  #line:demo_cl_007 #ctx:Meta output. Without consent, a journal note

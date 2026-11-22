@@ -28,6 +28,8 @@ const ADVANCE_FACTORS := [1.3, 1.0, 0.8]
 const CHASE_ASSIST_SPEED := 0.7
 ## Tallest the list of rows gets before it scrolls (the controls screen has fourteen).
 const MAX_LIST_HEIGHT := 430.0
+## Choices of the graphic-content row, in value order (0 veiled, 1 shown).
+const GORE_CHOICES := ["ui.options.gore_veiled", "ui.options.gore_shown"]
 
 var director: ScareDirector
 var audio: ProtoAudio
@@ -45,6 +47,8 @@ var values := {
 	"text_size": 1, "subtitles": 1, "text_bg": 2, "speaker_names": 1, "advance": 0,
 	"advance_speed": 1,
 	"scare_mode": 0, "photosafe": 0, "chase_assist": 0, "meta_os": 0,
+	# Graphic (gore) lines and pictures: 1 shown, 0 veiled (the story reads it as sys.gore).
+	"gore": 1,
 	"ff_hold": 0,
 	# Not a row: set once the first-run pages (brightness, content notice) have been through.
 	"first_run_done": 0,
@@ -110,6 +114,7 @@ func setup(font: Font, panel: StyleBox, row_style: StyleBox, cursor: Texture2D) 
 		{"label": "ui.options.tab_access", "items": [
 			{"key": "scare_mode", "label": "ui.options.scare_mode", "choices": ["ui.options.scare_default", "ui.options.scare_soft", "ui.options.scare_off"], "hint": "ui.options.scare_hint"},
 			{"key": "photosafe", "label": "ui.options.reduce_flashing", "choices": off_on, "hint": "ui.options.reduce_flashing_hint"},
+			{"key": "gore", "label": "ui.options.gore", "choices": GORE_CHOICES, "hint": "ui.options.gore_hint"},
 			{"key": "chase_assist", "label": "ui.options.chase_assist", "choices": off_on, "hint": "ui.options.chase_assist_hint"},
 			{"key": "meta_os", "label": "ui.options.meta_effects", "choices": off_on, "hint": "ui.options.meta_effects_hint"},
 			{"key": "", "label": "ui.options.content_notice", "open": "content", "hint": "ui.options.content_notice_hint"},
@@ -421,6 +426,7 @@ func apply_all() -> void:
 		screen.set_brightness(int(values["brightness"]))
 	if runner != null:
 		runner.flags.set_meta_os(int(values["meta_os"]) == 1)
+		runner.flags.gore = int(values["gore"]) == 1
 	if apply_window and DisplayServer.get_name() != "headless":
 		var full := DisplayServer.window_get_mode() in [DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN]
 		if full != (int(values["fullscreen"]) == 1):

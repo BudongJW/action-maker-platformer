@@ -184,6 +184,11 @@ func test_flags_tiers_and_save() -> void:
 	check_eq(flags.get_flag("sys.loop_count"), 2, "loop count restored")
 	check(flags.was_chosen("line_x"), "once choices restored")
 	check(flags.is_seen("blk", "save"), "seen.save restored")
+	# sys.gore: set by the game from its settings, read-only for the script.
+	check_eq(flags.get_flag("sys.gore"), true, "sys.gore shown by default")
+	flags.gore = false
+	check_eq(flags.get_flag("sys.gore"), false, "sys.gore follows the game setting")
+	check(not flags.set_flag("sys.gore", true), "sys.gore is read-only")
 
 
 func test_meta_persistence() -> void:

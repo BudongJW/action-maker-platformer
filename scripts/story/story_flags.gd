@@ -5,7 +5,7 @@
 ##   save.*   stored in the save file (serialize_save / restore_save)
 ##   meta.*   survives new games and save deletion; written to meta_path on every change
 ##   seen.<loop|save|meta>.<block id>   set by mark_seen()
-##   sys.*    read-only runtime values: loop_count, playthrough, meta_os, locale
+##   sys.*    read-only runtime values: loop_count, playthrough, meta_os, locale, gore
 class_name StoryFlags
 extends RefCounted
 
@@ -20,6 +20,9 @@ const META_FORMAT := 1
 var meta_path: String = "user://meta.dat"
 ## Current display locale, readable as sys.locale.
 var locale: String = ""
+## Whether the player lets graphic (gore) descriptions and pictures show, readable as sys.gore.
+## The game sets it from its settings; false means the script's veiled version is used.
+var gore: bool = true
 
 var _values: Dictionary = {}
 var _chosen: Dictionary = {}
@@ -43,6 +46,8 @@ func get_flag(flag_name: String) -> Variant:
 				return _meta_os
 			"sys.locale":
 				return locale
+			"sys.gore":
+				return gore
 		push_warning("StoryFlags: unknown runtime flag '%s'" % flag_name)
 		return null
 	return _values.get(flag_name)

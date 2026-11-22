@@ -613,6 +613,17 @@
             }
           },
           {
+            "from_line": "demo_cl_009",
+            "texture": "assets/original/art/backgrounds/bg_harbor.png"
+          },
+          {
+            "from_line": "demo_cl_008",
+            "requires": [
+              "sys.gore"
+            ],
+            "texture": "assets/original/art/backgrounds/bg_sea.png"
+          },
+          {
             "from_line": "demo_cl_005",
             "none": true
           }

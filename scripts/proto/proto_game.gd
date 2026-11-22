@@ -20,6 +20,9 @@ const STORY := "res://assets/original/story/compiled/story.json"
 const STRINGS := "res://assets/original/story/compiled"
 const SCARES := "res://assets/original/story/scares.json"
 const LEVEL := "res://assets/original/story/proto_level.json"
+## The UI font: Galmuri11 Condensed (SIL OFL 1.1, assets/third_party/quiple-galmuri/), drawn
+## pixel-exact (no anti-aliasing). Glyphs it lacks fall back to the system fonts below.
+const PIXEL_FONT := "res://assets/third_party/quiple-galmuri/Galmuri11-Condensed.ttf"
 const FONT_NAMES := ["Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo",
 	"NanumGothic", "WenQuanYi Zen Hei", "Noto Sans CJK JP", "sans-serif"]
 
@@ -136,7 +139,15 @@ func _ready() -> void:
 	var sf := SystemFont.new()
 	sf.font_names = PackedStringArray(FONT_NAMES)
 	font = sf
-	ThemeDB.fallback_font = sf
+	if ResourceLoader.exists(PIXEL_FONT):
+		var pixel := load(PIXEL_FONT) as FontFile
+		if pixel != null:
+			pixel.antialiasing = TextServer.FONT_ANTIALIASING_NONE
+			pixel.hinting = TextServer.HINTING_NONE
+			pixel.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
+			pixel.fallbacks = [sf]
+			font = pixel
+	ThemeDB.fallback_font = font
 	data = _load_json(LEVEL)
 
 	runner = StoryRunner.new()
@@ -1849,7 +1860,9 @@ func _bot_step(delta: float) -> void:
 			push_error("settings: the tab bar did not reach the controls tab")
 		# The two pages the options open: brightness (up, back to its value) and the content notice.
 		_bot_settings_page("display", "brightness", ["menu_right", "menu_left", "accept"])
-		_bot_settings_page("access", "content", ["menu_down", "menu_right", "menu_left", "menu_down", "accept"])
+		# Content notice rows: scares, flashing, graphic content (changed and changed back), back.
+		_bot_settings_page("access", "content", ["menu_down", "menu_right", "menu_left", "menu_down",
+			"menu_right", "menu_left", "menu_down", "accept"])
 		settings._show_tab(settings.tab_index("controls"))
 		# Sound captions on for the rest of the run, so their path is walked too.
 		settings.set_value("sound_captions", 1)

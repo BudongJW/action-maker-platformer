@@ -52,7 +52,7 @@ KEYWORDS = ("if", "elif", "else", "set", "do")
 STYLES = ("window", "bubble", "caption", "notice")
 TARGETS = STYLES + ("os_dialog", "window_title", "desktop_file")
 TIERS = ("loop", "save", "meta")
-SYS_FLAGS = ("loop_count", "playthrough", "meta_os", "locale")
+SYS_FLAGS = ("loop_count", "playthrough", "meta_os", "locale", "gore")
 TOKENS = ("player_name", "loop_count", "os_user")
 KNOWN_TAGS = ("line", "ctx")
 

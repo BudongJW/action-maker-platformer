@@ -182,7 +182,7 @@
 
 `assets/original/ui/strings.csv`에 한·영으로 더한다(코드에는 키만).
 
-- 탭과 설정: `ui.options.tab_display`, `tab_audio`, `tab_text`, `tab_access`, `tab_controls`, `ui.options.window_mode`, `fullscreen`, `windowed`, `scale`, `brightness`, `vhs_strength`, `screen_shake`, `music_volume`, `sound_captions`, `text_bg`, `speaker_names`, `advance`, `advance_manual`, `advance_auto`, `advance_speed`, `chase_assist`, `remap`, `pad_layout`, `hold_toggle`, `content_notice`.
+- 탭과 설정: `ui.options.tab_display`, `tab_audio`, `tab_text`, `tab_access`, `tab_controls`, `ui.options.window_mode`, `fullscreen`, `windowed`, `scale`, `brightness`, `vhs_strength`, `screen_shake`, `music_volume`, `sound_captions`, `text_bg`, `speaker_names`, `advance`, `advance_manual`, `advance_auto`, `advance_speed`, `chase_assist`, `remap`, `pad_layout`, `hold_toggle`, `content_notice`, `gore`·`gore_shown`·`gore_veiled`·`gore_hint`(2026-11-22: 접근성 탭과 첫 실행 콘텐츠 안내의 「잔혹 표현: 보임/가림」. 원고는 `sys.gore`로 읽는다).
 - 저널·기록: `ui.journal.title`, `ui.journal.tab_*`, `ui.journal.new`, `ui.journal.empty`, `ui.journal.to_board`, `ui.log.title`, `ui.log.empty`.
 - 알림·저장: `ui.notice.card`, `ui.notice.doc`, `ui.notice.knot`, `ui.notice.track`, `ui.system.saving`.
 - 데크: `ui.deck.counter`(「재생 {n}」), `ui.deck.locked`, `ui.deck.ff`.
